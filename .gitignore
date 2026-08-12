@@ -1,0 +1,13 @@
+# Godot 4 import & local cache
+.godot/
+*.import
+
+# Exported builds & binaries
+build/
+bin/
+*.exe
+*.apk
+
+# OS metadata
+.DS_Store
+Thumbs.db
