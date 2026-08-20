@@ -1,13 +1,23 @@
-# Godot 4 import & local cache
+# Godot-specific cache and build files
 .godot/
-*.import
+*.import/
 
-# Exported builds & binaries
-build/
-bin/
+# Exported binaries / build targets
+/build/
 *.exe
+*.pck
 *.apk
+*.ipa
+*.html
+*.wasm
 
-# OS metadata
+# OS / System junk
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Code Editor configs
+.vscode/
+.idea/
+*.swp
+*.code-workspace
