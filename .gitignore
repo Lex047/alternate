@@ -15,9 +15,3 @@
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Code Editor configs
-.vscode/
-.idea/
-*.swp
-*.code-workspace

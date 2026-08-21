@@ -11,6 +11,7 @@ class_name Player
 @export var jump_velocity: float = -350.0
 @export var gravity: float = 980.0
 @export var terminal_velocity: float = 1000.0
+@export var coyote_time: float = 0.25
 
 @export_category("Combat")
 @export var max_health: int = 100
@@ -20,6 +21,7 @@ var direction: float = 0.0
 var is_sprinting: bool = false
 var is_jumping: bool = false
 var current_health: int
+var coyote_timer: float = 0.0
 
 func _ready() -> void:
 	current_health = max_health
@@ -47,24 +49,36 @@ func _physics_process(delta: float) -> void:
 	# 1. Read Inputs First
 	direction = Input.get_axis("move_left", "move_right")
 	is_sprinting = Input.is_action_pressed("sprint")
-	is_jumping = Input.is_action_just_pressed("jump") and is_on_floor()
 
-	# 2. Apply Gravity
+	# 2. Update Coyote Timer (Refill while on floor, drain while airborne)
+	if is_on_floor():
+		coyote_timer = coyote_time
+	else:
+		coyote_timer = max(0.0, coyote_timer - delta)
+
+	# 3. Check for Jump Execution
+	if Input.is_action_just_pressed("jump") and coyote_timer > 0.0:
+		velocity.y = jump_velocity
+		coyote_timer = 0.0 # Clear immediately so only 1 jump is granted
+		is_jumping = true
+	else:
+		is_jumping = false
+
+	# 4. Apply Gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		if velocity.y > terminal_velocity:
 			velocity.y = terminal_velocity
 
-	# 3. Handle Jump Immediately
-	if is_jumping:
-		velocity.y = jump_velocity
-
-	# 4. Horizontal Velocity
+	# 5. Horizontal Velocity
 	var current_target_speed: float = run_speed if is_sprinting else walk_speed
 	if direction != 0.0:
 		velocity.x = move_toward(velocity.x, direction * current_target_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
-
-	# 5. Apply Physics Movement
+		
+	if global_position.y > 600:
+		get_tree().reload_current_scene()
+	
+	# 6. Apply Physics Movement
 	move_and_slide()

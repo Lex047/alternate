@@ -46,8 +46,13 @@ func _handle_flip() -> void:
 func _handle_animations() -> void:
 	# Aerial / Jump State
 	if not player.is_on_floor():
-		if animation_player.has_animation("jump"):
-			animation_player.play("jump")
+	# Only play 'fall' if we are dropping AND not already playing 'jump'
+		if player.velocity.y > 0 and animation_player.current_animation != "jump":
+			if animation_player.has_animation("fall"):
+				animation_player.play("fall")
+		elif player.velocity.y < 0:
+			if animation_player.has_animation("jump"):
+				animation_player.play("jump")
 		return
 
 	# Ground State
