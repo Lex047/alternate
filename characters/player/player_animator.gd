@@ -22,7 +22,7 @@ func _ready() -> void:
 	if sprite:
 		base_offset_x = abs(sprite.position.x)
 
-func _physics_process(_delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not player or not animation_player or not sprite:
 		return
 
@@ -47,20 +47,21 @@ func _handle_animations() -> void:
 	# Aerial / Jump State
 	if not player.is_on_floor():
 	# Only play 'fall' if we are dropping AND not already playing 'jump'
-		if player.velocity.y > 0 and animation_player.current_animation != "jump":
-			if animation_player.has_animation("fall"):
-				animation_player.play("fall")
-		elif player.velocity.y < 0:
-			if animation_player.has_animation("jump"):
-				animation_player.play("jump")
+		if !player.is_jumping and animation_player.current_animation != "jump":
+			_play_animation("fall")
+		elif player.is_jumping:
+			_play_animation("jump")
 		return
-
+	
 	# Ground State
 	if player.direction != 0.0:
-		if player.is_sprinting and animation_player.has_animation("run"):
-			animation_player.play("run")
-		elif animation_player.has_animation("walk"):
-			animation_player.play("walk")
+		if player.is_sprinting:
+			_play_animation("run")
+		else:
+			_play_animation("walk")
 	else:
-		if animation_player.has_animation("idle"):
-			animation_player.play("idle")
+		_play_animation("idle")
+
+func _play_animation(animation_name: String) -> void:
+	if animation_player.current_animation != animation_name:
+		animation_player.play(animation_name)

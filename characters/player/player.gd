@@ -16,7 +16,7 @@ class_name Player
 @export_category("Combat")
 @export var max_health: int = 100
 
-# State variables read by PlayerAnimator
+# Player State variables
 var direction: float = 0.0
 var is_sprinting: bool = false
 var is_jumping: bool = false
@@ -49,36 +49,39 @@ func _physics_process(delta: float) -> void:
 	# 1. Read Inputs First
 	direction = Input.get_axis("move_left", "move_right")
 	is_sprinting = Input.is_action_pressed("sprint")
-
+	
 	# 2. Update Coyote Timer (Refill while on floor, drain while airborne)
 	if is_on_floor():
 		coyote_timer = coyote_time
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
-
+	
 	# 3. Check for Jump Execution
 	if Input.is_action_just_pressed("jump") and coyote_timer > 0.0:
 		velocity.y = jump_velocity
-		coyote_timer = 0.0 # Clear immediately so only 1 jump is granted
+		coyote_timer = 0.0
 		is_jumping = true
-	else:
-		is_jumping = false
-
+	
 	# 4. Apply Gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		if velocity.y > terminal_velocity:
 			velocity.y = terminal_velocity
-
+	
 	# 5. Horizontal Velocity
 	var current_target_speed: float = run_speed if is_sprinting else walk_speed
 	if direction != 0.0:
 		velocity.x = move_toward(velocity.x, direction * current_target_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
-		
-	if global_position.y > 600:
-		get_tree().reload_current_scene()
 	
 	# 6. Apply Physics Movement
 	move_and_slide()
+	
+	# 7. Check Jump End
+	if is_jumping and velocity.y >= 0.0:
+		is_jumping = false
+	
+	# 8. Respawn Debug Code
+	if global_position.y > 600:
+		get_tree().reload_current_scene()
