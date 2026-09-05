@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="Alternate"
-run/main_scene="uid://2vxo2ok7lchp"
+run/main_scene="uid://x5bsa6wbd1qy"
 config/features=PackedStringArray("4.4", "Mobile")
+
+[editor]
+
+movie_writer/movie_file="D:/Final Project/alternate/MovieFile1.avi"
 
 [input]
 

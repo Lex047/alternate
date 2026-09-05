@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgvjgd8miorlb"]
+
+[ext_resource type="TileSet" uid="uid://djrn564wg4ovx" path="res://levels/dystopian_city/chunks/resources/environment/dystopian_city_tileset.tres" id="1_1esse"]
+[ext_resource type="Script" uid="uid://bjyqf5exruqd3" path="res://levels/dystopian_city/chunks/scenes/chunk_base.gd" id="1_ndmw0"]
+
+[node name="ChunkBase" type="Node2D"]
+script = ExtResource("1_ndmw0")
+
+[node name="BackWall" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_1esse")
+
+[node name="Terrain" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_1esse")
+
+[node name="Objects" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_1esse")
+
+[node name="Sockets" type="Node2D" parent="."]
+
+[node name="ChunkBounds" type="ReferenceRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 768.0
+mouse_filter = 2

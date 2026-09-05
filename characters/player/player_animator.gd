@@ -44,6 +44,11 @@ func _handle_flip() -> void:
 			hurtbox.scale.x = 1.0
 
 func _handle_animations() -> void:
+	# Ledge Climb State
+	if player.is_ledge_climbing:
+		_play_animation("ledge_climb")
+		return
+	
 	# Aerial / Jump State
 	if not player.is_on_floor():
 	# Only play 'fall' if we are dropping AND not already playing 'jump'
@@ -65,3 +70,10 @@ func _handle_animations() -> void:
 func _play_animation(animation_name: String) -> void:
 	if animation_player.current_animation != animation_name:
 		animation_player.play(animation_name)
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	print("ANIMATION FINISHED: ", anim_name)
+
+	if anim_name == &"ledge_climb":
+		print("FINISHING LEDGE CLIMB")
+		player.finish_ledge_climb()
