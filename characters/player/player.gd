@@ -22,6 +22,8 @@ class_name Player
 @export var body_collision: CollisionShape2D
 
 @export var ledge_search_step: float = 2.0
+@export var ledge_grab_max_x_distance: float = 8.0
+@export var ledge_grab_max_y_distance: float = 8.0
 @export var wall_clearance: float = 2.0
 @export var floor_clearance: float = 2.0
 @export var ledge_regrab_delay: float = 0.25
@@ -31,14 +33,10 @@ class_name Player
 @export var max_health: int = 100
 
 
-# State variables
 var direction: float = 0.0
 var is_sprinting: bool = false
 
-# Used by the animation system.
 var is_jumping: bool = false
-
-# Used to distinguish a real jump from simply walking off a platform.
 var jumped_this_airtime: bool = false
 
 var current_health: int
@@ -81,13 +79,6 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 
 func take_damage(amount: int) -> void:
 	current_health = max(0, current_health - amount)
-
-	print(
-		"Player took ",
-		amount,
-		" damage. HP left: ",
-		current_health
-	)
 
 	if current_health <= 0:
 		_die()
@@ -148,7 +139,6 @@ func _can_attempt_ledge_climb() -> bool:
 	if is_on_floor():
 		return false
 
-	# No automatic grabs from simply walking off a platform.
 	if not jumped_this_airtime:
 		return false
 
@@ -200,12 +190,10 @@ func _find_ledge_corner() -> Vector2:
 	if steps < 1:
 		steps = 1
 
-	# Search only inside the actual visible detector box.
 	for i in range(steps + 1):
 		var t: float = float(i) / float(steps)
 		var sample_x: float
 
-		# Search from the forward edge toward the player.
 		if facing_direction > 0.0:
 			sample_x = lerpf(
 				right_x,
@@ -246,13 +234,10 @@ func _find_ledge_corner() -> Vector2:
 
 		var top_normal: Vector2 = top_result["normal"]
 
-		# Must actually be the top of terrain.
 		if top_normal.y > -0.7:
 			continue
 
 		var top_point: Vector2 = top_result["position"]
-
-		# Look just underneath the top surface for its vertical side.
 		var wall_y: float = top_point.y + 2.0
 
 		var wall_from: Vector2
@@ -296,20 +281,15 @@ func _find_ledge_corner() -> Vector2:
 
 		var wall_normal: Vector2 = wall_result["normal"]
 
-		# The wall must face toward the player.
 		if wall_normal.x * facing_direction > -0.7:
 			continue
 
 		var wall_point: Vector2 = wall_result["position"]
 
-		var corner := Vector2(
+		return Vector2(
 			wall_point.x,
 			top_point.y
 		)
-
-		print("LEDGE CORNER: ", corner)
-
-		return corner
 
 	return Vector2.INF
 
@@ -318,17 +298,39 @@ func _get_grab_offset() -> Vector2:
 	if not ledge_grab_point:
 		return Vector2.ZERO
 
-	# Marker was placed for the right-facing pose.
-	# Mirror only its X offset when facing left.
 	return Vector2(
 		abs(ledge_grab_point.position.x) * facing_direction,
 		ledge_grab_point.position.y
 	)
 
 
-func _start_ledge_climb(ledge_corner: Vector2) -> void:
+func _is_valid_ledge_reach(
+	ledge_corner: Vector2
+) -> bool:
 	if not ledge_grab_point:
-		print("WARNING: Ledge Grab Point is not assigned.")
+		return false
+
+	var grab_position: Vector2 = (
+		global_position + _get_grab_offset()
+	)
+
+	var difference: Vector2 = (
+		ledge_corner - grab_position
+	)
+
+	if abs(difference.x) > ledge_grab_max_x_distance:
+		return false
+
+	if abs(difference.y) > ledge_grab_max_y_distance:
+		return false
+
+	return true
+
+
+func _start_ledge_climb(
+	ledge_corner: Vector2
+) -> void:
+	if not ledge_grab_point:
 		return
 
 	is_ledge_climbing = true
@@ -337,7 +339,6 @@ func _start_ledge_climb(ledge_corner: Vector2) -> void:
 
 	var grab_offset: Vector2 = _get_grab_offset()
 
-	# Put the fingertip marker directly on the ledge corner.
 	var hang_position: Vector2 = (
 		ledge_corner - grab_offset
 	)
@@ -350,7 +351,6 @@ func _start_ledge_climb(ledge_corner: Vector2) -> void:
 	if body_collision:
 		collision_offset_y = body_collision.position.y
 
-	# Final position places the whole collider on top of the ledge.
 	var stand_x: float = (
 		ledge_corner.x
 		+ facing_direction
@@ -369,19 +369,10 @@ func _start_ledge_climb(ledge_corner: Vector2) -> void:
 		stand_y
 	)
 
-	print("LEDGE START")
-	print("Facing: ", facing_direction)
-	print("Corner: ", ledge_corner)
-	print("Grab Offset: ", grab_offset)
-	print("Hang: ", hang_position)
-	print("Stand: ", ledge_stand_position)
-
 	global_position = hang_position
 
 
 func finish_ledge_climb() -> void:
-	print("LEDGE FINISHED")
-
 	global_position = ledge_stand_position
 	velocity = Vector2.ZERO
 
@@ -406,12 +397,11 @@ func _physics_process(delta: float) -> void:
 		"sprint"
 	)
 
-	if direction != 0.0:
+	if direction != 0.0 and not is_ledge_climbing:
 		facing_direction = sign(direction)
 
 	_update_ledge_detector()
 
-	# Freeze normal movement during the climb animation.
 	if is_ledge_climbing:
 		velocity = Vector2.ZERO
 		return
@@ -446,10 +436,11 @@ func _physics_process(delta: float) -> void:
 			_find_ledge_corner()
 		)
 
-		if ledge_corner != Vector2.INF:
-			_start_ledge_climb(
-				ledge_corner
-			)
+		if (
+			ledge_corner != Vector2.INF
+			and _is_valid_ledge_reach(ledge_corner)
+		):
+			_start_ledge_climb(ledge_corner)
 			return
 
 	var current_target_speed: float = (
@@ -473,6 +464,5 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# PlayerAnimator uses this to switch jump -> fall.
 	if is_jumping and velocity.y >= 0.0:
 		is_jumping = false

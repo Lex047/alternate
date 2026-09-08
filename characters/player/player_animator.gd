@@ -71,9 +71,8 @@ func _play_animation(animation_name: String) -> void:
 	if animation_player.current_animation != animation_name:
 		animation_player.play(animation_name)
 
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	print("ANIMATION FINISHED: ", anim_name)
-
+func _on_animation_player_animation_finished(
+	anim_name: StringName
+) -> void:
 	if anim_name == &"ledge_climb":
-		print("FINISHING LEDGE CLIMB")
 		player.finish_ledge_climb()
