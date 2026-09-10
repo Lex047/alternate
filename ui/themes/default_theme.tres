@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cula6gndqf2n5"]
+
+[ext_resource type="FontFile" uid="uid://220bh5nc1jpg" path="res://ui/fonts/bold_pixels.ttf" id="1_815yr"]
+
+[resource]
+default_font = ExtResource("1_815yr")

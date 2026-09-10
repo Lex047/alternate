@@ -1,0 +1,161 @@
+[gd_scene load_steps=13 format=3 uid="uid://c2ynhunpkkrre"]
+
+[ext_resource type="Script" uid="uid://b2lb7ehc82gyp" path="res://ui/hud.gd" id="1_rbyyf"]
+[ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="2_276te"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0eg6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_b00kl"]
+font_size = 26
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_276te"]
+bg_color = Color(1, 1, 1, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_276te"]
+font_size = 28
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_546lt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ihmi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_en2x2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1v5rv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q43x7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_srpbi"]
+
+[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "game_over_panel", "pause_panel", "resume_button", "restart_button", "main_menu_button")]
+script = ExtResource("1_rbyyf")
+health_bar = NodePath("RootControl/HUDMargin/VBoxContainer/HealthBar")
+health_label = NodePath("RootControl/HUDMargin/VBoxContainer/HealthLabel")
+game_over_panel = NodePath("RootControl/GameOverPanel")
+pause_panel = NodePath("RootControl/PausePanel")
+resume_button = NodePath("RootControl/PausePanel/VBoxContainer/ResumeButton")
+restart_button = NodePath("RootControl/PausePanel/VBoxContainer/RestartButton")
+main_menu_button = NodePath("RootControl/PausePanel/VBoxContainer/MainMenuButton")
+
+[node name="RootControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_276te")
+
+[node name="HUDMargin" type="MarginContainer" parent="RootControl"]
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 68.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootControl/HUDMargin"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HealthLabel" type="Label" parent="RootControl/HUDMargin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "HP 100 / 100"
+
+[node name="HealthBar" type="ProgressBar" parent="RootControl/HUDMargin/VBoxContainer"]
+custom_minimum_size = Vector2(128, 14)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+value = 100.0
+
+[node name="GameOverPanel" type="PanelContainer" parent="RootControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.5
+offset_top = -20.0
+offset_right = 64.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_m0eg6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootControl/GameOverPanel"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="GameOverLabel" type="Label" parent="RootControl/GameOverPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_b00kl")
+horizontal_alignment = 1
+
+[node name="RestartLabel" type="Label" parent="RootControl/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Press R to Restart"
+horizontal_alignment = 1
+
+[node name="PausePanel" type="PanelContainer" parent="RootControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -47.5
+offset_right = 44.0
+offset_bottom = 47.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_276te")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootControl/PausePanel"]
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="PauseLabel" type="Label" parent="RootControl/PausePanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Paused"
+label_settings = SubResource("LabelSettings_276te")
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="RootControl/PausePanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_546lt")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7ihmi")
+text = "Resume"
+
+[node name="RestartButton" type="Button" parent="RootControl/PausePanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_en2x2")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_1v5rv")
+text = "Restart Run"
+
+[node name="MainMenuButton" type="Button" parent="RootControl/PausePanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_q43x7")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_srpbi")
+text = "Main Menu"
+
+[connection signal="pressed" from="RootControl/PausePanel/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="RootControl/PausePanel/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="RootControl/PausePanel/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

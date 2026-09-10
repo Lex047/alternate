@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name Player
 
+@export var player_audio: PlayerAudio
 
 @export_category("Movement")
 @export var walk_speed: float = 120.0
@@ -37,12 +38,14 @@ var direction: float = 0.0
 var is_sprinting: bool = false
 
 var is_jumping: bool = false
+var is_airborne: bool = false
 var jumped_this_airtime: bool = false
 
 var current_health: int
 var coyote_timer: float = 0.0
 
 var is_ledge_climbing: bool = false
+var has_ledge_climbed: bool = false
 var facing_direction: float = 1.0
 
 var ledge_stand_position: Vector2
@@ -54,18 +57,15 @@ var ledge_detector_base_x: float = 0.0
 func _ready() -> void:
 	current_health = max_health
 
+	GameManager.register_player(self)
+
 	if ledge_detector:
 		ledge_detector_base_x = abs(ledge_detector.position.x)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if (
-		event is InputEventKey
-		and event.pressed
-		and not event.echo
-		and event.keycode == KEY_R
-	):
-		get_tree().reload_current_scene()
+	if event.is_action_pressed("debug_damage"):
+		take_damage(10)
 
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
@@ -78,14 +78,22 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 
 
 func take_damage(amount: int) -> void:
-	current_health = max(0, current_health - amount)
+	current_health = max(
+		0,
+		current_health - amount
+	)
+
+	GameManager.update_player_health(
+		current_health,
+		max_health
+	)
 
 	if current_health <= 0:
 		_die()
 
 
 func _die() -> void:
-	print("Player died!")
+	GameManager.handle_player_death()
 
 
 func _get_body_half_height() -> float:
@@ -337,6 +345,9 @@ func _start_ledge_climb(
 	is_jumping = false
 	velocity = Vector2.ZERO
 
+	if player_audio:
+		player_audio.play_ledge_climb()
+
 	var grab_offset: Vector2 = _get_grab_offset()
 
 	var hang_position: Vector2 = (
@@ -377,6 +388,7 @@ func finish_ledge_climb() -> void:
 	velocity = Vector2.ZERO
 
 	is_ledge_climbing = false
+	has_ledge_climbed = true
 	jumped_this_airtime = false
 	ledge_cooldown = ledge_regrab_delay
 
@@ -409,6 +421,14 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		coyote_timer = coyote_time
 		jumped_this_airtime = false
+	
+		if is_airborne and not has_ledge_climbed:
+			if player_audio:
+				player_audio.play_land()
+	
+		is_airborne = false
+		has_ledge_climbed = false
+	
 	else:
 		coyote_timer = max(
 			0.0,
@@ -421,11 +441,17 @@ func _physics_process(delta: float) -> void:
 	):
 		velocity.y = jump_velocity
 		coyote_timer = 0.0
-
+	
 		is_jumping = true
 		jumped_this_airtime = true
 
+		if player_audio:
+			player_audio.play_jump()
+
 	if not is_on_floor():
+		if velocity.y != 0.0:
+			is_airborne = true
+
 		velocity.y += gravity * delta
 
 		if velocity.y > terminal_velocity:

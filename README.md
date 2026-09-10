@@ -97,6 +97,12 @@ Several systems are still experimental and are likely to change as the project p
 
 Current development is focused on completing the core gameplay systems before expanding procedural generation and level content.
 
+## Credits
+
+- BoldPixels Font by Yūki (@YukiPixels)  
+  https://linktr.ee/yukipixels  
+  Licensed under CC BY-SA 4.0
+
 ## License
 
 This project is currently intended for educational and academic use.

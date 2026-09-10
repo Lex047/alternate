@@ -30,16 +30,16 @@ func _process(_delta: float) -> void:
 	_handle_animations()
 
 func _handle_flip() -> void:
-	if player.direction < 0:
-		# Facing Left
+	if player.facing_direction < 0.0:
 		sprite.flip_h = true
 		sprite.position.x = base_offset_x
+
 		if hurtbox:
 			hurtbox.scale.x = -1.0
-	elif player.direction > 0:
-		# Facing Right
+	else:
 		sprite.flip_h = false
 		sprite.position.x = -base_offset_x
+
 		if hurtbox:
 			hurtbox.scale.x = 1.0
 
