@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6d8tr5yo2047"]
+
+[ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="1_yp8po"]
+
+[node name="ChunkSocket" type="Marker2D"]
+gizmo_extents = 8.0
+script = ExtResource("1_yp8po")

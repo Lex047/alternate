@@ -22,7 +22,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_0dkrt")
 script = ExtResource("1_t7e0r")
-game_scene_path = "uid://x5bsa6wbd1qy"
+game_scene_path = "uid://2vxo2ok7lchp"
 start_button = NodePath("CenterContainer/VBoxContainer/StartButton")
 
 [node name="Background" type="TextureRect" parent="."]

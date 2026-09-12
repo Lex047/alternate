@@ -1,24 +1,37 @@
 [gd_scene load_steps=4 format=3 uid="uid://dgvjgd8miorlb"]
 
 [ext_resource type="TileSet" uid="uid://djrn564wg4ovx" path="res://levels/dystopian_city/chunks/resources/environment/terrain_tileset.tres" id="1_1esse"]
-[ext_resource type="Script" uid="uid://bjyqf5exruqd3" path="res://levels/dystopian_city/chunks/scenes/chunk_base.gd" id="1_ndmw0"]
+[ext_resource type="Script" uid="uid://bjyqf5exruqd3" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.gd" id="1_ndmw0"]
 [ext_resource type="TileSet" uid="uid://dk3g3kmanetxt" path="res://levels/dystopian_city/chunks/resources/environment/backwall_tileset.tres" id="2_4bg6x"]
 
 [node name="ChunkBase" type="Node2D"]
 script = ExtResource("1_ndmw0")
+metadata/_edit_lock_ = true
 
 [node name="BackWall" type="TileMapLayer" parent="."]
 tile_set = ExtResource("2_4bg6x")
+metadata/_edit_lock_ = true
 
 [node name="Terrain" type="TileMapLayer" parent="."]
 tile_set = ExtResource("1_1esse")
+metadata/_edit_lock_ = true
 
 [node name="Objects" type="TileMapLayer" parent="."]
 tile_set = ExtResource("1_1esse")
+metadata/_edit_lock_ = true
 
 [node name="Sockets" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
 
-[node name="ChunkBounds" type="ReferenceRect" parent="."]
+[node name="GenerationBounds" type="ReferenceRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+border_width = 0.5
+
+[node name="DesignBounds" type="ReferenceRect" parent="."]
+visible = false
 offset_right = 1280.0
 offset_bottom = 768.0
 mouse_filter = 2
+border_width = 4.0
+metadata/_edit_lock_ = true
