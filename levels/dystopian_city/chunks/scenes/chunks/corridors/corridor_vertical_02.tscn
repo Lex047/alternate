@@ -6,17 +6,28 @@
 [node name="CorridorVertical02" instance=ExtResource("1_p1nex")]
 chunk_type = 2
 
+[node name="BackWall" parent="." index="0"]
+tile_map_data = PackedByteArray("AAAeABUAAAAMAAMAAAAfABUAAAAMAAMAAAAgABUAAAAMAAMAAAAhABUAAAAMAAMAAAAeABEAAAAMAAMAAAAeABIAAAAMAAMAAAAfABIAAAAMAAMAAAAgABMAAAAMAAMAAAAhABMAAAAMAAMAAAAhABQAAAAMAAMAAAAhABIAAAAMAAMAAAAhABEAAAAMAAMAAAAgABEAAAAMAAMAAAAfABEAAAAMAAMAAAAgABIAAAAMAAMAAAAfABMAAAAMAAMAAAAeABMAAAAMAAMAAAAeABQAAAAMAAMAAAAfABQAAAAMAAMAAAAgABQAAAAMAAMAAAA=")
+
 [node name="Terrain" parent="." index="1"]
-tile_map_data = PackedByteArray("AAAdABEAAAABAAIAAAAdABIAAAABAAIAAAAdABMAAAABAAIAAAAdABQAAAABAAIAAAAdABUAAAABAAIAAAAiABEAAAAHAAIAAAAiABIAAAAHAAIAAAAiABMAAAAHAAIAAAAiABQAAAAHAAIAAAAiABUAAAAHAAIAAAA=")
+tile_map_data = PackedByteArray("AAAdABEAAAABAAIAAAAdABIAAAABAAIAAAAdABMAAAABAAIAAAAdABQAAAABAAIAAAAdABUAAAABAAIAAAAiABEAAAAHAAIAAAAiABIAAAAHAAIAAAAiABMAAAAHAAIAAAAiABQAAAAHAAIAAAAiABUAAAAHAAIAAAAhABUAAAAHAAsAAAAgABUAAAAGAAsAAAA=")
 
 [node name="BottomSocket01" type="Marker2D" parent="Sockets" index="0"]
-position = Vector2(513, 352)
+position = Vector2(512, 352)
 gizmo_extents = 8.0
 script = ExtResource("2_3147w")
 direction = 3
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
+[node name="TopSocket01" type="Marker2D" parent="Sockets" index="1"]
+position = Vector2(511.906, 271.958)
+gizmo_extents = 8.0
+script = ExtResource("2_3147w")
+direction = 2
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
 [node name="GenerationBounds" parent="." index="4"]
+visible = false
 offset_left = 464.0
 offset_top = 272.0
 offset_right = 560.0

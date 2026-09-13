@@ -1,24 +1,28 @@
-[gd_scene load_steps=12 format=3 uid="uid://2vxo2ok7lchp"]
+[gd_scene load_steps=15 format=3 uid="uid://2vxo2ok7lchp"]
 
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="1_2l2w4"]
 [ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator.tscn" id="1_axj3q"]
 [ext_resource type="PackedScene" uid="uid://c4357685gf36o" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_start.tscn" id="2_lr6wi"]
+[ext_resource type="PackedScene" uid="uid://bawiwc3is1o13" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_climb_01.tscn" id="3_nvjbw"]
 [ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="4_yknkj"]
 [ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="5_46m32"]
 [ext_resource type="PackedScene" uid="uid://chbondcs7cy6l" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_horizontal_01.tscn" id="6_l615m"]
-[ext_resource type="PackedScene" uid="uid://l7k3hg8hhjua" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_vertical_01.tscn" id="8_07vur"]
-[ext_resource type="PackedScene" uid="uid://cp7rt51aeyi3s" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_01.tscn" id="8_yknkj"]
-[ext_resource type="PackedScene" uid="uid://dh318hpudqgk" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_02.tscn" id="9_46m32"]
+[ext_resource type="PackedScene" uid="uid://bgwthi7s3jey3" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_vertical_02.tscn" id="7_mtyjm"]
+[ext_resource type="PackedScene" uid="uid://cp7rt51aeyi3s" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_01.tscn" id="8_yknkj"]
+[ext_resource type="PackedScene" uid="uid://dh318hpudqgk" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_top_01.tscn" id="9_46m32"]
 [ext_resource type="PackedScene" uid="uid://c8scebk7eutd0" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_02.tscn" id="9_nvjbw"]
+[ext_resource type="PackedScene" uid="uid://6gkyw1g06v4" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_01.tscn" id="10_l615m"]
+[ext_resource type="PackedScene" uid="uid://cahxl381523xg" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_bottom_01.tscn" id="11_mtyjm"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud.tscn" id="11_yknkj"]
 
 [node name="GenerationTest" type="Node2D"]
 
 [node name="LevelGenerator" parent="." instance=ExtResource("1_axj3q")]
 start_chunk_scene = ExtResource("2_lr6wi")
-chunk_scenes = Array[PackedScene]([ExtResource("4_yknkj"), ExtResource("6_l615m"), ExtResource("9_nvjbw"), ExtResource("5_46m32"), ExtResource("8_07vur")])
-terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32")])
-chunk_count = 8
+chunk_scenes = Array[PackedScene]([ExtResource("4_yknkj"), ExtResource("9_nvjbw"), ExtResource("5_46m32"), ExtResource("3_nvjbw")])
+horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
+vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
+terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm")])
 
 [node name="Player" parent="." instance=ExtResource("1_2l2w4")]
 position = Vector2(506, 130)
