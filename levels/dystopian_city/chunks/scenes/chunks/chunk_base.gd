@@ -5,7 +5,8 @@ class_name Chunk
 enum ChunkType {
 	START,
 	ROOM,
-	CORRIDOR
+	CORRIDOR,
+	TERMINAL,
 }
 
 
