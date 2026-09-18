@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=4 uid="uid://bvxt2jy6l7jib"]
+
+[ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_p8m4v"]
+[ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_xx7je"]
+
+[node name="TerminalLeftSmall01" instance=ExtResource("1_p8m4v")]
+chunk_type = 3
+
+[node name="Terrain" parent="." index="1"]
+tile_map_data = PackedByteArray("AAAVAAoAAAAHAAsAAAAUAAoAAAAHAAsAAAATAAoAAAAHAAsAAAASAAoAAAAHAAsAAAARAAoAAAAHAAsAAAAQAAoAAAAHAAsAAAAPAAoAAAAHAAsAAAAOAAoAAAABAAIAAAAOAAkAAAABAAIAAAAOAAgAAAABAAIAAAAOAAcAAAABAAIAAAAOAAYAAAABAAIAAAAOAAUAAAABAAIAAAAOAAQAAAABAAIAAAAOAAMAAAABAAIAAAAOAAIAAAABAAIAAAA=")
+
+[node name="RightSocket01" type="Marker2D" parent="Sockets" index="0"]
+position = Vector2(352, 168)
+gizmo_extents = 8.0
+script = ExtResource("2_xx7je")
+direction = 1
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="GenerationBounds" parent="." index="4"]
+offset_left = 224.0
+offset_top = 32.0
+offset_right = 352.0
+offset_bottom = 176.0

@@ -9,15 +9,17 @@ enum PlacementKind {
 	TERMINAL,
 }
 
-@export_category("Randomness")
+# ==================================================
+# RNG CONSTANTS
+# ==================================================
 
-@export var generation_seed: int = 12345
+const GRAPH_SEED_SALT: int = 0x2C9277B5
+const SPATIAL_SEED_SALT: int = 0x19A4E6D3
 
-# Useful later if you want a button that creates a fresh seed.
-@export var use_random_seed: bool = false
 
-var generation_rng := RandomNumberGenerator.new()
-var active_generation_seed: int = 0
+# ==================================================
+# GENERATION SETTINGS
+# ==================================================
 
 @export_category("Generation")
 
@@ -30,35 +32,153 @@ var active_generation_seed: int = 0
 
 @export var terminal_chunk_scenes: Array[PackedScene] = []
 
+
 @export_range(1, 100, 1)
 var chunk_count: int = 8
+
 
 # First half = expansion.
 # Second half = tapering.
 @export_range(0.0, 1.0, 0.05)
 var terminal_start_ratio: float = 0.5
 
+
 @export_range(1, 100, 1)
 var max_generation_attempts: int = 20
+
 
 @export_range(0.0, 8.0, 1.0)
 var bounds_overlap_tolerance: float = 4.0
 
 
+# ==================================================
+# GRAPH SETTINGS
+# ==================================================
+
+@export_category("Graph")
+
+# Maximum number of logical children a graph node
+# may have.
+#
+# A non-start room also needs one connection
+# back to its parent.
+#
+# Example:
+#
+# max_graph_children = 2
+#
+#          child
+#            |
+# parent -- room -- child
+#
+# This room therefore needs 3 physical connections.
+@export_range(1, 4, 1)
+var max_graph_children: int = 2
+
+
+# Higher values encourage side branches.
+#
+# Lower values encourage longer main paths.
+@export_range(0.0, 1.0, 0.05)
+var graph_branch_chance: float = 0.35
+
+
+# ==================================================
+# SOLVER SETTINGS
+# ==================================================
+
+@export_category("Solver")
+
+# How many times one graph node / closure decision may
+# be retried locally before the solver gives up on that
+# branch and propagates failure upward.
+@export_range(1, 8, 1)
+var max_local_backtrack_retries: int = 4
+
+# Hard safety cap for one complete generation attempt.
+@export_range(1, 1000, 1)
+var max_solver_backtracks: int = 250
+
+
+# ==================================================
+# RANDOMNESS SETTINGS
+# ==================================================
+
+@export_category("Randomness")
+
+@export var generation_seed: int = 12345
+
+# When enabled, a new seed is generated each time
+# generate_level() begins.
+@export var use_random_seed: bool = false
+
+
+# ==================================================
+# NODE REFERENCES
+# ==================================================
+
 @onready var generated_chunks: Node2D = $GeneratedChunks
 
 
+# ==================================================
+# RANDOM STATE
+# ==================================================
+
+# Used by the abstract logical graph.
+var graph_rng := RandomNumberGenerator.new()
+
+# Used by physical chunk placement.
+var generation_rng := RandomNumberGenerator.new()
+
+# The actual seed being used for the current level.
+var active_generation_seed: int = 0
+
+
+# ==================================================
+# SOLVER STATE
+# ==================================================
+
+var solver_backtracks: int = 0
+
+
+# ==================================================
+# GRAPH STATE
+# ==================================================
+
+# Maps:
+#
+# LevelGraphNode.id -> physical Chunk
+#
+# This lets us know which physical room represents
+# each logical graph node.
+var graph_node_chunks: Dictionary = {}
+
+var level_graph := LevelGraph.new()
+
+
+# ==================================================
+# GENERATION STATE
+# ==================================================
+
 var placed_chunks: Array[Chunk] = []
+
 
 # Only actual growth rooms count toward chunk_count.
 var normal_chunks_placed: int = 0
 
-# Structural connector chunks do not count.
+
+# Structural connector chunks do not count toward
+# chunk_count.
 var horizontal_corridors_placed: int = 0
 var vertical_corridors_placed: int = 0
 
+
 var terminals_placed: int = 0
 
+
+# ==================================================
+# CHUNK USAGE STATE
+# ==================================================
 
 # Key:
 #	scene.resource_path
@@ -73,16 +193,28 @@ func _ready() -> void:
 	generate_level()
 
 # ==================================================
-# SEED
+# SEEDED RNG
 # ==================================================
 
 func _initialize_generation_rng() -> void:
 	if use_random_seed:
 		generation_rng.randomize()
-		active_generation_seed = generation_rng.seed
+
+		active_generation_seed = (
+			generation_rng.seed
+		)
 	else:
 		active_generation_seed = generation_seed
-		generation_rng.seed = active_generation_seed
+
+	graph_rng.seed = (
+		active_generation_seed
+		^ GRAPH_SEED_SALT
+	)
+
+	generation_rng.seed = (
+		active_generation_seed
+		^ SPATIAL_SEED_SALT
+	)
 
 	print(
 		"Generation seed: ",
@@ -112,17 +244,908 @@ func _shuffle_with_generation_rng(
 		array[i] = array[random_index]
 		array[random_index] = temporary_value
 
+# ==================================================
+# GRAPH GENERATION
+# ==================================================
+
+func _build_level_graph() -> void:
+	level_graph.clear()
+
+	var start_node := level_graph.create_node(
+		LevelGraphNode.NodeType.START
+	)
+
+	# Nodes which are still allowed to receive children.
+	var expandable_nodes: Array[LevelGraphNode] = []
+	expandable_nodes.append(start_node)
+
+	# Usually we continue growing from the newest room,
+	# producing a main path.
+	#
+	# Sometimes graph_branch_chance makes us pick an
+	# older node instead, producing a branch.
+	var latest_node: LevelGraphNode = start_node
+
+	for i in range(chunk_count):
+		var parent := _choose_graph_parent(
+			expandable_nodes,
+			latest_node
+		)
+
+		if not parent:
+			push_error(
+				"LevelGenerator: Graph ran out "
+				+ "of expandable nodes."
+			)
+			return
+
+		var growth_node := (
+			level_graph.create_node(
+				LevelGraphNode.NodeType.GROWTH
+			)
+		)
+
+		level_graph.add_edge(
+			parent,
+			growth_node
+		)
+
+		# The new room can itself be expanded later.
+		expandable_nodes.append(
+			growth_node
+		)
+
+		latest_node = growth_node
+
+		# START currently gets exactly one outgoing logical
+		# branch. We can make this configurable later once
+		# graph generation understands chunk socket metadata.
+		if (
+			parent == start_node
+			or parent.children.size()
+			>= max_graph_children
+		):
+			expandable_nodes.erase(parent)
+
+
+func _choose_graph_parent(
+	expandable_nodes: Array[LevelGraphNode],
+	latest_node: LevelGraphNode
+) -> LevelGraphNode:
+	if expandable_nodes.is_empty():
+		return null
+
+	if expandable_nodes.size() == 1:
+		return expandable_nodes[0]
+
+	# Usually continue from the newest node.
+	#
+	# This produces a recognizable main path instead
+	# of completely random bush-like graphs.
+	if (
+		latest_node
+		and expandable_nodes.has(latest_node)
+		and graph_rng.randf() >= graph_branch_chance
+	):
+		return latest_node
+
+	# Otherwise branch from an older available node.
+	var index := graph_rng.randi_range(
+		0,
+		expandable_nodes.size() - 1
+	)
+
+	return expandable_nodes[index]
+
+
+func _level_graph_is_valid() -> bool:
+	if not level_graph.root:
+		push_error(
+			"LevelGenerator: Graph has no root."
+		)
+		return false
+
+	if (
+		level_graph.root.node_type
+		!= LevelGraphNode.NodeType.START
+	):
+		push_error(
+			"LevelGenerator: Graph root is not START."
+		)
+		return false
+
+	if level_graph.root.parent:
+		push_error(
+			"LevelGenerator: START has a parent."
+		)
+		return false
+
+	var growth_count := (
+		level_graph.count_nodes_of_type(
+			LevelGraphNode.NodeType.GROWTH
+		)
+	)
+
+	if growth_count != chunk_count:
+		push_error(
+			"LevelGenerator: Graph growth count "
+			+ "does not match chunk_count."
+		)
+		return false
+
+	var visited: Dictionary = {}
+
+	var nodes_to_visit: Array[LevelGraphNode] = []
+	nodes_to_visit.append(
+		level_graph.root
+	)
+
+	while not nodes_to_visit.is_empty():
+		var node: LevelGraphNode = (
+			nodes_to_visit.pop_front() as LevelGraphNode
+		)
+
+		if visited.has(node.id):
+			push_error(
+				"LevelGenerator: Graph contains "
+				+ "a cycle or duplicate connection."
+			)
+			return false
+
+		visited[node.id] = true
+
+		if (
+			node.children.size()
+			> max_graph_children
+		):
+			push_error(
+				"LevelGenerator: Graph node exceeds "
+				+ "maximum child count."
+			)
+			return false
+
+		for child in node.children:
+			if child.parent != node:
+				push_error(
+					"LevelGenerator: Broken "
+					+ "parent/child relationship."
+				)
+				return false
+
+			nodes_to_visit.append(child)
+
+	if visited.size() != level_graph.nodes.size():
+		push_error(
+			"LevelGenerator: Graph contains "
+			+ "unreachable nodes."
+		)
+		return false
+
+	return true
+	
+func _print_level_graph() -> void:
+	print(
+		"================ LEVEL GRAPH ================"
+	)
+
+	print(
+		"Seed: ",
+		active_generation_seed,
+		" | Nodes: ",
+		level_graph.nodes.size(),
+		" | Growth: ",
+		level_graph.count_nodes_of_type(
+			LevelGraphNode.NodeType.GROWTH
+		)
+	)
+
+	_print_graph_subtree(
+		level_graph.root,
+		""
+	)
+
+	print(
+		"============================================="
+	)
+	
+func _print_graph_subtree(
+	node: LevelGraphNode,
+	indent: String
+) -> void:
+	var type_name: String = (
+		str(
+			LevelGraphNode.NodeType.keys()[
+				node.node_type
+			]
+		)
+	)
+
+	print(
+		indent,
+		"[",
+		node.id,
+		"] ",
+		type_name,
+		" | children: ",
+		node.children.size()
+	)
+
+	for child in node.children:
+		_print_graph_subtree(
+			child,
+			indent + "    "
+		)
+		
+
+
+# ==================================================
+# GRAPH REALIZATION
+# ==================================================
+
+
+func _realize_graph_children(
+	graph_node: LevelGraphNode,
+	physical_chunk: Chunk,
+	committed_parent_sockets: Array[ChunkSocket]
+) -> bool:
+	var required_children: int = (
+		graph_node.children.size()
+	)
+
+	if (
+		physical_chunk.get_available_sockets().size()
+		< required_children
+	):
+		return false
+
+	for child_node: LevelGraphNode in graph_node.children:
+		var child_chunk: Chunk = (
+			_try_place_graph_child(
+				physical_chunk,
+				child_node,
+				committed_parent_sockets
+			)
+		)
+
+		if not child_chunk:
+			return false
+
+		graph_node_chunks[
+			child_node.id
+		] = child_chunk
+
+		# IMPORTANT:
+		#
+		# Re-check previously completed graph rooms
+		# after EVERY new graph placement.
+		#
+		# This is what prevents a new room from
+		# boxing in an older unused socket.
+		if not _graph_frontier_is_closable():
+			return false
+
+	return true
+
+
+func _solve_graph_node(
+	graph_node: LevelGraphNode,
+	physical_chunk: Chunk
+) -> bool:
+	# Leaf nodes have no graph children.
+	if graph_node.children.is_empty():
+		return true
+
+	for _retry in range(
+		max_local_backtrack_retries
+	):
+		if (
+			solver_backtracks
+			>= max_solver_backtracks
+		):
+			return false
+
+		# --------------------------------------
+		# SNAPSHOT
+		# --------------------------------------
+
+		var placed_count_before: int = (
+			placed_chunks.size()
+		)
+
+		var normal_before: int = (
+			normal_chunks_placed
+		)
+
+		var horizontal_before: int = (
+			horizontal_corridors_placed
+		)
+
+		var vertical_before: int = (
+			vertical_corridors_placed
+		)
+
+		var terminals_before: int = (
+			terminals_placed
+		)
+
+		var usage_before: Dictionary = (
+			chunk_usage.duplicate(true)
+		)
+
+		var graph_map_before: Dictionary = (
+			graph_node_chunks.duplicate(true)
+		)
+
+		var committed_parent_sockets: Array[ChunkSocket] = []
+
+		# --------------------------------------
+		# TRY THIS NODE
+		# --------------------------------------
+
+		var children_realized: bool = (
+			_realize_graph_children(
+				graph_node,
+				physical_chunk,
+				committed_parent_sockets
+			)
+		)
+
+		var subtree_solved: bool = (
+			children_realized
+		)
+
+		# --------------------------------------
+		# RECURSE INTO CHILDREN
+		# --------------------------------------
+
+		if subtree_solved:
+			for child: LevelGraphNode in (
+				graph_node.children
+			):
+				var child_chunk: Chunk = (
+					graph_node_chunks.get(
+						child.id,
+						null
+					) as Chunk
+				)
+
+				if not child_chunk:
+					subtree_solved = false
+					break
+
+				if not _solve_graph_node(
+					child,
+					child_chunk
+				):
+					subtree_solved = false
+					break
+
+		if subtree_solved:
+			return true
+
+		# --------------------------------------
+		# BACKTRACK
+		# --------------------------------------
+
+		_rollback_solver_state(
+			placed_count_before,
+			normal_before,
+			horizontal_before,
+			vertical_before,
+			terminals_before,
+			usage_before,
+			graph_map_before
+		)
+
+		# These sockets belong to physical chunks
+		# that existed before the snapshot, so
+		# freeing the newly placed children does
+		# not automatically reopen them.
+		for socket: ChunkSocket in (
+			committed_parent_sockets
+		):
+			if is_instance_valid(socket):
+				socket.is_used = false
+
+		if not _register_solver_backtrack():
+			return false
+
+	return false
+
+
+func _try_place_graph_child(
+	parent_chunk: Chunk,
+	child_node: LevelGraphNode,
+	committed_parent_sockets: Array[ChunkSocket]
+) -> Chunk:
+	var parent_sockets: Array[ChunkSocket] = (
+		parent_chunk.get_available_sockets()
+	)
+
+	_shuffle_with_generation_rng(
+		parent_sockets
+	)
+
+	for target_socket: ChunkSocket in parent_sockets:
+		var corridor_kind: int = (
+			_get_required_corridor_kind(
+				parent_chunk,
+				target_socket
+			)
+		)
+
+		var corridor_pool: Array[PackedScene] = []
+
+		if (
+			corridor_kind
+			== PlacementKind.HORIZONTAL_CORRIDOR
+		):
+			corridor_pool = horizontal_corridor_scenes
+
+		elif (
+			corridor_kind
+			== PlacementKind.VERTICAL_CORRIDOR
+		):
+			corridor_pool = vertical_corridor_scenes
+
+		else:
+			continue
+
+		var corridor_candidates: Array[PackedScene] = (
+			_get_usage_prioritized_scenes(
+				corridor_pool
+			)
+		)
+
+		for corridor_scene: PackedScene in corridor_candidates:
+			var corridor: Chunk = _spawn_chunk(
+				corridor_scene,
+				Vector2.ZERO
+			)
+
+			if not corridor:
+				continue
+
+			if not _scene_matches_placement_kind(
+				corridor,
+				corridor_kind
+			):
+				_discard_chunk(corridor)
+				continue
+
+			var matching_sockets: Array[ChunkSocket] = (
+				_find_matching_sockets(
+					corridor,
+					target_socket
+				)
+			)
+
+			_shuffle_with_generation_rng(
+				matching_sockets
+			)
+
+			for corridor_entrance: ChunkSocket in matching_sockets:
+				_align_chunk(
+					corridor,
+					corridor_entrance,
+					target_socket
+				)
+
+				if _overlaps_chunks(
+					corridor,
+					placed_chunks
+				):
+					continue
+
+				# Temporarily connect parent -> corridor.
+				target_socket.is_used = true
+				corridor_entrance.is_used = true
+
+				var occupied_with_corridor: Array[Chunk] = (
+					_copy_chunk_array(
+						placed_chunks
+					)
+				)
+
+				occupied_with_corridor.append(
+					corridor
+				)
+
+				var corridor_exits: Array[ChunkSocket] = (
+					corridor.get_available_sockets()
+				)
+
+				_shuffle_with_generation_rng(
+					corridor_exits
+				)
+
+				for corridor_exit: ChunkSocket in corridor_exits:
+					var child_chunk: Chunk = (
+						_try_place_graph_growth_room(
+							corridor,
+							corridor_exit,
+							child_node,
+							occupied_with_corridor
+						)
+					)
+
+					if not child_chunk:
+						continue
+
+					# --------------------------------
+					# COMMIT GRAPH EDGE
+					# --------------------------------
+
+					placed_chunks.append(
+						corridor
+					)
+
+					placed_chunks.append(
+						child_chunk
+					)
+
+					if (
+						corridor_kind
+						== PlacementKind.HORIZONTAL_CORRIDOR
+					):
+						horizontal_corridors_placed += 1
+					else:
+						vertical_corridors_placed += 1
+
+					normal_chunks_placed += 1
+
+					_record_chunk_usage(
+						corridor_scene
+					)
+
+					# This socket belongs to a chunk that existed
+					# before this child edge. Record it so a local
+					# backtrack can reopen it after freeing the new
+					# corridor / child subtree.
+					committed_parent_sockets.append(
+						target_socket
+					)
+
+					return child_chunk
+
+				# This corridor alignment couldn't
+				# realize the graph child.
+				target_socket.is_used = false
+				corridor_entrance.is_used = false
+
+			_discard_chunk(corridor)
+
+	return null
+
+
+func _try_place_graph_growth_room(
+	corridor: Chunk,
+	target_socket: ChunkSocket,
+	graph_node: LevelGraphNode,
+	occupied_chunks: Array[Chunk]
+) -> Chunk:
+	var candidate_scenes: Array[PackedScene] = (
+		_get_usage_prioritized_scenes(
+			chunk_scenes
+		)
+	)
+
+	for scene: PackedScene in candidate_scenes:
+		var candidate: Chunk = _spawn_chunk(
+			scene,
+			Vector2.ZERO
+		)
+
+		if not candidate:
+			continue
+
+		if not _scene_matches_placement_kind(
+			candidate,
+			PlacementKind.GROWTH
+		):
+			_discard_chunk(candidate)
+			continue
+
+		if not _chunk_types_can_connect(
+			corridor,
+			candidate
+		):
+			_discard_chunk(candidate)
+			continue
+
+		var matching_sockets: Array[ChunkSocket] = (
+			_find_matching_sockets(
+				candidate,
+				target_socket
+			)
+		)
+
+		_shuffle_with_generation_rng(
+			matching_sockets
+		)
+
+		for entrance_socket: ChunkSocket in matching_sockets:
+			_align_chunk(
+				candidate,
+				entrance_socket,
+				target_socket
+			)
+
+			if _overlaps_chunks(
+				candidate,
+				occupied_chunks
+			):
+				continue
+
+			# Temporarily establish corridor -> room.
+			target_socket.is_used = true
+			entrance_socket.is_used = true
+
+			# --------------------------------------
+			# GRAPH DEGREE CHECK
+			# --------------------------------------
+			#
+			# The room must have enough sockets left
+			# to physically represent all of this
+			# graph node's children.
+
+			var remaining_sockets: int = (
+				candidate
+				.get_available_sockets()
+				.size()
+			)
+
+			if (
+				remaining_sockets
+				< graph_node.children.size()
+			):
+				target_socket.is_used = false
+				entrance_socket.is_used = false
+				continue
+
+			# Accepted.
+			_record_chunk_usage(scene)
+
+			return candidate
+
+		_discard_chunk(candidate)
+
+	return null
+
+
+func _graph_frontier_is_closable() -> bool:
+	var occupied_chunks: Array[Chunk] = (
+		_copy_chunk_array(placed_chunks)
+	)
+
+	# ------------------------------------------
+	# COMPLETED LOGICAL ROOMS
+	# ------------------------------------------
+	#
+	# Once all logical children of a graph node
+	# have been physically realized, every socket
+	# still open on that room is an EXTRA socket.
+	#
+	# Therefore every remaining socket must still
+	# be capable of eventually becoming:
+	#
+	# ROOM -> CORRIDOR -> TERMINAL
+
+	for graph_node: LevelGraphNode in level_graph.nodes:
+		if not graph_node_chunks.has(graph_node.id):
+			continue
+
+		var all_children_realized: bool = true
+
+		for child: LevelGraphNode in graph_node.children:
+			if not graph_node_chunks.has(child.id):
+				all_children_realized = false
+				break
+
+		# This node still needs logical children,
+		# so some of its sockets are reserved for
+		# future graph growth.
+		if not all_children_realized:
+			continue
+
+		var physical_chunk: Chunk = (
+			graph_node_chunks.get(
+				graph_node.id,
+				null
+			) as Chunk
+		)
+
+		if not physical_chunk:
+			return false
+
+		for socket: ChunkSocket in (
+			physical_chunk.get_available_sockets()
+		):
+			if not _graph_socket_can_eventually_close(
+				physical_chunk,
+				socket,
+				occupied_chunks
+			):
+				return false
+				
+	
+	
+
+	# ------------------------------------------
+	# EXTRA CORRIDOR EXITS
+	# ------------------------------------------
+	#
+	# A graph corridor normally has its entrance
+	# and graph-child exit consumed.
+	#
+	# If a corridor scene exposes any additional
+	# exits, those exits must be terminatable.
+
+	for chunk: Chunk in occupied_chunks:
+		if (
+			chunk.chunk_type
+			!= Chunk.ChunkType.CORRIDOR
+		):
+			continue
+
+		for socket: ChunkSocket in (
+			chunk.get_available_sockets()
+		):
+			if not _socket_can_fit_scene_pool(
+				chunk,
+				socket,
+				terminal_chunk_scenes,
+				occupied_chunks,
+				PlacementKind.TERMINAL
+			):
+				return false
+
+	return true
+
+
+func _graph_socket_can_eventually_close(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	occupied_chunks: Array[Chunk]
+) -> bool:
+	var corridor_kind: int = (
+		_get_required_corridor_kind(
+			current_chunk,
+			target_socket
+		)
+	)
+
+	var corridor_pool: Array[PackedScene] = []
+
+	if (
+		corridor_kind
+		== PlacementKind.HORIZONTAL_CORRIDOR
+	):
+		corridor_pool = horizontal_corridor_scenes
+
+	elif (
+		corridor_kind
+		== PlacementKind.VERTICAL_CORRIDOR
+	):
+		corridor_pool = vertical_corridor_scenes
+
+	else:
+		return false
+
+	for corridor_scene: PackedScene in corridor_pool:
+		var test_corridor: Chunk = _spawn_chunk(
+			corridor_scene,
+			Vector2.ZERO
+		)
+
+		if not test_corridor:
+			continue
+
+		if not _scene_matches_placement_kind(
+			test_corridor,
+			corridor_kind
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		if not _chunk_types_can_connect(
+			current_chunk,
+			test_corridor
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		var matching_sockets: Array[ChunkSocket] = (
+			_find_matching_sockets(
+				test_corridor,
+				target_socket
+			)
+		)
+
+		for corridor_entrance: ChunkSocket in matching_sockets:
+			_align_chunk(
+				test_corridor,
+				corridor_entrance,
+				target_socket
+			)
+
+			if _overlaps_chunks(
+				test_corridor,
+				occupied_chunks
+			):
+				continue
+
+			# Hide the entrance so only actual
+			# corridor exits are examined.
+			corridor_entrance.is_used = true
+
+			var occupied_with_corridor: Array[Chunk] = (
+				_copy_chunk_array(
+					occupied_chunks
+				)
+			)
+
+			occupied_with_corridor.append(
+				test_corridor
+			)
+
+			var exits: Array[ChunkSocket] = (
+				test_corridor.get_available_sockets()
+			)
+
+			var corridor_can_close: bool = (
+				not exits.is_empty()
+			)
+
+			for exit_socket: ChunkSocket in exits:
+				if not _socket_can_fit_scene_pool(
+					test_corridor,
+					exit_socket,
+					terminal_chunk_scenes,
+					occupied_with_corridor,
+					PlacementKind.TERMINAL
+				):
+					corridor_can_close = false
+					break
+
+			corridor_entrance.is_used = false
+
+			if corridor_can_close:
+				_discard_chunk(test_corridor)
+				return true
+
+		_discard_chunk(test_corridor)
+
+	return false
+
 
 # ==================================================
 # GENERATION
 # ==================================================
 
-
 func generate_level() -> void:
 	if not _configuration_is_valid():
 		return
-		
+
 	_initialize_generation_rng()
+
+	# ------------------------------------------
+	# LOGICAL GRAPH GENERATION
+	# ------------------------------------------
+
+	_build_level_graph()
+
+	if not _level_graph_is_valid():
+		push_error(
+			"LevelGenerator: Generated graph is invalid."
+		)
+		return
+
+	_print_level_graph()
+
+	# ------------------------------------------
+	# PHYSICAL LEVEL GENERATION
+	# ------------------------------------------
 
 	for attempt in range(
 		1,
@@ -186,6 +1209,7 @@ func _begin_generation_attempt() -> void:
 	_clear_generated_chunks()
 
 	placed_chunks.clear()
+	graph_node_chunks.clear()
 
 	normal_chunks_placed = 0
 
@@ -194,11 +1218,13 @@ func _begin_generation_attempt() -> void:
 
 	terminals_placed = 0
 
+	solver_backtracks = 0
+
 	_initialize_chunk_usage()
 
 
 func _generate_attempt() -> void:
-	var start_chunk := _spawn_chunk(
+	var start_chunk: Chunk = _spawn_chunk(
 		start_chunk_scene,
 		Vector2.ZERO
 	)
@@ -208,44 +1234,46 @@ func _generate_attempt() -> void:
 
 	placed_chunks.append(start_chunk)
 
-	# Fail this attempt immediately if the starting
-	# frontier cannot produce a legal continuation.
-	if not _all_open_sockets_are_viable(
-		placed_chunks,
-		normal_chunks_placed
+	graph_node_chunks[
+		level_graph.root.id
+	] = start_chunk
+
+	# ------------------------------------------
+	# GRAPH SOLVER
+	# ------------------------------------------
+
+	if not _solve_graph_node(
+		level_graph.root,
+		start_chunk
 	):
 		return
 
-	# Breadth-first generation.
+	if normal_chunks_placed != chunk_count:
+		return
+
+	if (
+		graph_node_chunks.size()
+		!= level_graph.nodes.size()
+	):
+		return
+
+	# ------------------------------------------
+	# DEAD-END CLEANUP
+	# ------------------------------------------
 	#
-	# All sockets of one chunk are handled before
-	# moving deeper into newly created chunks.
-	var chunks_to_process: Array[Chunk] = []
-	chunks_to_process.append(start_chunk)
+	# NOT recursive.
+	#
+	# If cleanup fails, the whole attempt can
+	# currently retry. We'll improve this later.
 
-	while not chunks_to_process.is_empty():
-		var current_chunk: Chunk = (
-			chunks_to_process.pop_front()
-		)
-
-		var created_chunks := _process_chunk_sockets(
-			current_chunk
-		)
-
-		for chunk in created_chunks:
-			if (
-				chunk.chunk_type
-				!= Chunk.ChunkType.TERMINAL
-			):
-				chunks_to_process.append(chunk)
-
-	# Retry anything still open.
 	_resolve_remaining_sockets()
 
 
 func _generation_is_complete() -> bool:
 	return (
 		normal_chunks_placed == chunk_count
+		and graph_node_chunks.size()
+			== level_graph.nodes.size()
 		and _count_open_sockets() == 0
 	)
 
@@ -1373,33 +2401,342 @@ func _get_usage_prioritized_scenes(
 # ==================================================
 
 
-func _resolve_remaining_sockets() -> void:
+func _resolve_remaining_sockets() -> bool:
 	while true:
-		var made_progress := false
+		if _count_open_sockets() == 0:
+			return true
 
-		var chunks_to_check := (
+		var made_progress: bool = false
+
+		var chunks_to_check: Array[Chunk] = (
 			_copy_chunk_array(placed_chunks)
 		)
 
-		for chunk in chunks_to_check:
-			var open_sockets := (
+		_shuffle_with_generation_rng(
+			chunks_to_check
+		)
+
+		for chunk: Chunk in chunks_to_check:
+			var open_sockets: Array[ChunkSocket] = (
 				chunk.get_available_sockets()
 			)
 
-			for socket in open_sockets:
+			_shuffle_with_generation_rng(
+				open_sockets
+			)
+
+			for socket: ChunkSocket in open_sockets:
 				if socket.is_used:
 					continue
 
-				var new_chunk := _try_fill_socket(
+				if _try_close_graph_socket(
 					chunk,
 					socket
-				)
-
-				if new_chunk:
+				):
 					made_progress = true
 
+		# Nothing else can be closed.
 		if not made_progress:
-			break
+			return false
+
+	return true
+
+func _try_close_graph_socket(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket
+) -> bool:
+	# A correctly authored terminal must never expose an
+	# unused socket after its entrance is connected.
+	if (
+		current_chunk.chunk_type
+		== Chunk.ChunkType.TERMINAL
+	):
+		return false
+
+	# An open structural corridor exits directly into
+	# a terminal.
+	if (
+		current_chunk.chunk_type
+		== Chunk.ChunkType.CORRIDOR
+	):
+		return _try_place_graph_terminal(
+			current_chunk,
+			target_socket
+		)
+
+	# Any non-corridor room/start socket first receives
+	# the required structural corridor. The corridor's
+	# remaining exit will be handled by the next cleanup
+	# iteration and closed with a terminal.
+	var corridor_kind: int = (
+		_get_required_corridor_kind(
+			current_chunk,
+			target_socket
+		)
+	)
+
+	if (
+		corridor_kind
+		== PlacementKind.HORIZONTAL_CORRIDOR
+	):
+		return _try_place_graph_closure_corridor(
+			current_chunk,
+			target_socket,
+			horizontal_corridor_scenes,
+			PlacementKind.HORIZONTAL_CORRIDOR
+		)
+
+	if (
+		corridor_kind
+		== PlacementKind.VERTICAL_CORRIDOR
+	):
+		return _try_place_graph_closure_corridor(
+			current_chunk,
+			target_socket,
+			vertical_corridor_scenes,
+			PlacementKind.VERTICAL_CORRIDOR
+		)
+
+	return false
+
+
+func _try_place_graph_closure_corridor(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	corridor_scenes: Array[PackedScene],
+	corridor_kind: int
+) -> bool:
+	var candidate_scenes: Array[PackedScene] = (
+		_get_usage_prioritized_scenes(
+			corridor_scenes
+		)
+	)
+
+	for scene: PackedScene in candidate_scenes:
+		var corridor: Chunk = _spawn_chunk(
+			scene,
+			Vector2.ZERO
+		)
+
+		if not corridor:
+			continue
+
+		if not _scene_matches_placement_kind(
+			corridor,
+			corridor_kind
+		):
+			_discard_chunk(corridor)
+			continue
+
+		if not _chunk_types_can_connect(
+			current_chunk,
+			corridor
+		):
+			_discard_chunk(corridor)
+			continue
+
+		var matching_sockets: Array[ChunkSocket] = (
+			_find_matching_sockets(
+				corridor,
+				target_socket
+			)
+		)
+
+		_shuffle_with_generation_rng(
+			matching_sockets
+		)
+
+		for corridor_entrance: ChunkSocket in matching_sockets:
+			_align_chunk(
+				corridor,
+				corridor_entrance,
+				target_socket
+			)
+
+			if _overlaps_chunks(
+				corridor,
+				placed_chunks
+			):
+				continue
+
+			# Temporarily connect the room
+			# to this corridor.
+			target_socket.is_used = true
+			corridor_entrance.is_used = true
+
+			var corridor_exits: Array[ChunkSocket] = (
+				corridor.get_available_sockets()
+			)
+
+			# Closure corridors should lead to exactly
+			# one terminal destination.
+			if corridor_exits.size() != 1:
+				target_socket.is_used = false
+				corridor_entrance.is_used = false
+				continue
+
+			var corridor_exit: ChunkSocket = (
+				corridor_exits[0]
+			)
+
+			# Temporarily add the corridor so terminal
+			# collision checks include it.
+			placed_chunks.append(corridor)
+
+			# --------------------------------------
+			# ATOMIC CLOSURE
+			# --------------------------------------
+			#
+			# Do NOT accept the corridor unless its
+			# terminal can also be placed immediately.
+
+			if _try_place_graph_terminal(
+				corridor,
+				corridor_exit
+			):
+				if (
+					corridor_kind
+					== PlacementKind.HORIZONTAL_CORRIDOR
+				):
+					horizontal_corridors_placed += 1
+				else:
+					vertical_corridors_placed += 1
+
+				_record_chunk_usage(scene)
+
+				return true
+
+			# --------------------------------------
+			# ROLLBACK FAILED CLOSURE
+			# --------------------------------------
+
+			placed_chunks.erase(corridor)
+
+			target_socket.is_used = false
+			corridor_entrance.is_used = false
+
+		_discard_chunk(corridor)
+
+	return false
+
+
+func _try_place_graph_terminal(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket
+) -> bool:
+	var candidate_scenes: Array[PackedScene] = (
+		_get_usage_prioritized_scenes(
+			terminal_chunk_scenes
+		)
+	)
+
+	for scene: PackedScene in candidate_scenes:
+		var terminal: Chunk = _spawn_chunk(
+			scene,
+			Vector2.ZERO
+		)
+
+		if not terminal:
+			continue
+
+		if not _scene_matches_placement_kind(
+			terminal,
+			PlacementKind.TERMINAL
+		):
+			_discard_chunk(terminal)
+			continue
+
+		if not _chunk_types_can_connect(
+			current_chunk,
+			terminal
+		):
+			_discard_chunk(terminal)
+			continue
+
+		var matching_sockets: Array[ChunkSocket] = (
+			_find_matching_sockets(
+				terminal,
+				target_socket
+			)
+		)
+
+		_shuffle_with_generation_rng(
+			matching_sockets
+		)
+
+		for terminal_entrance: ChunkSocket in matching_sockets:
+			_align_chunk(
+				terminal,
+				terminal_entrance,
+				target_socket
+			)
+
+			if _overlaps_chunks(
+				terminal,
+				placed_chunks
+			):
+				continue
+
+			target_socket.is_used = true
+			terminal_entrance.is_used = true
+
+			# A terminal is an actual dead end. If the scene
+			# exposes another unused socket, reject it here.
+			if not terminal.get_available_sockets().is_empty():
+				target_socket.is_used = false
+				terminal_entrance.is_used = false
+				continue
+
+			placed_chunks.append(terminal)
+			terminals_placed += 1
+
+			_record_chunk_usage(scene)
+
+			return true
+
+		_discard_chunk(terminal)
+
+	return false
+
+
+# ==================================================
+# SOLVER ROLLBACK
+# ==================================================
+
+
+func _rollback_solver_state(
+	placed_count_before: int,
+	normal_before: int,
+	horizontal_before: int,
+	vertical_before: int,
+	terminals_before: int,
+	usage_before: Dictionary,
+	graph_map_before: Dictionary
+) -> void:
+	while placed_chunks.size() > placed_count_before:
+		var chunk_to_remove: Chunk = (
+			placed_chunks.pop_back() as Chunk
+		)
+
+		if chunk_to_remove:
+			_discard_chunk(chunk_to_remove)
+
+	normal_chunks_placed = normal_before
+	horizontal_corridors_placed = horizontal_before
+	vertical_corridors_placed = vertical_before
+	terminals_placed = terminals_before
+
+	chunk_usage = usage_before.duplicate(true)
+	graph_node_chunks = graph_map_before.duplicate(true)
+
+
+func _register_solver_backtrack() -> bool:
+	solver_backtracks += 1
+
+	return (
+		solver_backtracks
+		<= max_solver_backtracks
+	)
 
 
 # ==================================================
@@ -1490,6 +2827,8 @@ func _print_generation_result(
 		terminals_placed,
 		" | Total chunks: ",
 		placed_chunks.size(),
+		" | Backtracks: ",
+		solver_backtracks,
 		" | Unresolved sockets: ",
 		unresolved
 	)
