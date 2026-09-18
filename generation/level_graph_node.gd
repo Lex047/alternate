@@ -25,7 +25,7 @@ func _init(
 
 
 func get_degree() -> int:
-	var degree := children.size()
+	var degree: int = children.size()
 
 	if parent:
 		degree += 1

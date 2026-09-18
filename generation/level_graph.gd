@@ -14,7 +14,7 @@ func clear() -> void:
 func create_node(
 	node_type: int
 ) -> LevelGraphNode:
-	var node := LevelGraphNode.new(
+	var node: LevelGraphNode = LevelGraphNode.new(
 		nodes.size(),
 		node_type
 	)
@@ -47,9 +47,9 @@ func add_edge(
 func count_nodes_of_type(
 	node_type: int
 ) -> int:
-	var count := 0
+	var count: int = 0
 
-	for node in nodes:
+	for node: LevelGraphNode in nodes:
 		if node.node_type == node_type:
 			count += 1
 
