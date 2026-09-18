@@ -9,6 +9,15 @@ enum PlacementKind {
 	TERMINAL,
 }
 
+@export_category("Randomness")
+
+@export var generation_seed: int = 12345
+
+# Useful later if you want a button that creates a fresh seed.
+@export var use_random_seed: bool = false
+
+var generation_rng := RandomNumberGenerator.new()
+var active_generation_seed: int = 0
 
 @export_category("Generation")
 
@@ -63,6 +72,46 @@ var chunk_usage: Dictionary = {}
 func _ready() -> void:
 	generate_level()
 
+# ==================================================
+# SEED
+# ==================================================
+
+func _initialize_generation_rng() -> void:
+	if use_random_seed:
+		generation_rng.randomize()
+		active_generation_seed = generation_rng.seed
+	else:
+		active_generation_seed = generation_seed
+		generation_rng.seed = active_generation_seed
+
+	print(
+		"Generation seed: ",
+		active_generation_seed
+	)
+
+func _shuffle_with_generation_rng(
+	array: Array
+) -> void:
+	if array.size() <= 1:
+		return
+
+	for i in range(
+		array.size() - 1,
+		0,
+		-1
+	):
+		var random_index := (
+			generation_rng.randi_range(
+				0,
+				i
+			)
+		)
+
+		var temporary_value = array[i]
+
+		array[i] = array[random_index]
+		array[random_index] = temporary_value
+
 
 # ==================================================
 # GENERATION
@@ -72,6 +121,8 @@ func _ready() -> void:
 func generate_level() -> void:
 	if not _configuration_is_valid():
 		return
+		
+	_initialize_generation_rng()
 
 	for attempt in range(
 		1,
@@ -157,6 +208,14 @@ func _generate_attempt() -> void:
 
 	placed_chunks.append(start_chunk)
 
+	# Fail this attempt immediately if the starting
+	# frontier cannot produce a legal continuation.
+	if not _all_open_sockets_are_viable(
+		placed_chunks,
+		normal_chunks_placed
+	):
+		return
+
 	# Breadth-first generation.
 	#
 	# All sockets of one chunk are handled before
@@ -205,7 +264,9 @@ func _process_chunk_sockets(
 		current_chunk.get_available_sockets()
 	)
 
-	available_sockets.shuffle()
+	_shuffle_with_generation_rng(
+		available_sockets
+	)
 
 	for target_socket in available_sockets:
 		if target_socket.is_used:
@@ -358,23 +419,28 @@ func _should_continue_growth() -> bool:
 	if remaining_growth <= 0:
 		return false
 
-	var open_branches := _count_open_sockets()
+	var growth_capable_branches := (
+		_count_growth_capable_branches(
+			placed_chunks,
+			normal_chunks_placed
+		)
+	)
 
-	# Example:
+	# Important:
 	#
-	# 3 growth chunks still needed
-	# 6 open branches available
+	# An open socket is not automatically a useful
+	# growth branch. It only counts here if it can
+	# physically reach another growth room under the
+	# current map state.
 	#
-	# -> we can safely terminate some branches.
+	# If the number of growth-capable branches is less
+	# than or equal to the number of growth rooms still
+	# required, this branch should try to keep growing.
 	#
-	# But:
-	#
-	# 3 growth chunks still needed
-	# 2 open branches available
-	#
-	# -> this branch must continue growing.
+	# If we have surplus growth-capable branches, this
+	# branch may safely try to terminate.
 
-	return open_branches <= remaining_growth
+	return growth_capable_branches <= remaining_growth
 
 
 # ==================================================
@@ -426,7 +492,9 @@ func _try_place_from_scenes(
 			_discard_chunk(candidate)
 			continue
 
-		matching_sockets.shuffle()
+		_shuffle_with_generation_rng(
+			matching_sockets
+		)
 
 		for matching_socket in matching_sockets:
 			_align_chunk(
@@ -441,7 +509,9 @@ func _try_place_from_scenes(
 			):
 				continue
 
-			# Temporarily complete the connection.
+			# Temporarily complete the connection so the
+			# frontier check sees the exact state that would
+			# exist if this candidate were accepted.
 			target_socket.is_used = true
 			matching_socket.is_used = true
 
@@ -462,28 +532,23 @@ func _try_place_from_scenes(
 			occupied_chunks.append(candidate)
 
 			# --------------------------------------
-			# LOCAL ONE-STEP VIABILITY
+			# GLOBAL FRONTIER VIABILITY
 			# --------------------------------------
 			#
-			# We only test sockets belonging to the
-			# NEW candidate.
+			# Do not only validate sockets belonging to the
+			# new candidate. A newly placed chunk can make an
+			# older open socket impossible by occupying the
+			# last space that socket could use.
 			#
-			# An unrelated bad socket elsewhere no
-			# longer prevents valid placements.
+			# This also runs for TERMINAL placement because a
+			# terminal can physically block unrelated sockets.
 
-			var placement_is_valid := true
-
-			if (
-				placement_kind
-				!= PlacementKind.TERMINAL
-			):
-				placement_is_valid = (
-					_candidate_sockets_are_viable(
-						candidate,
-						occupied_chunks,
-						projected_normal_count
-					)
+			var placement_is_valid := (
+				_all_open_sockets_are_viable(
+					occupied_chunks,
+					projected_normal_count
 				)
+			)
 
 			if not placement_is_valid:
 				target_socket.is_used = false
@@ -553,8 +618,41 @@ func _scene_matches_placement_kind(
 
 
 # ==================================================
-# LOCAL ONE-STEP VIABILITY
+# FRONTIER VIABILITY
 # ==================================================
+
+
+func _all_open_sockets_are_viable(
+	occupied_chunks: Array[Chunk],
+	projected_normal_count: int
+) -> bool:
+	# Re-check the entire unresolved frontier after a
+	# tentative placement.
+	#
+	# This catches the important case where the new
+	# candidate is fine itself but blocks the final
+	# possible continuation of an older socket.
+	for chunk in occupied_chunks:
+		if not _candidate_sockets_are_viable(
+			chunk,
+			occupied_chunks,
+			projected_normal_count
+		):
+			return false
+
+	# If growth is still required, never accept a state
+	# that has closed or blocked every path to another
+	# growth room. One viable branch can still produce
+	# several rooms sequentially, so we only require at
+	# least one here.
+	if projected_normal_count < chunk_count:
+		if _count_growth_capable_branches(
+			occupied_chunks,
+			projected_normal_count
+		) <= 0:
+			return false
+
+	return true
 
 
 func _candidate_sockets_are_viable(
@@ -581,44 +679,155 @@ func _candidate_sockets_are_viable(
 
 			continue
 
-		# Growth room:
+		# ROOM / START:
 		#
-		# Every open socket must at least have enough
-		# physical room for the required connector.
-		var required_corridor := (
-			_get_required_corridor_kind(
-				candidate,
-				socket
+		# Do not stop at "a corridor fits". Prove that
+		# at least one corridor can fit AND that all of the
+		# corridor's resulting exits have a legal next
+		# destination under the current generation phase.
+		if not _room_socket_has_viable_path(
+			candidate,
+			socket,
+			occupied_chunks,
+			projected_normal_count
+		):
+			return false
+
+	return true
+
+
+func _room_socket_has_viable_path(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	occupied_chunks: Array[Chunk],
+	projected_normal_count: int
+) -> bool:
+	var required_corridor := (
+		_get_required_corridor_kind(
+			current_chunk,
+			target_socket
+		)
+	)
+
+	if (
+		required_corridor
+			== PlacementKind.HORIZONTAL_CORRIDOR
+	):
+		return _socket_has_viable_corridor_path(
+			current_chunk,
+			target_socket,
+			horizontal_corridor_scenes,
+			occupied_chunks,
+			PlacementKind.HORIZONTAL_CORRIDOR,
+			projected_normal_count
+		)
+
+	if (
+		required_corridor
+			== PlacementKind.VERTICAL_CORRIDOR
+	):
+		return _socket_has_viable_corridor_path(
+			current_chunk,
+			target_socket,
+			vertical_corridor_scenes,
+			occupied_chunks,
+			PlacementKind.VERTICAL_CORRIDOR,
+			projected_normal_count
+		)
+
+	return false
+
+
+func _socket_has_viable_corridor_path(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	corridor_scenes: Array[PackedScene],
+	occupied_chunks: Array[Chunk],
+	corridor_kind: int,
+	projected_normal_count: int
+) -> bool:
+	for scene in corridor_scenes:
+		var test_corridor := _spawn_chunk(
+			scene,
+			Vector2.ZERO
+		)
+
+		if not test_corridor:
+			continue
+
+		if not _scene_matches_placement_kind(
+			test_corridor,
+			corridor_kind
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		if not _chunk_types_can_connect(
+			current_chunk,
+			test_corridor
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		var matching_sockets := (
+			_find_matching_sockets(
+				test_corridor,
+				target_socket
 			)
 		)
 
-		if (
-			required_corridor
-				== PlacementKind.HORIZONTAL_CORRIDOR
-		):
-			if not _socket_can_fit_scene_pool(
-				candidate,
-				socket,
-				horizontal_corridor_scenes,
-				occupied_chunks,
-				PlacementKind.HORIZONTAL_CORRIDOR
-			):
-				return false
+		for matching_socket in matching_sockets:
+			_align_chunk(
+				test_corridor,
+				matching_socket,
+				target_socket
+			)
 
-		elif (
-			required_corridor
-				== PlacementKind.VERTICAL_CORRIDOR
-		):
-			if not _socket_can_fit_scene_pool(
-				candidate,
-				socket,
-				vertical_corridor_scenes,
-				occupied_chunks,
-				PlacementKind.VERTICAL_CORRIDOR
+			if _overlaps_chunks(
+				test_corridor,
+				occupied_chunks
 			):
-				return false
+				continue
 
-	return true
+			# Hide the entrance socket so only the corridor
+			# exits are evaluated below.
+			matching_socket.is_used = true
+
+			var occupied_with_corridor := (
+				_copy_chunk_array(occupied_chunks)
+			)
+			occupied_with_corridor.append(test_corridor)
+
+			var exit_sockets := (
+				test_corridor.get_available_sockets()
+			)
+
+			# A structural corridor that has no remaining
+			# exit cannot continue the branch.
+			var corridor_is_viable := (
+				not exit_sockets.is_empty()
+			)
+
+			if corridor_is_viable:
+				for exit_socket in exit_sockets:
+					if not _corridor_exit_is_viable(
+						test_corridor,
+						exit_socket,
+						occupied_with_corridor,
+						projected_normal_count
+					):
+						corridor_is_viable = false
+						break
+
+			matching_socket.is_used = false
+
+			if corridor_is_viable:
+				_discard_chunk(test_corridor)
+				return true
+
+		_discard_chunk(test_corridor)
+
+	return false
 
 
 func _corridor_exit_is_viable(
@@ -724,6 +933,187 @@ func _socket_can_fit_scene_pool(
 				return true
 
 		_discard_chunk(test_chunk)
+
+	return false
+
+
+# ==================================================
+# GROWTH-CAPABLE FRONTIER
+# ==================================================
+
+
+func _count_growth_capable_branches(
+	occupied_chunks: Array[Chunk],
+	projected_normal_count: int
+) -> int:
+	var count := 0
+
+	for chunk in occupied_chunks:
+		for socket in chunk.get_available_sockets():
+			if _socket_can_reach_growth(
+				chunk,
+				socket,
+				occupied_chunks,
+				projected_normal_count
+			):
+				count += 1
+
+	return count
+
+
+func _socket_can_reach_growth(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	occupied_chunks: Array[Chunk],
+	projected_normal_count: int
+) -> bool:
+	# Corridor exits connect directly to growth rooms.
+	if (
+		current_chunk.chunk_type
+			== Chunk.ChunkType.CORRIDOR
+	):
+		return _socket_can_fit_scene_pool(
+			current_chunk,
+			target_socket,
+			chunk_scenes,
+			occupied_chunks,
+			PlacementKind.GROWTH
+		)
+
+	# ROOM / START sockets first need their structural
+	# corridor. Count the branch as growth-capable only
+	# if some legal corridor can fit and that corridor
+	# still has at least one exit that can accept a
+	# growth room.
+	var required_corridor := (
+		_get_required_corridor_kind(
+			current_chunk,
+			target_socket
+		)
+	)
+
+	if (
+		required_corridor
+			== PlacementKind.HORIZONTAL_CORRIDOR
+	):
+		return _room_socket_can_reach_growth_through_pool(
+			current_chunk,
+			target_socket,
+			horizontal_corridor_scenes,
+			occupied_chunks,
+			PlacementKind.HORIZONTAL_CORRIDOR,
+			projected_normal_count
+		)
+
+	if (
+		required_corridor
+			== PlacementKind.VERTICAL_CORRIDOR
+	):
+		return _room_socket_can_reach_growth_through_pool(
+			current_chunk,
+			target_socket,
+			vertical_corridor_scenes,
+			occupied_chunks,
+			PlacementKind.VERTICAL_CORRIDOR,
+			projected_normal_count
+		)
+
+	return false
+
+
+func _room_socket_can_reach_growth_through_pool(
+	current_chunk: Chunk,
+	target_socket: ChunkSocket,
+	corridor_scenes: Array[PackedScene],
+	occupied_chunks: Array[Chunk],
+	corridor_kind: int,
+	projected_normal_count: int
+) -> bool:
+	for scene in corridor_scenes:
+		var test_corridor := _spawn_chunk(
+			scene,
+			Vector2.ZERO
+		)
+
+		if not test_corridor:
+			continue
+
+		if not _scene_matches_placement_kind(
+			test_corridor,
+			corridor_kind
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		if not _chunk_types_can_connect(
+			current_chunk,
+			test_corridor
+		):
+			_discard_chunk(test_corridor)
+			continue
+
+		var matching_sockets := (
+			_find_matching_sockets(
+				test_corridor,
+				target_socket
+			)
+		)
+
+		for matching_socket in matching_sockets:
+			_align_chunk(
+				test_corridor,
+				matching_socket,
+				target_socket
+			)
+
+			if _overlaps_chunks(
+				test_corridor,
+				occupied_chunks
+			):
+				continue
+
+			matching_socket.is_used = true
+
+			var occupied_with_corridor := (
+				_copy_chunk_array(occupied_chunks)
+			)
+			occupied_with_corridor.append(test_corridor)
+
+			var exit_sockets := (
+				test_corridor.get_available_sockets()
+			)
+
+			var all_exits_viable := (
+				not exit_sockets.is_empty()
+			)
+			var has_growth_exit := false
+
+			for exit_socket in exit_sockets:
+				if not _corridor_exit_is_viable(
+					test_corridor,
+					exit_socket,
+					occupied_with_corridor,
+					projected_normal_count
+				):
+					all_exits_viable = false
+					break
+
+				if _socket_can_fit_scene_pool(
+					test_corridor,
+					exit_socket,
+					chunk_scenes,
+					occupied_with_corridor,
+					PlacementKind.GROWTH
+				):
+					has_growth_exit = true
+
+			matching_socket.is_used = false
+
+			if all_exits_viable and has_growth_exit:
+				_discard_chunk(test_corridor)
+				return true
+
+		_discard_chunk(test_corridor)
 
 	return false
 
@@ -966,8 +1356,11 @@ func _get_usage_prioritized_scenes(
 			if _get_scene_usage(scene) == usage:
 				usage_group.append(scene)
 
-		# Same usage count remains random.
-		usage_group.shuffle()
+		# Same usage count remains random,
+		# but is now deterministic for the seed.
+		_shuffle_with_generation_rng(
+			usage_group
+		)
 
 		for scene in usage_group:
 			result.append(scene)
@@ -1079,9 +1472,11 @@ func _print_generation_result(
 	attempt: int
 ) -> void:
 	var unresolved := _count_open_sockets()
-
+	
 	print(
-		"Generation attempt: ",
+		"Seed: ",
+		active_generation_seed,
+		" | Generation attempt: ",
 		attempt,
 		" | Growth chunks: ",
 		normal_chunks_placed,

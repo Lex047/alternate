@@ -23,6 +23,7 @@ chunk_scenes = Array[PackedScene]([ExtResource("4_yknkj"), ExtResource("9_nvjbw"
 horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm")])
+chunk_count = 10
 
 [node name="Player" parent="." instance=ExtResource("1_2l2w4")]
 position = Vector2(506, 130)
