@@ -1,6 +1,9 @@
 extends Node2D
 class_name LevelGenerator
 
+signal generation_finished(seed: int)
+signal generation_failed
+
 # ==================================================
 # GENERATION SETTINGS
 # ==================================================
@@ -90,7 +93,6 @@ var _components_initialized: bool = false
 
 func _ready() -> void:
 	_initialize_components()
-	generate_level()
 
 
 func _initialize_components() -> void:
@@ -187,6 +189,7 @@ func generate_level() -> void:
 	_sync_context_from_exports()
 
 	if not _configuration_is_valid():
+		generation_failed.emit()
 		return
 
 	context.active_generation_seed = rng.initialize(
@@ -205,6 +208,8 @@ func generate_level() -> void:
 		push_error(
 			"LevelGenerator: Generated graph is invalid."
 		)
+
+		generation_failed.emit()
 		return
 
 	generation_debug.print_level_graph()
@@ -220,6 +225,11 @@ func generate_level() -> void:
 			generation_debug.print_generation_result(
 				attempt
 			)
+
+			generation_finished.emit(
+				context.active_generation_seed
+			)
+
 			return
 
 	push_warning(
@@ -232,6 +242,8 @@ func generate_level() -> void:
 	generation_debug.print_generation_result(
 		max_generation_attempts
 	)
+
+	generation_failed.emit()
 
 
 func _configuration_is_valid() -> bool:

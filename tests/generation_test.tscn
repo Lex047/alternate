@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://2vxo2ok7lchp"]
+[gd_scene load_steps=21 format=3 uid="uid://2vxo2ok7lchp"]
 
 [ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator.tscn" id="1_axj3q"]
 [ext_resource type="Script" uid="uid://buvmoe5xmaev7" path="res://tests/generation_test.gd" id="1_cw2b7"]
@@ -18,9 +18,13 @@
 [ext_resource type="PackedScene" uid="uid://bvxt2jy6l7jib" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_small_01.tscn" id="14_nk0po"]
 [ext_resource type="Script" uid="uid://da1jshu73dh5y" path="res://tests/camera_2d.gd" id="15_07vur"]
 [ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="15_nk0po"]
+[ext_resource type="PackedScene" uid="uid://c2vnyj6k8m8q1" path="res://ui/generation_splash.tscn" id="19_s6ku8"]
+[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/hud.tscn" id="20_e83hr"]
 
-[node name="GenerationTest" type="Node2D"]
+[node name="GenerationTest" type="Node2D" node_paths=PackedStringArray("level_generator", "generation_splash")]
 script = ExtResource("1_cw2b7")
+level_generator = NodePath("LevelGenerator")
+generation_splash = NodePath("GenerationSplash")
 game_music = ExtResource("2_vmolj")
 
 [node name="LevelGenerator" parent="." instance=ExtResource("1_axj3q")]
@@ -30,7 +34,12 @@ horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("15_nk0po")])
-chunk_count = 10
+chunk_count = 15
+generation_seed = 123467
 
 [node name="DebugCamera" type="Camera2D" parent="."]
 script = ExtResource("15_07vur")
+
+[node name="GenerationSplash" parent="." instance=ExtResource("19_s6ku8")]
+
+[node name="HUD" parent="." instance=ExtResource("20_e83hr")]

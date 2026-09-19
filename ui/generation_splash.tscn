@@ -1,0 +1,59 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2vnyj6k8m8q1"]
+
+[ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="1_4jrwi"]
+[ext_resource type="Script" uid="uid://cmsn5hhfk0q50" path="res://ui/generation_splash.gd" id="1_cfr0f"]
+[ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="2_cfr0f"]
+
+[node name="GenerationSplash" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_cfr0f")
+
+[node name="Overlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_4jrwi")
+
+[node name="Background" type="ColorRect" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TitleLabel" type="Label" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -80.0
+offset_right = 206.0
+offset_bottom = -48.0
+grow_vertical = 0
+text = "ALTERNATE"
+label_settings = ExtResource("2_cfr0f")
+
+[node name="StatusLabel" type="Label" parent="Overlay"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -423.0
+offset_top = -80.0
+offset_right = -24.0
+offset_bottom = -48.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "GENERATING DISTRICT..."
+label_settings = ExtResource("2_cfr0f")
+horizontal_alignment = 2

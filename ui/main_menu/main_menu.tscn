@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://ckf0478pi5pd2" path="res://ui/main_menu/main_menu.gd" id="1_t7e0r"]
 [ext_resource type="AudioStream" uid="uid://d1qlp2aqjrwdt" path="res://audio/music/cyberpunk_streets_in_the_dead_of_night.ogg" id="3_6mijq"]
 [ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="3_wk0pr"]
-[ext_resource type="Script" uid="uid://ba1qlshk1tma" path="res://ui/main_menu/menu_audio.gd" id="4_rmr83"]
+[ext_resource type="Script" uid="uid://ba1qlshk1tma" path="res://ui/menu_audio.gd" id="4_rmr83"]
 [ext_resource type="AudioStream" uid="uid://bkhok686wv5e5" path="res://ui/audio/SFX_UI_MenuSelections.wav" id="5_u184e"]
 [ext_resource type="PackedScene" uid="uid://lpuc020ok5ja" path="res://ui/settings_panel.tscn" id="5_w2r0d"]
 [ext_resource type="AudioStream" uid="uid://cnpwfj5lnvrt" path="res://ui/audio/SFX_UI_Confirm.wav" id="6_6mijq"]
@@ -28,7 +28,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_0dkrt")
 script = ExtResource("1_t7e0r")
-game_scene_path = "uid://b4bpc3l7wnr0r"
+game_scene_path = "uid://2vxo2ok7lchp"
 main_panel = NodePath("MenuContainer/MainPanel")
 settings_panel = NodePath("MenuContainer/SettingsPanel")
 start_button = NodePath("MenuContainer/MainPanel/StartButton")
