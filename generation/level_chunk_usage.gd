@@ -18,6 +18,7 @@ func initialize() -> void:
 	context.chunk_usage_counts.clear()
 
 	_register_pool(context.chunk_scenes)
+	_register_pool(context.goal_chunk_scenes)
 	_register_pool(context.horizontal_corridor_scenes)
 	_register_pool(context.vertical_corridor_scenes)
 	_register_pool(context.terminal_chunk_scenes)

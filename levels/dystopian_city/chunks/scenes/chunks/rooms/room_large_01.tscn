@@ -1,9 +1,7 @@
-[gd_scene load_steps=5 format=4 uid="uid://x5bsa6wbd1qy"]
+[gd_scene load_steps=3 format=4 uid="uid://x5bsa6wbd1qy"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_nxqnn"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_7mkqr"]
-[ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="3_vpxx5"]
-[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud.tscn" id="4_ln6qw"]
 
 [node name="RoomLarge_01" instance=ExtResource("1_nxqnn")]
 
@@ -44,10 +42,3 @@ offset_left = 288.0
 offset_top = 78.0
 offset_right = 944.0
 offset_bottom = 624.0
-
-[node name="Player" parent="." index="5" instance=ExtResource("3_vpxx5")]
-visible = false
-position = Vector2(321, 385)
-
-[node name="HUD" parent="." index="6" instance=ExtResource("4_ln6qw")]
-visible = false

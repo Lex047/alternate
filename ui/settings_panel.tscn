@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://lpuc020ok5ja"]
+
+[ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="1_xc77b"]
+
+[node name="SettingsPanel" type="VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(320, 0)
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SettingsLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "SETTINGS"
+label_settings = ExtResource("1_xc77b")
+horizontal_alignment = 1
+
+[node name="MasterRow" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MasterLabel" type="Label" parent="MasterRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "MASTER"
+
+[node name="MasterSlider" type="HSlider" parent="MasterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="MusicRow" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="MusicRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "MUSIC"
+
+[node name="MusicSlider" type="HSlider" parent="MusicRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="SFXRow" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="SFXRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "SFX"
+
+[node name="SFXSlider" type="HSlider" parent="SFXRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="FullscreenCheck" type="CheckButton" parent="."]
+layout_mode = 2
+text = "FULLSCREEN"
+
+[node name="ShowSeedCheck" type="CheckButton" parent="."]
+layout_mode = 2
+text = "SHOW LEVEL SEED"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 2
+text = "BACK"

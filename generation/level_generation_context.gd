@@ -8,6 +8,7 @@ var generated_chunks: Node2D
 var start_chunk_scene: PackedScene
 
 var chunk_scenes: Array[PackedScene] = []
+var goal_chunk_scenes: Array[PackedScene] = []
 var horizontal_corridor_scenes: Array[PackedScene] = []
 var vertical_corridor_scenes: Array[PackedScene] = []
 var terminal_chunk_scenes: Array[PackedScene] = []
@@ -32,6 +33,7 @@ var graph_node_chunks: Dictionary = {}
 var placed_chunks: Array[Chunk] = []
 
 var normal_chunks_placed: int = 0
+var goal_chunks_placed: int = 0
 var horizontal_corridors_placed: int = 0
 var vertical_corridors_placed: int = 0
 var terminals_placed: int = 0
@@ -44,6 +46,7 @@ func reset_attempt_state() -> void:
 	graph_node_chunks.clear()
 
 	normal_chunks_placed = 0
+	goal_chunks_placed = 0
 	horizontal_corridors_placed = 0
 	vertical_corridors_placed = 0
 	terminals_placed = 0

@@ -17,6 +17,8 @@ config/features=PackedStringArray("4.4", "Mobile")
 [autoload]
 
 GameManager="*res://core/game_manager.gd"
+SettingsManager="*res://core/settings_manager.gd"
+MusicManager="*res://audio/music/music_manager.tscn"
 
 [display]
 

@@ -1,17 +1,6 @@
 extends Node2D
 class_name LevelGenerator
 
-
-# Kept for compatibility with any code that used
-# LevelGenerator.PlacementKind before this refactor.
-enum PlacementKind {
-	GROWTH,
-	HORIZONTAL_CORRIDOR,
-	VERTICAL_CORRIDOR,
-	TERMINAL,
-}
-
-
 # ==================================================
 # GENERATION SETTINGS
 # ==================================================
@@ -26,6 +15,7 @@ enum PlacementKind {
 @export var vertical_corridor_scenes: Array[PackedScene] = []
 
 @export var terminal_chunk_scenes: Array[PackedScene] = []
+@export var goal_chunk_scenes: Array[PackedScene] = []
 
 @export_range(1, 100, 1)
 var chunk_count: int = 8
@@ -161,6 +151,7 @@ func _sync_context_from_exports() -> void:
 	context.start_chunk_scene = start_chunk_scene
 
 	context.chunk_scenes = chunk_scenes
+	context.goal_chunk_scenes = goal_chunk_scenes
 	context.horizontal_corridor_scenes = (
 		horizontal_corridor_scenes
 	)
@@ -256,6 +247,12 @@ func _configuration_is_valid() -> bool:
 		)
 		return false
 
+	if goal_chunk_scenes.is_empty():
+		push_error(
+			"LevelGenerator: No goal chunks assigned."
+		)
+		return false
+
 	if horizontal_corridor_scenes.is_empty():
 		push_error(
 			"LevelGenerator: No horizontal corridors assigned."
@@ -315,6 +312,9 @@ func _generate_attempt() -> void:
 	):
 		return
 
+	if context.goal_chunks_placed != 1:
+		return
+
 	if (
 		context.graph_node_chunks.size()
 		!= context.level_graph.nodes.size()
@@ -326,6 +326,7 @@ func _generation_is_complete() -> bool:
 	return (
 		context.normal_chunks_placed
 		== context.chunk_count
+		and context.goal_chunks_placed == 1
 		and context.graph_node_chunks.size()
 			== context.level_graph.nodes.size()
 		and chunk_tools.count_open_sockets(

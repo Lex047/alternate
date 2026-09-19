@@ -63,6 +63,83 @@ func build() -> void:
 			>= context.max_graph_children
 		):
 			expandable_nodes.erase(parent)
+		
+	_add_goal_node()
+
+
+func _add_goal_node() -> void:
+	var goal_parent: LevelGraphNode = (
+		_choose_goal_parent()
+	)
+
+	if not goal_parent:
+		push_error(
+			"LevelGenerator: Could not find a "
+			+ "growth leaf for the GOAL node."
+		)
+		return
+
+	var goal_node: LevelGraphNode = (
+		context.level_graph.create_node(
+			LevelGraphNode.NodeType.GOAL
+		)
+	)
+
+	context.level_graph.add_edge(
+		goal_parent,
+		goal_node
+	)
+
+
+func _choose_goal_parent() -> LevelGraphNode:
+	var deepest_leaves: Array[LevelGraphNode] = []
+	var deepest_depth: int = -1
+
+	for node: LevelGraphNode in context.level_graph.nodes:
+		if (
+			node.node_type
+			!= LevelGraphNode.NodeType.GROWTH
+		):
+			continue
+
+		if not node.children.is_empty():
+			continue
+
+		var depth: int = _get_node_depth(node)
+
+		if depth > deepest_depth:
+			deepest_depth = depth
+			deepest_leaves.clear()
+			deepest_leaves.append(node)
+
+		elif depth == deepest_depth:
+			deepest_leaves.append(node)
+
+	if deepest_leaves.is_empty():
+		return null
+
+	if deepest_leaves.size() == 1:
+		return deepest_leaves[0]
+
+	var index: int = rng.graph_rng.randi_range(
+		0,
+		deepest_leaves.size() - 1
+	)
+
+	return deepest_leaves[index]
+
+
+func _get_node_depth(
+	node: LevelGraphNode
+) -> int:
+	var depth: int = 0
+	var current: LevelGraphNode = node
+
+	while current.parent:
+		depth += 1
+		current = current.parent
+
+	return depth
 
 
 func _choose_parent(
@@ -125,6 +202,19 @@ func is_valid() -> bool:
 			+ "does not match chunk_count."
 		)
 		return false
+		
+	var goal_count: int = (
+		context.level_graph.count_nodes_of_type(
+			LevelGraphNode.NodeType.GOAL
+		)
+	)
+
+	if goal_count != 1:
+		push_error(
+			"LevelGenerator: Graph must contain "
+			+ "exactly one GOAL node."
+		)
+		return false
 
 	var visited: Dictionary = {}
 
@@ -157,6 +247,24 @@ func is_valid() -> bool:
 				+ "maximum child count."
 			)
 			return false
+
+		if node.node_type == LevelGraphNode.NodeType.GOAL:
+			if not node.children.is_empty():
+				push_error(
+					"LevelGenerator: GOAL must be a leaf."
+				)
+				return false
+
+			if (
+				not node.parent
+				or node.parent.node_type
+				!= LevelGraphNode.NodeType.GROWTH
+			):
+				push_error(
+					"LevelGenerator: GOAL must be "
+					+ "attached to a GROWTH node."
+				)
+				return false
 
 		for child: LevelGraphNode in node.children:
 			if child.parent != node:

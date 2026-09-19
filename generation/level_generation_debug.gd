@@ -30,6 +30,10 @@ func print_level_graph() -> void:
 		" | Growth: ",
 		context.level_graph.count_nodes_of_type(
 			LevelGraphNode.NodeType.GROWTH
+		),
+		" | Goals: ",
+		context.level_graph.count_nodes_of_type(
+			LevelGraphNode.NodeType.GOAL
 		)
 	)
 
@@ -90,6 +94,9 @@ func print_generation_result(
 		context.normal_chunks_placed,
 		" / ",
 		context.chunk_count,
+		" | Goal chunks: ",
+		context.goal_chunks_placed,
+		" / 1",
 		" | Horizontal corridors: ",
 		context.horizontal_corridors_placed,
 		" | Vertical corridors: ",
@@ -107,6 +114,18 @@ func print_generation_result(
 	print("Growth chunk usage:")
 
 	for scene: PackedScene in context.chunk_scenes:
+		print(
+			"  ",
+			scene.resource_path.get_file(),
+			": ",
+			chunk_usage.get_scene_usage(
+				scene
+			)
+		)
+
+	print("Goal chunk usage:")
+
+	for scene: PackedScene in context.goal_chunk_scenes:
 		print(
 			"  ",
 			scene.resource_path.get_file(),

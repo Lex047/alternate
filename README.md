@@ -99,9 +99,21 @@ Current development is focused on completing the core gameplay systems before ex
 
 ## Credits
 
-- BoldPixels Font by Yūki (@YukiPixels)  
-  https://linktr.ee/yukipixels  
-  Licensed under CC BY-SA 4.0
+- Warped City by Ansimuz
+  https://ansimuz.itch.io/warped-city
+  Licensed under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+- BoldPixels Font by Yūki (@YukiPixels)
+  https://yukipixels.itch.io/boldpixels
+  Licensed under CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+
+- 12 Player Movement SFX by leohpaz
+  https://opengameart.org/content/12-player-movement-sfx
+  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
+- SoupTonic's sound SFX Pack 1 - UI menu sounds by SoupTonic
+  https://souptonic.itch.io/souptonic-sfx-pack-1-ui-sounds
+  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 ## License
 

@@ -50,6 +50,10 @@ func solve_graph_node(
 			context.normal_chunks_placed
 		)
 
+		var goal_before: int = (
+			context.goal_chunks_placed
+		)
+
 		var horizontal_before: int = (
 			context.horizontal_corridors_placed
 		)
@@ -121,6 +125,7 @@ func solve_graph_node(
 		_rollback_solver_state(
 			placed_count_before,
 			normal_before,
+			goal_before,
 			horizontal_before,
 			vertical_before,
 			terminals_before,
@@ -287,7 +292,7 @@ func _try_place_graph_child(
 
 				for corridor_exit: ChunkSocket in corridor_exits:
 					var child_chunk: Chunk = (
-						_try_place_graph_growth_room(
+						_try_place_graph_room(
 							corridor,
 							corridor_exit,
 							child_node,
@@ -314,7 +319,18 @@ func _try_place_graph_child(
 					else:
 						context.vertical_corridors_placed += 1
 
-					context.normal_chunks_placed += 1
+					match child_node.node_type:
+						LevelGraphNode.NodeType.GROWTH:
+							context.normal_chunks_placed += 1
+
+						LevelGraphNode.NodeType.GOAL:
+							context.goal_chunks_placed += 1
+
+						_:
+							push_error(
+								"LevelGraphSolver: Unsupported "
+								+ "graph child type."
+							)
 
 					chunk_usage.record(
 						corridor_scene
@@ -332,15 +348,27 @@ func _try_place_graph_child(
 	return null
 
 
-func _try_place_graph_growth_room(
+func _try_place_graph_room(
 	corridor: Chunk,
 	target_socket: ChunkSocket,
 	graph_node: LevelGraphNode,
 	occupied_chunks: Array[Chunk]
 ) -> Chunk:
+	var room_pool: Array[PackedScene] = []
+
+	match graph_node.node_type:
+		LevelGraphNode.NodeType.GROWTH:
+			room_pool = context.chunk_scenes
+
+		LevelGraphNode.NodeType.GOAL:
+			room_pool = context.goal_chunk_scenes
+
+		_:
+			return null
+
 	var candidate_scenes: Array[PackedScene] = (
 		chunk_usage.get_prioritized_scenes(
-			context.chunk_scenes
+			room_pool
 		)
 	)
 
@@ -430,6 +458,7 @@ func _try_place_graph_growth_room(
 func _rollback_solver_state(
 	placed_count_before: int,
 	normal_before: int,
+	goal_before: int,
 	horizontal_before: int,
 	vertical_before: int,
 	terminals_before: int,
@@ -451,6 +480,7 @@ func _rollback_solver_state(
 			)
 
 	context.normal_chunks_placed = normal_before
+	context.goal_chunks_placed = goal_before
 	context.horizontal_corridors_placed = (
 		horizontal_before
 	)

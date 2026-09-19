@@ -1,9 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://2vxo2ok7lchp"]
+[gd_scene load_steps=17 format=3 uid="uid://2vxo2ok7lchp"]
 
 [ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator.tscn" id="1_axj3q"]
-[ext_resource type="Script" uid="uid://buvmoe5xmaev7" path="res://tests/generation_test.gd" id="1_cw2b7"]
 [ext_resource type="PackedScene" uid="uid://c4357685gf36o" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_start.tscn" id="2_lr6wi"]
-[ext_resource type="AudioStream" uid="uid://cntcce3efk5j0" path="res://audio/music/future_noir.ogg" id="2_vmolj"]
 [ext_resource type="PackedScene" uid="uid://bawiwc3is1o13" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_climb_01.tscn" id="3_nvjbw"]
 [ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="4_yknkj"]
 [ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="5_46m32"]
@@ -20,8 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="15_nk0po"]
 
 [node name="GenerationTest" type="Node2D"]
-script = ExtResource("1_cw2b7")
-game_music = ExtResource("2_vmolj")
 
 [node name="LevelGenerator" parent="." instance=ExtResource("1_axj3q")]
 start_chunk_scene = ExtResource("2_lr6wi")
@@ -30,7 +26,7 @@ horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("15_nk0po")])
-chunk_count = 10
+chunk_count = 15
 
 [node name="DebugCamera" type="Camera2D" parent="."]
 script = ExtResource("15_07vur")
