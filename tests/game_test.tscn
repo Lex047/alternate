@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4bpc3l7wnr0r"]
+
+[ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="1_laemt"]
+[ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="2_abd73"]
+[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/hud.tscn" id="3_abd73"]
+
+[node name="GameTest" type="Node2D"]
+
+[node name="RoomLarge_01" parent="." instance=ExtResource("1_laemt")]
+
+[node name="Player" parent="." instance=ExtResource("2_abd73")]
+position = Vector2(345, 386)
+
+[node name="HUD" parent="." instance=ExtResource("3_abd73")]

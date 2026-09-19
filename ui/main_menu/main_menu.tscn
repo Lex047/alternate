@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://11pn16i0cv1s"]
+[gd_scene load_steps=12 format=3 uid="uid://11pn16i0cv1s"]
 
 [ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="1_0dkrt"]
 [ext_resource type="Script" uid="uid://ckf0478pi5pd2" path="res://ui/main_menu/main_menu.gd" id="1_t7e0r"]
@@ -6,6 +6,7 @@
 [ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="3_wk0pr"]
 [ext_resource type="Script" uid="uid://ba1qlshk1tma" path="res://ui/main_menu/menu_audio.gd" id="4_rmr83"]
 [ext_resource type="AudioStream" uid="uid://bkhok686wv5e5" path="res://ui/audio/SFX_UI_MenuSelections.wav" id="5_u184e"]
+[ext_resource type="PackedScene" uid="uid://lpuc020ok5ja" path="res://ui/settings_panel.tscn" id="5_w2r0d"]
 [ext_resource type="AudioStream" uid="uid://cnpwfj5lnvrt" path="res://ui/audio/SFX_UI_Confirm.wav" id="6_6mijq"]
 [ext_resource type="AudioStream" uid="uid://cqvrh7i13r2wd" path="res://ui/audio/SFX_UI_Cancel.wav" id="7_w2r0d"]
 
@@ -18,7 +19,7 @@ gradient = SubResource("Gradient_t7e0r")
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 1)
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("main_panel", "settings_panel", "start_button", "settings_button", "quit_button", "back_button", "menu_audio", "master_slider", "music_slider", "sfx_slider", "fullscreen_check", "show_seed_check")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("main_panel", "settings_panel", "start_button", "settings_button", "quit_button", "menu_audio")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,20 +28,14 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_0dkrt")
 script = ExtResource("1_t7e0r")
-game_scene_path = "uid://2vxo2ok7lchp"
-menu_music = ExtResource("3_6mijq")
+game_scene_path = "uid://b4bpc3l7wnr0r"
 main_panel = NodePath("MenuContainer/MainPanel")
 settings_panel = NodePath("MenuContainer/SettingsPanel")
 start_button = NodePath("MenuContainer/MainPanel/StartButton")
 settings_button = NodePath("MenuContainer/MainPanel/SettingsButton")
 quit_button = NodePath("MenuContainer/MainPanel/QuitButton")
-back_button = NodePath("MenuContainer/SettingsPanel/BackButton")
 menu_audio = NodePath("MenuAudio")
-master_slider = NodePath("MenuContainer/SettingsPanel/MasterRow/MasterSlider")
-music_slider = NodePath("MenuContainer/SettingsPanel/MusicRow/MusicSlider")
-sfx_slider = NodePath("MenuContainer/SettingsPanel/SFXRow/SFXSlider")
-fullscreen_check = NodePath("MenuContainer/SettingsPanel/FullscreenCheck")
-show_seed_check = NodePath("MenuContainer/SettingsPanel/ShowSeedCheck")
+menu_music = ExtResource("3_6mijq")
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
@@ -89,70 +84,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Quit"
 
-[node name="SettingsPanel" type="VBoxContainer" parent="MenuContainer"]
-visible = false
-custom_minimum_size = Vector2(320, 0)
+[node name="SettingsPanel" parent="MenuContainer" instance=ExtResource("5_w2r0d")]
 layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="SettingsLabel" type="Label" parent="MenuContainer/SettingsPanel"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-text = "SETTINGS"
-label_settings = ExtResource("3_wk0pr")
-horizontal_alignment = 1
-
-[node name="MasterRow" type="HBoxContainer" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-
-[node name="MasterLabel" type="Label" parent="MenuContainer/SettingsPanel/MasterRow"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "MASTER"
-
-[node name="MasterSlider" type="HSlider" parent="MenuContainer/SettingsPanel/MasterRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-value = 100.0
-
-[node name="MusicRow" type="HBoxContainer" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-
-[node name="MusicLabel" type="Label" parent="MenuContainer/SettingsPanel/MusicRow"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "MUSIC"
-
-[node name="MusicSlider" type="HSlider" parent="MenuContainer/SettingsPanel/MusicRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-value = 100.0
-
-[node name="SFXRow" type="HBoxContainer" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-
-[node name="SFXLabel" type="Label" parent="MenuContainer/SettingsPanel/SFXRow"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "SFX"
-
-[node name="SFXSlider" type="HSlider" parent="MenuContainer/SettingsPanel/SFXRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-value = 100.0
-
-[node name="FullscreenCheck" type="CheckButton" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-text = "FULLSCREEN"
-
-[node name="ShowSeedCheck" type="CheckButton" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-text = "SHOW LEVEL SEED"
-
-[node name="BackButton" type="Button" parent="MenuContainer/SettingsPanel"]
-layout_mode = 2
-text = "BACK"
 
 [node name="MenuAudio" type="Node" parent="."]
 script = ExtResource("4_rmr83")
@@ -172,15 +105,3 @@ bus = &"UI"
 [connection signal="pressed" from="MenuContainer/MainPanel/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="focus_entered" from="MenuContainer/MainPanel/QuitButton" to="." method="_on_control_focused"]
 [connection signal="pressed" from="MenuContainer/MainPanel/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/MasterRow/MasterSlider" to="." method="_on_control_focused"]
-[connection signal="value_changed" from="MenuContainer/SettingsPanel/MasterRow/MasterSlider" to="." method="_on_master_slider_value_changed"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/MusicRow/MusicSlider" to="." method="_on_control_focused"]
-[connection signal="value_changed" from="MenuContainer/SettingsPanel/MusicRow/MusicSlider" to="." method="_on_music_slider_value_changed"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/SFXRow/SFXSlider" to="." method="_on_control_focused"]
-[connection signal="value_changed" from="MenuContainer/SettingsPanel/SFXRow/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/FullscreenCheck" to="." method="_on_control_focused"]
-[connection signal="toggled" from="MenuContainer/SettingsPanel/FullscreenCheck" to="." method="_on_fullscreen_check_toggled"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/ShowSeedCheck" to="." method="_on_control_focused"]
-[connection signal="toggled" from="MenuContainer/SettingsPanel/ShowSeedCheck" to="." method="_on_show_seed_check_toggled"]
-[connection signal="focus_entered" from="MenuContainer/SettingsPanel/BackButton" to="." method="_on_control_focused"]
-[connection signal="pressed" from="MenuContainer/SettingsPanel/BackButton" to="." method="_on_back_button_pressed"]

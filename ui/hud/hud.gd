@@ -1,18 +1,35 @@
 extends CanvasLayer
 
 
+@export_category("HUD")
 @export var health_bar: ProgressBar
 @export var health_label: Label
+
+
+@export_category("Panels")
 @export var game_over_panel: Control
 @export var pause_panel: Control
+@export var pause_settings_panel: Control
+@export var settings_panel: SettingsPanel
 
+
+@export_category("Pause Menu")
 @export var resume_button: Button
+@export var settings_button: Button
 @export var restart_button: Button
 @export var main_menu_button: Button
 
 
+@export_category("Audio")
+@export var pause_audio: MenuAudio
+
+
+var allow_focus_sound: bool = false
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	GameManager.player_health_changed.connect(
 		_on_player_health_changed
 	)
@@ -20,22 +37,40 @@ func _ready() -> void:
 	GameManager.player_died.connect(
 		_on_player_died
 	)
-	
+
 	GameManager.pause_changed.connect(
 		_on_pause_changed
 	)
+
+	settings_panel.back_requested.connect(
+		_on_settings_back_requested
+	)
+
+	settings_panel.navigation_focused.connect(
+		_on_control_focused
+	)
+
+	_setup_pause_focus()
 
 	if GameManager.player:
 		_on_player_health_changed(
 			GameManager.player.current_health,
 			GameManager.player.max_health
 		)
-	
+
 	if pause_panel:
-		pause_panel.visible = false
-	
+		pause_panel.hide()
+
+	if pause_settings_panel:
+		pause_settings_panel.hide()
+
 	if game_over_panel:
-		game_over_panel.visible = false
+		game_over_panel.hide()
+
+
+# ==================================================
+# HUD
+# ==================================================
 
 
 func _on_player_health_changed(
@@ -55,23 +90,104 @@ func _on_player_health_changed(
 
 func _on_player_died() -> void:
 	if game_over_panel:
-		game_over_panel.visible = true
+		game_over_panel.show()
 
 
-func _on_pause_changed(is_paused: bool) -> void:
-	if pause_panel:
-		pause_panel.visible = is_paused
-	
-	if is_paused and resume_button:
-		resume_button.grab_focus()
+# ==================================================
+# PAUSE
+# ==================================================
+
+
+func _on_pause_changed(
+	is_paused: bool
+) -> void:
+	if is_paused:
+		pause_settings_panel.hide()
+		pause_panel.show()
+
+		_grab_focus_silently(resume_button)
+
+	else:
+		pause_panel.hide()
+		pause_settings_panel.hide()
+
 
 func _on_resume_button_pressed() -> void:
+	pause_audio.play_confirm()
+
 	GameManager.resume_game()
 
 
+func _on_settings_button_pressed() -> void:
+	pause_audio.play_confirm()
+
+	pause_panel.hide()
+	pause_settings_panel.show()
+
+	settings_panel.focus_first_control_silently()
+
+
 func _on_restart_button_pressed() -> void:
+	pause_audio.play_confirm()
+
 	GameManager.restart_current_level()
 
 
 func _on_main_menu_button_pressed() -> void:
+	pause_audio.play_confirm()
+
 	GameManager.go_to_main_menu()
+
+
+# ==================================================
+# SETTINGS
+# ==================================================
+
+
+func _on_settings_back_requested() -> void:
+	pause_audio.play_back()
+
+	pause_settings_panel.hide()
+	pause_panel.show()
+
+	_grab_focus_silently(settings_button)
+
+
+# ==================================================
+# FOCUS
+# ==================================================
+
+
+func _setup_pause_focus() -> void:
+	var focus_controls: Array[Control] = [
+		resume_button,
+		settings_button,
+		restart_button,
+		main_menu_button
+	]
+
+	for control in focus_controls:
+		control.focus_entered.connect(
+			_on_control_focused
+		)
+
+		control.mouse_entered.connect(
+			control.grab_focus
+		)
+
+
+func _grab_focus_silently(
+	control: Control
+) -> void:
+	allow_focus_sound = false
+
+	control.grab_focus()
+
+	allow_focus_sound = true
+
+
+func _on_control_focused() -> void:
+	if not allow_focus_sound:
+		return
+
+	pause_audio.play_focus()

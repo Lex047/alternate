@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://lpuc020ok5ja"]
+[gd_scene load_steps=3 format=3 uid="uid://lpuc020ok5ja"]
 
+[ext_resource type="Script" uid="uid://jhraog1vrphn" path="res://ui/settings_panel.gd" id="1_owbak"]
 [ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="1_xc77b"]
 
 [node name="SettingsPanel" type="VBoxContainer"]
@@ -7,6 +8,7 @@ visible = false
 custom_minimum_size = Vector2(320, 0)
 theme_override_constants/separation = 8
 alignment = 1
+script = ExtResource("1_owbak")
 
 [node name="SettingsLabel" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 60)
@@ -24,6 +26,7 @@ layout_mode = 2
 text = "MASTER"
 
 [node name="MasterSlider" type="HSlider" parent="MasterRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
@@ -37,6 +40,7 @@ layout_mode = 2
 text = "MUSIC"
 
 [node name="MusicSlider" type="HSlider" parent="MusicRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
@@ -50,18 +54,22 @@ layout_mode = 2
 text = "SFX"
 
 [node name="SFXSlider" type="HSlider" parent="SFXRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
 
 [node name="FullscreenCheck" type="CheckButton" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 text = "FULLSCREEN"
 
 [node name="ShowSeedCheck" type="CheckButton" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 text = "SHOW LEVEL SEED"
 
 [node name="BackButton" type="Button" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 text = "BACK"
