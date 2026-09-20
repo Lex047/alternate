@@ -26,6 +26,9 @@ var chunk_count: int = 8
 @export_range(1, 100, 1)
 var max_generation_attempts: int = 20
 
+@export_range(1, 20, 1)
+var attempts_per_graph: int = 4
+
 @export_range(0.0, 8.0, 1.0)
 var bounds_overlap_tolerance: float = 4.0
 
@@ -202,45 +205,96 @@ func generate_level() -> void:
 		context.active_generation_seed
 	)
 
-	graph_builder.build()
+	var total_attempts: int = 0
+	var graph_number: int = 0
 
-	if not graph_builder.is_valid():
-		push_error(
-			"LevelGenerator: Generated graph is invalid."
+	var max_graphs: int = ceili(
+		float(max_generation_attempts)
+		/ float(attempts_per_graph)
+	)
+
+	for graph_index in range(max_graphs):
+		if total_attempts >= max_generation_attempts:
+			break
+
+		graph_number += 1
+
+		print(
+			"Building level graph ",
+			graph_number,
+			"..."
 		)
 
-		generation_failed.emit()
-		return
+		graph_builder.build()
 
-	generation_debug.print_level_graph()
-
-	for attempt in range(
-		1,
-		max_generation_attempts + 1
-	):
-		_begin_generation_attempt()
-		_generate_attempt()
-
-		if _generation_is_complete():
-			generation_debug.print_generation_result(
-				attempt
+		if not graph_builder.is_valid():
+			push_warning(
+				"LevelGenerator: Generated graph "
+				+ str(graph_number)
+				+ " is invalid."
 			)
 
-			generation_finished.emit(
-				context.active_generation_seed
-			)
+			continue
 
-			return
+		generation_debug.print_level_graph()
+
+		var remaining_attempts: int = (
+			max_generation_attempts
+			- total_attempts
+		)
+
+		var attempts_for_graph: int = mini(
+			attempts_per_graph,
+			remaining_attempts
+		)
+
+		for local_attempt in range(
+			1,
+			attempts_for_graph + 1
+		):
+			total_attempts += 1
+
+			_begin_generation_attempt()
+			_generate_attempt()
+
+			if _generation_is_complete():
+				print(
+					"Graph ",
+					graph_number,
+					" succeeded on local attempt ",
+					local_attempt,
+					"."
+				)
+
+				generation_debug.print_generation_result(
+					total_attempts
+				)
+
+				generation_finished.emit(
+					context.active_generation_seed
+				)
+
+				return
+
+		print(
+			"Graph ",
+			graph_number,
+			" failed after ",
+			attempts_for_graph,
+			" placement attempts."
+		)
 
 	push_warning(
 		"LevelGenerator: Could not generate a complete "
 		+ "level after "
-		+ str(max_generation_attempts)
-		+ " attempts."
+		+ str(total_attempts)
+		+ " placement attempts across "
+		+ str(graph_number)
+		+ " graphs."
 	)
 
 	generation_debug.print_generation_result(
-		max_generation_attempts
+		total_attempts
 	)
 
 	generation_failed.emit()
