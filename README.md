@@ -1,49 +1,101 @@
 # Alternate
 
-**Alternate** is a 2D platformer currently being developed in Godot as a final project.
+**Alternate** is a 2D pixel-art platformer currently being developed in Godot as a final project.
 
-The project focuses on responsive platforming, hand-built level chunks, and procedural level generation. The current goal is to build a small but complete gameplay loop around traversal, exploration, enemies, obstacles, and pickups.
+The game combines responsive platforming with hand-authored level chunks assembled through procedural generation. The player explores a generated dystopian environment, reaches a target at the end of the level, triggers an altered version of the world, and must make their way back to escape.
 
 ## Current Features
 
-- Player movement
-  - Walking
-  - Sprinting
-  - Jumping
-  - Coyote time
+### Player Movement
 
-- Ledge climbing
-  - Automatic ledge detection
-  - Ledge grab and mantle animation
-  - Dedicated climbable collision masking
-  - Grab-point reach validation
-  - Left and right facing ledges
+- Walking
+- Sprinting
+- Jumping
+- Coyote time
+- Ledge grabbing and climbing
+- Automatic ledge detection
+- Grab-point reach validation
+- Left and right facing ledges
+- Dedicated climbable collision layer
 
-- Tile-based environments
-  - Separate terrain and backwall TileSets
-  - Terrain collision
-  - Dedicated climbable physics layer
-  - Hand-built level chunks
+### Player Systems
 
-- Early chunk-based level structure
-  - Reusable chunk scenes
-  - Chunk sockets / connection points
-  - Preparation for procedural generation
+- Health system
+- Hurtbox and damage handling
+- Death and restart handling
+- Movement and action sound effects
 
-- Basic player health and hurtbox system
+### Procedural Level Generation
+
+- Graph-based procedural level structure
+- Reusable hand-authored chunk scenes
+- Growth rooms, corridors, terminals, start rooms, and goal rooms
+- Horizontal and vertical chunk connections
+- Socket-based chunk placement
+- Collision and bounds validation
+- Solver backtracking
+- Automatic generation retries
+- Graph regeneration after repeated placement failures
+- Deterministic seeded generation
+- Random player-readable level seeds
+- Optional level seed display
+- Weighted chunk selection
+- Usage balancing between room variants
+- Prevention of identical consecutive growth rooms
+- Multiple small and large room variants
+- Generation debugging and validation
+
+### User Interface
+
+- Main menu
+- Pause menu
+- Game over interface
+- Health display
+- Reusable settings panel
+- Master, music, and SFX volume controls
+- Fullscreen setting
+- Level seed visibility setting
+- Keyboard and mouse focus navigation
+- UI interaction sound effects
+- Level generation splash screen
+
+### Audio
+
+- Player movement and action SFX
+- UI navigation and confirmation SFX
+- Main menu music
+- Gameplay music
+- Separate Master, Music, SFX, and UI audio buses
+- Persistent audio settings
 
 ## In Development
 
-Planned systems currently include:
+Current development is focused on completing the main gameplay loop.
 
-- UI and HUD
-- Game manager
-- Procedural level generation
+Planned and in-progress systems include:
+
+- Player spawning from generated start-room markers
+- Artifact interaction in the generated goal room
+- Alternate world state and transition
+- Return journey after collecting the artifact
+- Exit portal and level completion
 - Enemies
-- Doors
-- Obstacles
-- Environmental props
-- Pickups and additional gameplay systems
+  - Animation
+  - Player detection
+  - Movement and pathfinding
+  - Combat and damage interaction
+- Enemy spawn markers inside generated chunks
+- Environmental hazards such as spikes and moving traps
+- Additional room and terminal variants
+- Treasure rooms
+- Treasure chests and a small weapon pool
+- Alternate-state environment changes
+
+## Built With
+
+- **Godot 4.4.1**
+- **GDScript**
+- Pixel-art assets and animations
 
 ## Built With
 
@@ -79,23 +131,41 @@ Controls may change during development.
 
 ## Project Structure
 
-The project currently uses a chunk-based level structure.
+Alternate uses reusable scenes and component-focused systems.
 
-Each level chunk is built as its own scene and contains separate layers for terrain, backwalls, and other environment elements.
+Levels are assembled from hand-authored chunk scenes. Each chunk contains its own terrain, background elements, gameplay objects, connection sockets, and generation bounds.
 
-Terrain and background elements use independent TileSet resources so gameplay collision and visual tiles can be managed separately.
+Chunks are connected procedurally using compatible directional sockets. Horizontal and vertical corridors are used as structural connections between gameplay rooms.
 
-Special ledge tiles use an additional Climbable physics layer, allowing the player to distinguish climbable ledges from ordinary solid terrain.
+The generator first creates a logical level graph and then attempts to realise that graph using physical chunk scenes. Placement is validated using chunk bounds, socket compatibility, collision checks, and backtracking.
 
-The long-term goal is for a level generator to select and connect compatible chunks during gameplay.
+Chunk selection uses generation weights and usage balancing so common rooms can appear more frequently while distinctive or larger rooms can remain less common.
+
+Generated levels use deterministic seeds, allowing individual layouts to be reproduced for debugging and testing.
+
+Gameplay systems such as the player, HUD, settings, audio, and procedural generation are kept separate where possible so they can be developed and tested independently.
+
+## Planned Gameplay Loop
+
+The intended core gameplay loop is:
+
+Generate a new level.
+Spawn the player in the starting chunk.
+Explore the generated environment.
+Avoid hazards and fight enemies.
+Reach the goal room and interact with the artifact.
+Trigger the Alternate state.
+Return through the altered level.
+Reach the activated exit portal.
+Escape and complete the level.
 
 ## Development Status
 
-This project is actively in development.
+This project is actively in development as a final academic project.
 
-Several systems are still experimental and are likely to change as the project progresses.
+The procedural generation, player movement, UI, settings, audio, and core supporting systems are currently functional.
 
-Current development is focused on completing the core gameplay systems before expanding procedural generation and level content.
+Development is now focused on completing the playable gameplay loop, enemy systems, environmental interaction, and final level content before testing and polish.
 
 ## Credits
 
