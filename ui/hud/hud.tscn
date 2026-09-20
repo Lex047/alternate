@@ -34,10 +34,11 @@ font_size = 28
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o2lis"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "pause_audio")]
+[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "seed_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "pause_audio")]
 script = ExtResource("1_rbyyf")
 health_bar = NodePath("RootControl/HUDMargin/VBoxContainer/HealthBar")
 health_label = NodePath("RootControl/HUDMargin/VBoxContainer/HealthLabel")
+seed_label = NodePath("RootControl/HUDMargin/VBoxContainer/SeedLabel")
 game_over_panel = NodePath("RootControl/GameOverPanel")
 pause_panel = NodePath("RootControl/PausePanel")
 pause_settings_panel = NodePath("RootControl/PauseSettingsPanel")
@@ -82,6 +83,15 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 20
 value = 100.0
+
+[node name="Spacer" type="Control" parent="RootControl/HUDMargin/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="SeedLabel" type="Label" parent="RootControl/HUDMargin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "SEED: 12345"
 
 [node name="GameOverPanel" type="PanelContainer" parent="RootControl"]
 visible = false

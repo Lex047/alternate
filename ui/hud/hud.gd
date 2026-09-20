@@ -1,9 +1,13 @@
 extends CanvasLayer
+class_name GameHUD
 
 
 @export_category("HUD")
 @export var health_bar: ProgressBar
 @export var health_label: Label
+@export var seed_label: Label
+
+var current_level_seed: int = 0
 
 
 @export_category("Panels")
@@ -23,7 +27,6 @@ extends CanvasLayer
 @export_category("Audio")
 @export var pause_audio: MenuAudio
 
-
 var allow_focus_sound: bool = false
 
 
@@ -32,6 +35,10 @@ func _ready() -> void:
 
 	GameManager.player_health_changed.connect(
 		_on_player_health_changed
+	)
+	
+	SettingsManager.show_seed_changed.connect(
+		_on_show_seed_changed
 	)
 
 	GameManager.player_died.connect(
@@ -86,6 +93,33 @@ func _on_player_health_changed(
 			"HP %d / %d"
 			% [current_health, max_health]
 		)
+
+
+func set_level_seed(generation_seed: int) -> void:
+	current_level_seed = generation_seed
+
+	_update_seed_display()
+
+
+func _on_show_seed_changed(
+	_enabled: bool
+) -> void:
+	_update_seed_display()
+
+
+func _update_seed_display() -> void:
+	if not seed_label:
+		return
+
+	seed_label.text = (
+		"SEED: %d"
+		% current_level_seed
+	)
+
+	seed_label.visible = (
+		SettingsManager.show_seed
+		and current_level_seed != 0
+	)
 
 
 func _on_player_died() -> void:

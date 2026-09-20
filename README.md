@@ -115,6 +115,14 @@ Current development is focused on completing the core gameplay systems before ex
   https://souptonic.itch.io/souptonic-sfx-pack-1-ui-sounds
   Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
+- Future Noir (Looping) by Eric Matyas
+  https://opengameart.org/content/future-noir-looping
+  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
+- Cyberpunk Streets In The Dead Of Night by Eric Matyas
+  https://opengameart.org/content/cyberpunk-streets-in-the-dead-of-night
+  Licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+
 ## License
 
 This project is currently intended for educational and academic use.

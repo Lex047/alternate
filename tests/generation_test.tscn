@@ -21,10 +21,11 @@
 [ext_resource type="PackedScene" uid="uid://c2vnyj6k8m8q1" path="res://ui/generation_splash.tscn" id="19_s6ku8"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/hud.tscn" id="20_e83hr"]
 
-[node name="GenerationTest" type="Node2D" node_paths=PackedStringArray("level_generator", "generation_splash")]
+[node name="GenerationTest" type="Node2D" node_paths=PackedStringArray("level_generator", "generation_splash", "hud")]
 script = ExtResource("1_cw2b7")
 level_generator = NodePath("LevelGenerator")
 generation_splash = NodePath("GenerationSplash")
+hud = NodePath("HUD")
 game_music = ExtResource("2_vmolj")
 
 [node name="LevelGenerator" parent="." instance=ExtResource("1_axj3q")]
@@ -35,7 +36,6 @@ vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("15_nk0po")])
 chunk_count = 15
-generation_seed = 123467
 
 [node name="DebugCamera" type="Camera2D" parent="."]
 script = ExtResource("15_07vur")

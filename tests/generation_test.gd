@@ -4,6 +4,7 @@ extends Node2D
 @export_category("Generation")
 @export var level_generator: LevelGenerator
 @export var generation_splash: GenerationSplash
+@export var hud: GameHUD
 
 
 @export_category("Audio")
@@ -23,9 +24,7 @@ func _ready() -> void:
 
 
 func _start_game() -> void:
-	generation_splash.show_splash(
-		"GENERATING DISTRICT..."
-	)
+	generation_splash.show_splash()
 
 	# Give Godot a frame to actually draw the splash.
 	await get_tree().process_frame
@@ -40,6 +39,7 @@ func _on_generation_finished(
 		"Game: Level ready with seed ",
 		generation_seed
 	)
+	hud.set_level_seed(generation_seed)
 
 	generation_splash.hide_splash()
 

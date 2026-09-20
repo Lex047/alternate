@@ -3,6 +3,7 @@ extends Node
 
 const SETTINGS_PATH := "user://settings.cfg"
 
+signal show_seed_changed(enabled: bool)
 
 var master_volume: float = 100.0
 var music_volume: float = 100.0
@@ -70,7 +71,10 @@ func set_fullscreen(enabled: bool) -> void:
 
 func set_show_seed(enabled: bool) -> void:
 	show_seed = enabled
+
 	save_settings()
+
+	show_seed_changed.emit(show_seed)
 
 
 func _apply_fullscreen() -> void:

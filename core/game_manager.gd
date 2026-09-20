@@ -10,12 +10,23 @@ signal pause_changed(is_paused: bool)
 
 var player: Player
 
+var is_game_over: bool = false
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_game_over:
+		if event.is_action_pressed("restart_game"):
+			restart_current_level()
+
+		elif event.is_action_pressed("pause"):
+			go_to_main_menu()
+
+		return
+
 	if event.is_action_pressed("pause"):
 		if get_tree().paused:
 			resume_game()
@@ -47,6 +58,8 @@ func update_player_health(
 
 
 func handle_player_death() -> void:
+	is_game_over = true
+	
 	get_tree().paused = true
 	player_died.emit()
 
@@ -62,10 +75,14 @@ func resume_game() -> void:
 
 
 func restart_current_level() -> void:
+	is_game_over = false
+	
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 
 func go_to_main_menu() -> void:
+	is_game_over = false
+	
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://ui/main_menu/main_menu.tscn")
