@@ -1,8 +1,7 @@
 extends RefCounted
 class_name LevelGenerationContext
 
-
-# Scene/configuration data copied from LevelGenerator.
+# Scene configuration data
 var generated_chunks: Node2D
 
 var start_chunk_scene: PackedScene

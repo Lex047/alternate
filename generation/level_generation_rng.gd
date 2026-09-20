@@ -5,6 +5,9 @@ class_name LevelGenerationRng
 const GRAPH_SEED_SALT: int = 0x2C9277B5
 const SPATIAL_SEED_SALT: int = 0x19A4E6D3
 
+const MIN_RANDOM_SEED: int = 10000
+const MAX_RANDOM_SEED: int = 999999999
+
 
 var graph_rng := RandomNumberGenerator.new()
 var generation_rng := RandomNumberGenerator.new()
@@ -18,7 +21,11 @@ func initialize(
 
 	if use_random_seed:
 		generation_rng.randomize()
-		active_seed = generation_rng.seed
+
+		active_seed = generation_rng.randi_range(
+			MIN_RANDOM_SEED,
+			MAX_RANDOM_SEED
+		)
 
 	graph_rng.seed = (
 		active_seed
