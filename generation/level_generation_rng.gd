@@ -62,3 +62,13 @@ func shuffle(
 
 		array[i] = array[random_index]
 		array[random_index] = temporary_value
+
+
+func randf_range(
+	min_value: float,
+	max_value: float
+) -> float:
+	return generation_rng.randf_range(
+		min_value,
+		max_value
+	)

@@ -160,6 +160,7 @@ func _realize_graph_children(
 	for child_node: LevelGraphNode in graph_node.children:
 		var child_chunk: Chunk = (
 			_try_place_graph_child(
+				graph_node,
 				physical_chunk,
 				child_node
 			)
@@ -179,6 +180,7 @@ func _realize_graph_children(
 
 
 func _try_place_graph_child(
+	parent_node: LevelGraphNode,
 	parent_chunk: Chunk,
 	child_node: LevelGraphNode
 ) -> Chunk:
@@ -293,6 +295,8 @@ func _try_place_graph_child(
 				for corridor_exit: ChunkSocket in corridor_exits:
 					var child_chunk: Chunk = (
 						_try_place_graph_room(
+							parent_node,
+							parent_chunk,
 							corridor,
 							corridor_exit,
 							child_node,
@@ -349,6 +353,8 @@ func _try_place_graph_child(
 
 
 func _try_place_graph_room(
+	parent_node: LevelGraphNode,
+	parent_chunk: Chunk,
 	corridor: Chunk,
 	target_socket: ChunkSocket,
 	graph_node: LevelGraphNode,
@@ -373,6 +379,21 @@ func _try_place_graph_room(
 	)
 
 	for scene: PackedScene in candidate_scenes:
+		# Do not place the same growth room directly
+		# after itself.
+		#
+		# Physical structure:
+		# GROWTH ROOM -> CORRIDOR -> GROWTH ROOM
+		if (
+			graph_node.node_type
+			== LevelGraphNode.NodeType.GROWTH
+			and parent_node.node_type
+			== LevelGraphNode.NodeType.GROWTH
+			and scene.resource_path
+			== parent_chunk.scene_file_path
+		):
+			continue
+
 		var candidate: Chunk = (
 			chunk_tools.spawn_chunk(
 				scene,

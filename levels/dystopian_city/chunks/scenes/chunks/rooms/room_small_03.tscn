@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=4 uid="uid://c4a4vd8kq42si"]
+
+[ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_sx1pv"]
+[ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_0pxry"]
+
+[node name="RoomSmall03" instance=ExtResource("1_sx1pv")]
+
+[node name="BackWall" parent="." index="0"]
+tile_map_data = PackedByteArray("AAABAA8AAAAMAAMAAAACAA8AAAAMAAMAAAAEAA8AAAAMAAMAAAADAA8AAAAMAAMAAAA=")
+
+[node name="Terrain" parent="." index="1"]
+tile_map_data = PackedByteArray("AAAFAA8AAAAHAAsAAAAGAA8AAAAHAAsAAAAHAA8AAAAHAAsAAAAIAA8AAAAHAAsAAAAJAA8AAAAHAAsAAAAKAA8AAAAHAAsAAAALAA8AAAAHAAsAAAAMAA8AAAAHAAsAAAANAA8AAAAHAAsAAAAOAA8AAAAHAAsAAAAPAA8AAAAHAAsAAAAAAA8AAAABAAIAAAAAAA4AAAABAAIAAAAAAA0AAAABAAIAAAAAAAwAAAABAAIAAAAAAAsAAAABAAIAAAAAAAoAAAABAAIAAAAAAAkAAAABAAIAAAAAAAgAAAABAAIAAAAAAAcAAAABAAIAAAAAAAYAAAABAAIAAAAAAAUAAAABAAIAAAAAAAQAAAABAAIAAAAAAAMAAAABAAIAAAAAAAIAAAABAAIAAAAAAAEAAAABAAIAAAAAAAAAAAAEAAQAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAAPAAAAAAAEAAQAAAABAAgAAAAHAAsAAAACAAgAAAAHAAsAAAADAAgAAAAHAAsAAAAEAAgAAAAHAAsAAAAFAAgAAAAHAAsAAAAGAAgAAAAHAAsAAAAHAAgAAAAJAAsAAAA=")
+
+[node name="BottomSocket01" type="Marker2D" parent="Sockets" index="0"]
+position = Vector2(48, 256)
+gizmo_extents = 8.0
+script = ExtResource("2_0pxry")
+direction = 3
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="RightSocket01" type="Marker2D" parent="Sockets" index="1"]
+position = Vector2(256, 248)
+gizmo_extents = 8.0
+script = ExtResource("2_0pxry")
+direction = 1
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="GenerationBounds" parent="." index="4"]
+custom_minimum_size = Vector2(256, 256)
