@@ -48,7 +48,7 @@ horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("15_nk0po")])
-chunk_count = 5
+chunk_count = 6
 generation_seed = 794432687
 use_random_seed = true
 
