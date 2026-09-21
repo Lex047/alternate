@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmyfgy3maeuy4"]
+
+[ext_resource type="Script" uid="uid://cqw2h410ery7s" path="res://gameplay/artifact/artifact_container.gd" id="1_u83si"]
+[ext_resource type="Texture2D" uid="uid://dhn321fsfy28a" path="res://gameplay/artifact/artifact_container.png" id="2_ujy0v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u83si"]
+size = Vector2(56, 78)
+
+[node name="ArtifactContainer" type="Area2D"]
+z_index = -1
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_u83si")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ujy0v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_u83si")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

@@ -80,7 +80,7 @@ func set_show_seed(enabled: bool) -> void:
 func _apply_fullscreen() -> void:
 	if fullscreen:
 		DisplayServer.window_set_mode(
-			DisplayServer.WINDOW_MODE_FULLSCREEN
+			DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 		)
 	else:
 		DisplayServer.window_set_mode(

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2vnyj6k8m8q1"]
 
 [ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="1_4jrwi"]
-[ext_resource type="Script" uid="uid://cmsn5hhfk0q50" path="res://ui/generation_splash.gd" id="1_cfr0f"]
+[ext_resource type="Script" uid="uid://cmsn5hhfk0q50" path="res://ui/generation_splash/generation_splash.gd" id="1_cfr0f"]
 [ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="2_cfr0f"]
 
 [node name="GenerationSplash" type="CanvasLayer"]

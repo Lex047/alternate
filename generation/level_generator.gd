@@ -399,3 +399,45 @@ func _generation_is_complete() -> bool:
 			context.placed_chunks
 		) == 0
 	)
+
+
+func get_start_chunk() -> Chunk:
+	if not context:
+		return null
+
+	if not context.level_graph:
+		return null
+
+	if not context.level_graph.root:
+		return null
+
+	return (
+		context.graph_node_chunks.get(
+			context.level_graph.root.id,
+			null
+		) as Chunk
+	)
+
+
+func get_goal_chunk() -> Chunk:
+	if not context:
+		return null
+
+	if not context.level_graph:
+		return null
+
+	for graph_node: LevelGraphNode in context.level_graph.nodes:
+		if (
+			graph_node.node_type
+			!= LevelGraphNode.NodeType.GOAL
+		):
+			continue
+
+		return (
+			context.graph_node_chunks.get(
+				graph_node.id,
+				null
+			) as Chunk
+		)
+
+	return null

@@ -34,6 +34,25 @@ func _ready() -> void:
 	settings_panel.navigation_focused.connect(
 		_on_control_focused
 	)
+	
+	print(
+	"Viewport: ",
+	get_viewport().get_visible_rect().size
+)
+
+	print(
+		"MainMenu position: ",
+		position,
+		" size: ",
+		size
+	)
+
+	print(
+		"Background position: ",
+		$Background.position,
+		" size: ",
+		$Background.size
+	)
 
 	_grab_focus_silently(start_button)
 
