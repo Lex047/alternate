@@ -1,18 +1,22 @@
 extends Node2D
 
+@export_category("Management")
+
+@export var tutorial_splash: TutorialSplash
 
 @export_category("Generation")
 
 @export var level_generator: LevelGenerator
 @export var generation_splash: GenerationSplash
 @export var alternate_transition: AlternateTransition
-@export var hud: GameHUD
+@export var game_hud: GameHUD
 
 var is_alternate: bool = false
 
 @export_category("Debug")
 
 @export var debug_camera: Camera2D
+@export var always_show_tutorial: bool = false
 
 var using_debug_camera: bool = false
 
@@ -29,6 +33,10 @@ var alternate_player_local_position: Vector2
 
 
 func _ready() -> void:
+	tutorial_splash.dismissed.connect(
+		_on_tutorial_dismissed
+	)
+	
 	level_generator.generation_finished.connect(
 		_on_generation_finished
 	)
@@ -126,15 +134,19 @@ func _on_generation_finished(
 
 		return
 
-	hud.set_level_seed(
+	game_hud.set_level_seed(
 		generation_seed
 	)
 
 	generation_splash.hide_splash()
 
-	MusicManager.play_music(
-		game_music
-	)
+	if (
+		always_show_tutorial
+		or not ProgressManager.has_seen_tutorial()
+	):
+		tutorial_splash.show_splash()
+	else:
+		_begin_gameplay()
 
 
 func _place_player_at_start() -> bool:
@@ -181,6 +193,16 @@ func _on_generation_failed() -> void:
 
 	push_error(
 		"Game: Level generation failed."
+	)
+
+
+func _on_tutorial_dismissed() -> void:
+	_begin_gameplay()
+
+
+func _begin_gameplay() -> void:
+	MusicManager.play_music(
+		game_music
 	)
 
 
@@ -294,4 +316,12 @@ func _activate_alternate_state() -> void:
 func _on_alternate_transition_finished() -> void:
 	print(
 		"Game: Alternate transition finished."
+	)
+
+	if not is_alternate:
+		return
+
+	game_hud.show_objective_message(
+		"ARTIFACT RETRIEVED",
+		"RETURN TO THE ENTRY POINT"
 	)

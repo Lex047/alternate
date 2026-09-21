@@ -15,6 +15,7 @@ var current_level_seed: int = 0
 @export var pause_panel: Control
 @export var pause_settings_panel: Control
 @export var settings_panel: SettingsPanel
+@export var objective_message_panel: PanelContainer
 
 
 @export_category("Pause Menu")
@@ -24,6 +25,15 @@ var current_level_seed: int = 0
 @export var main_menu_button: Button
 
 
+@export_category("Objective Message")
+
+@export var objective_title: Label
+@export var objective_subtitle: Label
+
+@export var objective_message_duration: float = 3.0
+
+var objective_message_tween: Tween
+
 @export_category("Audio")
 @export var pause_audio: MenuAudio
 
@@ -32,6 +42,9 @@ var allow_focus_sound: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	objective_message_panel.hide()
+	objective_message_panel.modulate.a = 0.0
 
 	GameManager.player_health_changed.connect(
 		_on_player_health_changed
@@ -225,3 +238,52 @@ func _on_control_focused() -> void:
 		return
 
 	pause_audio.play_focus()
+
+
+# ==================================================
+# OBJECTIVE MESSAGE
+# ==================================================
+
+
+func show_objective_message(
+	title: String,
+	subtitle: String = ""
+) -> void:
+	print("HUD: showing objective message")
+	
+	if objective_message_tween:
+		objective_message_tween.kill()
+
+	objective_title.text = title
+	objective_subtitle.text = subtitle
+
+	objective_subtitle.visible = (
+		not subtitle.is_empty()
+	)
+
+	objective_message_panel.modulate.a = 0.0
+	objective_message_panel.show()
+
+	objective_message_tween = create_tween()
+
+	objective_message_tween.tween_property(
+		objective_message_panel,
+		"modulate:a",
+		1.0,
+		0.25
+	)
+
+	objective_message_tween.tween_interval(
+		objective_message_duration
+	)
+
+	objective_message_tween.tween_property(
+		objective_message_panel,
+		"modulate:a",
+		0.0,
+		0.4
+	)
+
+	objective_message_tween.tween_callback(
+		objective_message_panel.hide
+	)

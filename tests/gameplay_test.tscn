@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="1_b64qu"]
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="2_mldwy"]
-[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/hud.tscn" id="3_4i20e"]
+[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/game_hud.tscn" id="3_4i20e"]
 
 [node name="GameplayTest" type="Node2D"]
 

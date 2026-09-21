@@ -1,0 +1,115 @@
+[gd_scene load_steps=5 format=3 uid="uid://bpxrgvvtkve4r"]
+
+[ext_resource type="Script" uid="uid://cwquv86iayok8" path="res://ui/tutorial_splash/tutorial_splash.gd" id="1_ev1rp"]
+[ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="2_l2dm7"]
+[ext_resource type="LabelSettings" uid="uid://d3m7yv73ll7kc" path="res://ui/fonts/TitleLabel.tres" id="3_l2dm7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2dm7"]
+
+[node name="TutorialSplash" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_ev1rp")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_l2dm7")
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -165.5
+offset_top = -123.0
+offset_right = 165.5
+offset_bottom = 123.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Overlay/CenterContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_l2dm7")
+
+[node name="MarginContainer" type="MarginContainer" parent="Overlay/CenterContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "BRIEFING"
+label_settings = ExtResource("3_l2dm7")
+horizontal_alignment = 1
+
+[node name="ObjectiveLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Find the artifact hidden somewhere in the ruins."
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControlsGrid" type="GridContainer" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="MovementKeysLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "A / D"
+
+[node name="MoveActionLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "MOVE"
+horizontal_alignment = 2
+
+[node name="JumpKeyLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "SPACE"
+
+[node name="JumpActionLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "JUMP"
+horizontal_alignment = 2
+
+[node name="InteractKeyLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "E"
+
+[node name="InteractActionLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "INTERACT"
+horizontal_alignment = 2
+
+[node name="PauseKeyLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "ESC"
+
+[node name="PauseActionLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CenterContainer/ControlsGrid"]
+layout_mode = 2
+text = "PAUSE"
+horizontal_alignment = 2
+
+[node name="WarningLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Retrieve the artifact and return safely.
+
+Whatever is sealed inside may not leave
+the world as you found it."
+horizontal_alignment = 1
+
+[node name="ContinueLabel" type="Label" parent="Overlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "PRESS ANY KEY"
+horizontal_alignment = 1

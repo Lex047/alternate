@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.4", "Mobile")
 GameManager="*res://core/game_manager.gd"
 SettingsManager="*res://core/settings_manager.gd"
 MusicManager="*res://audio/music/music_manager.tscn"
+ProgressManager="*res://core/progress_manager.gd"
 
 [display]
 
