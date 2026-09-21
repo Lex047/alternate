@@ -2,6 +2,7 @@ extends Node2D
 
 
 @export_category("Generation")
+
 @export var level_generator: LevelGenerator
 @export var generation_splash: GenerationSplash
 @export var alternate_transition: AlternateTransition
@@ -10,16 +11,20 @@ extends Node2D
 var is_alternate: bool = false
 
 @export_category("Debug")
+
 @export var debug_camera: Camera2D
 
 var using_debug_camera: bool = false
 
 
 @export_category("Gameplay")
+
 @export var player: Player
 
+var alternate_player_local_position: Vector2
 
 @export_category("Audio")
+
 @export var game_music: AudioStream
 
 
@@ -214,10 +219,27 @@ func _connect_artifact() -> bool:
 
 
 func _on_artifact_collected() -> void:
-	print(
-		"Game: Artifact collected!"
+	if is_alternate:
+		return
+
+	var normal_goal: Chunk = (
+		level_generator.get_goal_chunk()
 	)
-	
+
+	if not normal_goal:
+		push_error(
+			"Game: Normal GOAL chunk was not found."
+		)
+		return
+
+	alternate_player_local_position = (
+		normal_goal.to_local(
+			player.global_position
+		)
+	)
+
+	print("Game: Artifact collected!")
+
 	alternate_transition.play_transition()
 	
 
@@ -229,6 +251,38 @@ func _on_alternate_transition_midpoint() -> void:
 func _activate_alternate_state() -> void:
 	if is_alternate:
 		return
+
+	if not player:
+		push_error(
+			"Game: Player reference is missing."
+		)
+		return
+
+	var alternate_goal: Chunk = (
+		level_generator.get_alternate_goal_chunk()
+	)
+
+	if not alternate_goal:
+		push_error(
+			"Game: Alternate GOAL chunk "
+			+ "was not found."
+		)
+		return
+
+	if not level_generator.activate_alternate_layout():
+		push_error(
+			"Game: Could not activate "
+			+ "Alternate layout."
+		)
+		return
+
+	player.velocity = Vector2.ZERO
+
+	player.global_position = (
+		alternate_goal.to_global(
+			alternate_player_local_position
+		)
+	)
 
 	is_alternate = true
 

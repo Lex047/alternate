@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="15_nk0po"]
 [ext_resource type="PackedScene" uid="uid://c2vnyj6k8m8q1" path="res://ui/generation_splash/generation_splash.tscn" id="19_s6ku8"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/hud.tscn" id="20_e83hr"]
-[ext_resource type="PackedScene" uid="uid://cavriwbq8wpgh" path="res://ui/alternate_transition/AlternateTransition.tscn" id="25_1vf7n"]
+[ext_resource type="PackedScene" uid="uid://cavriwbq8wpgh" path="res://ui/alternate_transition/alternate_transition.tscn" id="25_1vf7n"]
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="25_45ffi"]
 
 [node name="GenerationTest" type="Node2D" node_paths=PackedStringArray("level_generator", "generation_splash", "alternate_transition", "hud", "debug_camera", "player")]
@@ -46,7 +46,6 @@ horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("15_nk0po")])
-chunk_count = 5
 generation_seed = 794432687
 use_random_seed = true
 

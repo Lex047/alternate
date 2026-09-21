@@ -54,3 +54,77 @@ func count_nodes_of_type(
 			count += 1
 
 	return count
+
+
+func get_goal_node() -> LevelGraphNode:
+	for node: LevelGraphNode in nodes:
+		if node.node_type == LevelGraphNode.NodeType.GOAL:
+			return node
+
+	return null
+
+
+func get_descendants(
+	node: LevelGraphNode
+) -> Array[LevelGraphNode]:
+	var result: Array[LevelGraphNode] = []
+
+	if not node:
+		return result
+
+	var nodes_to_visit: Array[LevelGraphNode] = []
+
+	for child: LevelGraphNode in node.children:
+		nodes_to_visit.append(
+			child
+		)
+
+	while not nodes_to_visit.is_empty():
+		var current: LevelGraphNode = (
+			nodes_to_visit.pop_front()
+			as LevelGraphNode
+		)
+
+		result.append(
+			current
+		)
+
+		for child: LevelGraphNode in current.children:
+			nodes_to_visit.append(
+				child
+			)
+
+	return result
+
+
+func get_route_to_node(
+	target: LevelGraphNode
+) -> Array[LevelGraphNode]:
+	var route: Array[LevelGraphNode] = []
+
+	if not target:
+		return route
+
+	var current: LevelGraphNode = target
+
+	while current:
+		route.push_front(
+			current
+		)
+
+		current = current.parent
+
+	return route
+
+
+func get_start_to_goal_route() -> Array[LevelGraphNode]:
+	var goal_node: LevelGraphNode = (
+		get_goal_node()
+	)
+
+	if not goal_node:
+		return []
+
+	return get_route_to_node(
+		goal_node
+	)

@@ -78,10 +78,24 @@ func try_close_graph_socket(
 		current_chunk.chunk_type
 		== Chunk.ChunkType.CORRIDOR
 	):
-		return _try_place_graph_terminal(
-			current_chunk,
-			target_socket
+		var terminal: Chunk = (
+			_try_place_graph_terminal(
+				current_chunk,
+				target_socket
+			)
 		)
+
+		if not terminal:
+			return false
+
+		_record_closure_branch(
+			current_chunk,
+			target_socket,
+			null,
+			terminal
+		)
+
+		return true
 
 	var corridor_kind: int = (
 		chunk_tools.get_required_corridor_kind(
@@ -200,10 +214,14 @@ func _try_place_graph_closure_corridor(
 				corridor
 			)
 
-			if _try_place_graph_terminal(
-				corridor,
-				corridor_exit
-			):
+			var terminal: Chunk = (
+				_try_place_graph_terminal(
+					corridor,
+					corridor_exit
+				)
+			)
+
+			if terminal:
 				if (
 					corridor_kind
 					== LevelGenerationTypes.PlacementKind.HORIZONTAL_CORRIDOR
@@ -214,6 +232,13 @@ func _try_place_graph_closure_corridor(
 
 				chunk_usage.record(
 					scene
+				)
+
+				_record_closure_branch(
+					current_chunk,
+					target_socket,
+					corridor,
+					terminal
 				)
 
 				return true
@@ -235,7 +260,7 @@ func _try_place_graph_closure_corridor(
 func _try_place_graph_terminal(
 	current_chunk: Chunk,
 	target_socket: ChunkSocket
-) -> bool:
+) -> Chunk:
 	var candidate_scenes: Array[PackedScene] = (
 		chunk_usage.get_prioritized_scenes(
 			context.terminal_chunk_scenes
@@ -313,10 +338,26 @@ func _try_place_graph_terminal(
 				scene
 			)
 
-			return true
+			return terminal
 
 		chunk_tools.discard_chunk(
 			terminal
 		)
 
-	return false
+	return null
+
+
+func _record_closure_branch(
+	source_chunk: Chunk,
+	source_socket: ChunkSocket,
+	corridor: Chunk,
+	terminal: Chunk
+) -> void:
+	context.closure_branches.append(
+		{
+			"source_chunk": source_chunk,
+			"source_socket": source_socket,
+			"corridor": corridor,
+			"terminal": terminal,
+		}
+	)

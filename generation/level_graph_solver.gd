@@ -73,6 +73,18 @@ func solve_graph_node(
 		var graph_map_before: Dictionary = (
 			context.graph_node_chunks.duplicate(true)
 		)
+		
+		var corridor_map_before: Dictionary = (
+			context.graph_edge_corridors.duplicate(true)
+		)
+		
+		var socket_map_before: Dictionary = (
+			context.graph_edge_parent_socket_paths.duplicate(true)
+		)
+		
+		var closure_branches_before: Array[Dictionary] = (
+			context.snapshot_closure_branches()
+		)
 
 		var open_sockets_before: Array[ChunkSocket] = (
 			chunk_tools.capture_open_sockets(
@@ -130,7 +142,10 @@ func solve_graph_node(
 			vertical_before,
 			terminals_before,
 			usage_before,
-			graph_map_before
+			graph_map_before,
+			corridor_map_before,
+			socket_map_before,
+			closure_branches_before
 		)
 
 		for socket: ChunkSocket in open_sockets_before:
@@ -315,6 +330,16 @@ func _try_place_graph_child(
 						child_chunk
 					)
 
+					context.graph_edge_corridors[
+						child_node.id
+					] = corridor
+
+					context.graph_edge_parent_socket_paths[
+						child_node.id
+					] = parent_chunk.get_path_to(
+						target_socket
+					)
+
 					if (
 						corridor_kind
 						== LevelGenerationTypes.PlacementKind.HORIZONTAL_CORRIDOR
@@ -484,7 +509,10 @@ func _rollback_solver_state(
 	vertical_before: int,
 	terminals_before: int,
 	usage_before: Dictionary,
-	graph_map_before: Dictionary
+	graph_map_before: Dictionary,
+	corridor_map_before: Dictionary,
+	socket_map_before: Dictionary,
+	closure_branches_before: Array[Dictionary]
 ) -> void:
 	while (
 		context.placed_chunks.size()
@@ -516,6 +544,18 @@ func _rollback_solver_state(
 
 	context.graph_node_chunks = (
 		graph_map_before.duplicate(true)
+	)
+	
+	context.graph_edge_corridors = (
+		corridor_map_before.duplicate(true)
+	)
+	
+	context.graph_edge_parent_socket_paths  = (
+		socket_map_before.duplicate(true)
+	)
+	
+	context.restore_closure_branches(
+		closure_branches_before
 	)
 
 

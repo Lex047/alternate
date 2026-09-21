@@ -6,3 +6,5 @@
 script = ExtResource("1_1crrm")
 
 [node name="GeneratedChunks" type="Node2D" parent="."]
+
+[node name="AlternateChunks" type="Node2D" parent="."]

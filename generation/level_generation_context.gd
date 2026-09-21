@@ -28,6 +28,10 @@ var solver_backtracks: int = 0
 
 var level_graph := LevelGraph.new()
 var graph_node_chunks: Dictionary = {}
+var graph_edge_corridors: Dictionary = {}
+var graph_edge_parent_socket_paths: Dictionary = {}
+
+var closure_branches: Array[Dictionary] = []
 
 var placed_chunks: Array[Chunk] = []
 
@@ -43,6 +47,9 @@ var chunk_usage_counts: Dictionary = {}
 func reset_attempt_state() -> void:
 	placed_chunks.clear()
 	graph_node_chunks.clear()
+	graph_edge_corridors.clear()
+	graph_edge_parent_socket_paths.clear()
+	closure_branches.clear()
 
 	normal_chunks_placed = 0
 	goal_chunks_placed = 0
@@ -51,3 +58,25 @@ func reset_attempt_state() -> void:
 	terminals_placed = 0
 
 	solver_backtracks = 0
+
+
+func snapshot_closure_branches() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+
+	for branch: Dictionary in closure_branches:
+		result.append(
+			branch.duplicate()
+		)
+
+	return result
+
+
+func restore_closure_branches(
+	snapshot: Array[Dictionary]
+) -> void:
+	closure_branches.clear()
+
+	for branch: Dictionary in snapshot:
+		closure_branches.append(
+			branch.duplicate()
+		)
