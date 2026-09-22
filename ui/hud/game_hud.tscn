@@ -37,7 +37,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rft0p"]
 
-[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "seed_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "objective_message_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "objective_title", "objective_subtitle", "pause_audio")]
+[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "seed_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "objective_message_panel", "level_completion_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "objective_title", "objective_subtitle", "pause_audio")]
 script = ExtResource("1_rbyyf")
 health_bar = NodePath("RootControl/HUDMargin/VBoxContainer/HealthBar")
 health_label = NodePath("RootControl/HUDMargin/VBoxContainer/HealthLabel")
@@ -47,6 +47,7 @@ pause_panel = NodePath("RootControl/PausePanel")
 pause_settings_panel = NodePath("RootControl/PauseSettingsPanel")
 settings_panel = NodePath("RootControl/PauseSettingsPanel/SettingsPanel")
 objective_message_panel = NodePath("RootControl/ObjectivePanel")
+level_completion_panel = NodePath("RootControl/LevelCompletionPanel")
 resume_button = NodePath("RootControl/PausePanel/VBoxContainer/ResumeButton")
 settings_button = NodePath("RootControl/PausePanel/VBoxContainer/SettingsButton")
 restart_button = NodePath("RootControl/PausePanel/VBoxContainer/RestartButton")
@@ -132,6 +133,41 @@ theme_override_font_sizes/font_size = 18
 text = "Press ESC to Quit
 or
 Press R to Restart"
+horizontal_alignment = 1
+
+[node name="LevelCompletionPanel" type="PanelContainer" parent="RootControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.5
+offset_top = -20.0
+offset_right = 64.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_m0eg6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RootControl/LevelCompletionPanel"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="GameOverLabel" type="Label" parent="RootControl/LevelCompletionPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "Thankyou For Playing
+The Game :)"
+label_settings = SubResource("LabelSettings_b00kl")
+horizontal_alignment = 1
+
+[node name="GameOverMessage" type="Label" parent="RootControl/LevelCompletionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "More Stuff Coming Soon
+Press R to Play Again or ESC to Quit"
 horizontal_alignment = 1
 
 [node name="PausePanel" type="PanelContainer" parent="RootControl"]

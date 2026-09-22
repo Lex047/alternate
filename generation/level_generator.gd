@@ -1238,6 +1238,17 @@ func activate_alternate_layout() -> bool:
 	return true
 
 
+func get_alternate_start_chunk() -> Chunk:
+	if not alternate_context:
+		return null
+
+	for chunk: Chunk in alternate_context.placed_chunks:
+		if chunk.chunk_type == Chunk.ChunkType.START:
+			return chunk
+
+	return null
+
+
 func _print_alternate_plan() -> void:
 	var route: Array[LevelGraphNode] = (
 		get_goal_route()

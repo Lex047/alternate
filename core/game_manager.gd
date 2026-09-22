@@ -12,12 +12,17 @@ var player: Player
 
 var is_game_over: bool = false
 
+var gameplay_input_enabled: bool = true
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not gameplay_input_enabled:
+		return
+
 	if is_game_over:
 		if event.is_action_pressed("restart_game"):
 			restart_current_level()
@@ -76,13 +81,17 @@ func resume_game() -> void:
 
 func restart_current_level() -> void:
 	is_game_over = false
-	
+	gameplay_input_enabled = true
+
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 
 func go_to_main_menu() -> void:
 	is_game_over = false
-	
+	gameplay_input_enabled = false
+
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://ui/main_menu/main_menu.tscn")
+	get_tree().change_scene_to_file(
+		"res://ui/main_menu/main_menu.tscn"
+	)

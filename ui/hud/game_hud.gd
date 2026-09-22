@@ -2,6 +2,10 @@ extends CanvasLayer
 class_name GameHUD
 
 
+signal completion_restart_requested
+signal completion_menu_requested
+
+
 @export_category("HUD")
 @export var health_bar: ProgressBar
 @export var health_label: Label
@@ -16,6 +20,9 @@ var current_level_seed: int = 0
 @export var pause_settings_panel: Control
 @export var settings_panel: SettingsPanel
 @export var objective_message_panel: PanelContainer
+@export var level_completion_panel: Control
+
+var level_completion_active: bool = false
 
 
 @export_category("Pause Menu")
@@ -45,6 +52,9 @@ func _ready() -> void:
 	
 	objective_message_panel.hide()
 	objective_message_panel.modulate.a = 0.0
+	
+	if level_completion_panel:
+		level_completion_panel.hide()
 
 	GameManager.player_health_changed.connect(
 		_on_player_health_changed
@@ -86,6 +96,21 @@ func _ready() -> void:
 
 	if game_over_panel:
 		game_over_panel.hide()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not level_completion_active:
+		return
+
+	if event.is_action_pressed("restart_game"):
+		get_viewport().set_input_as_handled()
+		completion_restart_requested.emit()
+		return
+
+	if event.is_action_pressed("pause"):
+		get_viewport().set_input_as_handled()
+		completion_menu_requested.emit()
+		return
 
 
 # ==================================================
@@ -138,6 +163,17 @@ func _update_seed_display() -> void:
 func _on_player_died() -> void:
 	if game_over_panel:
 		game_over_panel.show()
+
+
+func show_completion() -> void:
+	if not level_completion_panel:
+		push_error(
+			"GameHUD: Completion panel is not assigned."
+		)
+		return
+
+	level_completion_active = true
+	level_completion_panel.show()
 
 
 # ==================================================

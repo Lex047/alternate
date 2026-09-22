@@ -27,12 +27,16 @@ var using_debug_camera: bool = false
 
 var alternate_player_local_position: Vector2
 
+var level_completed: bool = false
+
 @export_category("Audio")
 
 @export var game_music: AudioStream
 
 
 func _ready() -> void:
+	GameManager.gameplay_input_enabled = true
+	
 	tutorial_splash.dismissed.connect(
 		_on_tutorial_dismissed
 	)
@@ -51,6 +55,14 @@ func _ready() -> void:
 
 	alternate_transition.transition_finished.connect(
 		_on_alternate_transition_finished
+	)
+	
+	game_hud.completion_restart_requested.connect(
+		_on_level_completion_restart_requested
+	)
+
+	game_hud.completion_menu_requested.connect(
+		_on_level_completion_menu_requested
 	)
 	
 	debug_camera.enabled = false
@@ -308,6 +320,11 @@ func _activate_alternate_state() -> void:
 
 	is_alternate = true
 
+	if not _activate_exit_portal():
+		push_error(
+			"Game: Could not activate exit portal."
+		)
+
 	print(
 		"Game: Alternate state activated."
 	)
@@ -325,3 +342,64 @@ func _on_alternate_transition_finished() -> void:
 		"ARTIFACT RETRIEVED",
 		"RETURN TO THE ENTRY POINT"
 	)
+
+
+func _activate_exit_portal() -> bool:
+	var start_chunk: Chunk = (
+		level_generator.get_alternate_start_chunk()
+	)
+
+	if not start_chunk:
+		push_error(
+			"Game: Alternate start chunk not found."
+		)
+		return false
+
+	var exit_portal: ExitPortal = (
+		start_chunk.get_node_or_null(
+			"Objects/ExitPortal"
+		) as ExitPortal
+	)
+
+	if not exit_portal:
+		push_error(
+			"Game: ExitPortal not found "
+			+ "in Alternate start chunk."
+		)
+		return false
+
+	if not exit_portal.exited.is_connected(
+		_on_exit_portal_exited
+	):
+		exit_portal.exited.connect(
+			_on_exit_portal_exited
+		)
+
+	exit_portal.activate()
+
+	return true
+
+
+func _on_exit_portal_exited() -> void:
+	if level_completed:
+		return
+
+	level_completed = true
+
+	GameManager.gameplay_input_enabled = false
+
+	game_hud.show_completion()
+
+	get_tree().paused = true
+
+
+func _on_level_completion_restart_requested() -> void:
+	get_tree().paused = false
+
+	GameManager.restart_current_level()
+
+
+func _on_level_completion_menu_requested() -> void:
+	get_tree().paused = false
+
+	GameManager.go_to_main_menu()

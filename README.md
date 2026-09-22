@@ -193,6 +193,12 @@ Development is now focused on completing the playable gameplay loop, enemy syste
   https://opengameart.org/content/cyberpunk-streets-in-the-dead-of-night
   Licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
 
+- Pixel art portal by f1xtach
+  https://f1xtach.itch.io/pixel-art-portal
+
+- Pixel art Artifact generated with PixelLab
+  https://www.pixellab.ai/
+
 ## License
 
 This project is currently intended for educational and academic use.
