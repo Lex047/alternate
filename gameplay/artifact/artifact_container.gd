@@ -17,9 +17,9 @@ func _process(_delta: float) -> void:
 	):
 		is_collected = true
 
-		print(
-			"ArtifactContainer: collected signal emitted"
-		)
+		#print(
+			#"ArtifactContainer: collected signal emitted"
+		#)
 
 		collected.emit()
 
@@ -27,10 +27,10 @@ func _process(_delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player:
 		player_in_range = true
-		print("ArtifactContainer: player entered range")
+		#print("ArtifactContainer: player entered range")
 
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Player:
 		player_in_range = false
-		print("ArtifactContainer: player left range")
+		#print("ArtifactContainer: player left range")

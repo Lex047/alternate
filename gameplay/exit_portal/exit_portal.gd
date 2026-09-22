@@ -39,7 +39,7 @@ func activate() -> void:
 	animated_sprite.show()
 	animated_sprite.play()
 
-	print("ExitPortal: activated.")
+	#print("ExitPortal: activated.")
 
 
 func _on_body_entered(body: Node) -> void:

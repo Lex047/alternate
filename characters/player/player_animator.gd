@@ -4,7 +4,7 @@ class_name PlayerAnimator
 @export var player: Player
 @export var animation_player: AnimationPlayer
 @export var sprite: Sprite2D
-@export var hurtbox: Area2D # Drag your Hurtbox node here in Inspector
+@export var hurtbox: Area2D
 
 var base_offset_x: float = 0.0
 

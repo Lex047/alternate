@@ -119,10 +119,10 @@ func _start_game() -> void:
 func _on_generation_finished(
 	generation_seed: int
 ) -> void:
-	print(
-		"Game: Level ready with seed ",
-		generation_seed
-	)
+	#print(
+		#"Game: Level ready with seed ",
+		#generation_seed
+	#)
 
 	if not _place_player_at_start():
 		generation_splash.set_status(
@@ -191,7 +191,7 @@ func _place_player_at_start() -> bool:
 		)
 		return false
 
-	player.global_position = (
+	player.teleport_to(
 		player_spawn.global_position
 	)
 
@@ -310,9 +310,7 @@ func _activate_alternate_state() -> void:
 		)
 		return
 
-	player.velocity = Vector2.ZERO
-
-	player.global_position = (
+	player.teleport_to(
 		alternate_goal.to_global(
 			alternate_player_local_position
 		)
@@ -331,9 +329,9 @@ func _activate_alternate_state() -> void:
 
 
 func _on_alternate_transition_finished() -> void:
-	print(
-		"Game: Alternate transition finished."
-	)
+	#print(
+		#"Game: Alternate transition finished."
+	#)
 
 	if not is_alternate:
 		return

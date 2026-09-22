@@ -2,6 +2,8 @@ extends CharacterBody2D
 class_name Player
 
 @export var player_audio: PlayerAudio
+@onready var player_camera: Camera2D = $Camera2D
+
 
 @export_category("Movement")
 @export var walk_speed: float = 120.0
@@ -391,6 +393,16 @@ func finish_ledge_climb() -> void:
 	has_ledge_climbed = true
 	jumped_this_airtime = false
 	ledge_cooldown = ledge_regrab_delay
+
+
+func teleport_to(
+	target_position: Vector2
+) -> void:
+	velocity = Vector2.ZERO
+	global_position = target_position
+
+	player_camera.reset_smoothing()
+	player_camera.force_update_scroll()
 
 
 func _physics_process(delta: float) -> void:

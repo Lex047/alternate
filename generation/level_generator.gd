@@ -4,6 +4,7 @@ class_name LevelGenerator
 signal generation_finished(seed: int)
 signal generation_failed
 
+
 # ==================================================
 # GENERATION SETTINGS
 # ==================================================
@@ -77,6 +78,15 @@ var max_solver_backtracks: int = 250
 
 @export var generation_seed: int = 12345
 @export var use_random_seed: bool = false
+
+
+# ==================================================
+# DEBUG SETTINGS
+# ==================================================
+
+@export_category("Debug")
+
+@export var verbose_generation_debug: bool = false
 
 
 # ==================================================
@@ -375,12 +385,12 @@ func generate_level() -> void:
 			break
 
 		graph_number += 1
-
-		print(
-			"Building level graph ",
-			graph_number,
-			"..."
-		)
+		if verbose_generation_debug:
+			print(
+				"Building level graph ",
+				graph_number,
+				"..."
+			)
 
 		graph_builder.build()
 
@@ -392,8 +402,8 @@ func generate_level() -> void:
 			)
 
 			continue
-
-		generation_debug.print_level_graph()
+		if verbose_generation_debug:
+			generation_debug.print_level_graph()
 
 		var remaining_attempts: int = (
 			max_generation_attempts
@@ -415,23 +425,43 @@ func generate_level() -> void:
 			_generate_attempt()
 
 			if _generation_is_complete():
+				if verbose_generation_debug:
+					print(
+						"Graph ",
+						graph_number,
+						" succeeded on local attempt ",
+						local_attempt,
+						"."
+					)
+
+				if verbose_generation_debug:
+					generation_debug.print_generation_result(
+						total_attempts
+					)
+
+					_print_alternate_plan()
+					_print_alternate_rebuild_plan()
+					_print_closure_branches()
+					_print_alternate_physical_partition()
+
 				print(
-					"Graph ",
-					graph_number,
-					" succeeded on local attempt ",
-					local_attempt,
-					"."
+					"Normal: Growth chunks: ",
+					context.normal_chunks_placed,
+					" / ",
+					context.chunk_count,
+					" | Goal chunks: ",
+					context.goal_chunks_placed,
+					" / 1",
+					" | Total physical chunks: ",
+					context.placed_chunks.size(),
+					" | Backtracks: ",
+					context.solver_backtracks,
+					" | Unresolved sockets: ",
+					chunk_tools.count_open_sockets(
+						context.placed_chunks
+					)
 				)
 
-				generation_debug.print_generation_result(
-					total_attempts
-				)
-
-				_print_alternate_plan()
-				_print_alternate_rebuild_plan()
-				_print_closure_branches()
-				_print_alternate_physical_partition()
-				
 				if not _prepare_alternate_layout():
 					push_error(
 						"LevelGenerator: Failed to prepare "
@@ -874,11 +904,12 @@ func _build_alternate_preserved_copy() -> Dictionary:
 
 		copy_map[source] = copy
 
-	print(
-		"Alternate: copied ",
-		copy_map.size(),
-		" preserved physical chunks."
-	)
+	if verbose_generation_debug:
+		print(
+			"Alternate: copied ",
+			copy_map.size(),
+			" preserved physical chunks."
+		)
 
 	return copy_map
 
@@ -976,15 +1007,16 @@ func _prepare_alternate_layout() -> bool:
 		)
 	)
 
-	print(
-		"Alternate generation seed: ",
-		alternate_context.active_generation_seed
-	)
+	if verbose_generation_debug:
+		print(
+			"Alternate generation seed: ",
+			alternate_context.active_generation_seed
+		)
 
-	print(
-		"Alternate rebuild growth count: ",
-		rebuild_growth_count
-	)
+		print(
+			"Alternate rebuild growth count: ",
+			rebuild_growth_count
+		)
 
 	var total_attempts: int = 0
 	var graph_number: int = 0
@@ -1000,11 +1032,12 @@ func _prepare_alternate_layout() -> bool:
 
 		graph_number += 1
 
-		print(
-			"Building Alternate graph ",
-			graph_number,
-			"..."
-		)
+		if verbose_generation_debug:
+			print(
+				"Building Alternate graph ",
+				graph_number,
+				"..."
+			)
 
 		alternate_graph_builder.build()
 
@@ -1091,13 +1124,14 @@ func _prepare_alternate_layout() -> bool:
 
 			alternate_layout_ready = true
 
-			print(
-				"Alternate graph ",
-				graph_number,
-				" succeeded on local attempt ",
-				local_attempt,
-				"."
-			)
+			if verbose_generation_debug:
+				print(
+					"Alternate graph ",
+					graph_number,
+					" succeeded on local attempt ",
+					local_attempt,
+					"."
+				)
 
 			print(
 				"Alternate: Growth chunks: ",
@@ -1117,9 +1151,10 @@ func _prepare_alternate_layout() -> bool:
 				)
 			)
 
-			print(
-				"Alternate: complete layout ready."
-			)
+			if verbose_generation_debug:
+				print(
+					"Alternate: complete layout ready."
+				)
 
 			return true
 
@@ -1231,9 +1266,9 @@ func activate_alternate_layout() -> bool:
 		Node.PROCESS_MODE_INHERIT
 	)
 
-	print(
-		"LevelGenerator: Alternate layout activated."
-	)
+	#print(
+		#"LevelGenerator: Alternate layout activated."
+	#)
 
 	return true
 

@@ -285,7 +285,7 @@ func show_objective_message(
 	title: String,
 	subtitle: String = ""
 ) -> void:
-	print("HUD: showing objective message")
+	#print("HUD: showing objective message")
 	
 	if objective_message_tween:
 		objective_message_tween.kill()
