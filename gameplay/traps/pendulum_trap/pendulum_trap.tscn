@@ -30,6 +30,6 @@ shape = SubResource("RectangleShape2D_kamu5")
 [node name="DamageTimer" type="Timer" parent="PendulumPivot/Area2D"]
 wait_time = 2.0
 
-[connection signal="body_entered" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_body_entered"]
-[connection signal="body_exited" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_body_exited"]
+[connection signal="area_entered" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_area_entered"]
+[connection signal="area_exited" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_area_exited"]
 [connection signal="timeout" from="PendulumPivot/Area2D/DamageTimer" to="PendulumPivot/Area2D" method="_on_damage_timer_timeout"]

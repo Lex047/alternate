@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://c6absy1ri0sro"]
+[gd_scene load_steps=58 format=3 uid="uid://c6absy1ri0sro"]
 
 [ext_resource type="Script" uid="uid://icx0stul3s40" path="res://characters/player/player.gd" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cvkxglldwalpu" path="res://characters/player/player_camera.gd" id="2_bakn2"]
@@ -554,23 +554,46 @@ _data = {
 &"walk": SubResource("Animation_g5jhy")
 }
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_audio", "ledge_detector", "ledge_grab_point", "body_collision")]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bakn2"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 70.0
+initial_velocity_min = 35.0
+initial_velocity_max = 60.0
+gravity = Vector3(0, 100, 0)
+scale_max = 2.0
+color = Color(0.632225, 1.40782e-06, 2.40654e-07, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2xk8k"]
+particle_flag_disable_z = true
+direction = Vector3(0, 1, 0)
+spread = 15.0
+initial_velocity_min = 8.0
+initial_velocity_max = 15.0
+gravity = Vector3(0, 60, 0)
+color = Color(0.631373, 0, 0, 1)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_audio", "ledge_detector", "ledge_grab_point", "body_collision", "blood_burst", "low_health_bleed")]
 collision_layer = 2
-collision_mask = 5
 script = ExtResource("1_g2els")
 player_audio = NodePath("PlayerAudio")
 ledge_detector = NodePath("LedgeDetector")
 ledge_grab_point = NodePath("LedgeGrabPoint")
 body_collision = NodePath("PhysicsCollider")
 ledge_grab_max_x_distance = 10.0
+blood_burst = NodePath("BloodBurst")
+low_health_bleed = NodePath("LowHealthBleed")
+metadata/_edit_lock_ = true
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
 process_callback = 0
 position_smoothing_speed = 1.0
 script = ExtResource("2_bakn2")
+metadata/_edit_lock_ = true
 
 [node name="PhysicsCollider" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, 21)
 shape = SubResource("CapsuleShape2D_8v65i")
 
@@ -584,12 +607,14 @@ position = Vector2(0.5, 21.5)
 shape = SubResource("RectangleShape2D_8v65i")
 
 [node name="LedgeDetector" type="ShapeCast2D" parent="."]
+visible = false
 position = Vector2(12, -20)
 shape = SubResource("RectangleShape2D_o3aog")
 target_position = Vector2(0, 0)
 collision_mask = 8
 
 [node name="LedgeGrabPoint" type="Marker2D" parent="."]
+visible = false
 position = Vector2(9, -14)
 
 [node name="PlayerAudio" type="Node2D" parent="."]
@@ -599,6 +624,7 @@ footstep_sound = ExtResource("3_bakn2")
 jump_sound = ExtResource("41_gro5v")
 land_sound = ExtResource("3_bakn2")
 ledge_climb_sound = ExtResource("44_2xk8k")
+metadata/_edit_lock_ = true
 
 [node name="MovementPlayer" type="AudioStreamPlayer" parent="PlayerAudio"]
 pitch_scale = 3.0
@@ -613,6 +639,7 @@ player = NodePath("..")
 animation_player = NodePath("AnimationPlayer")
 sprite = NodePath("Sprite2D")
 hurtbox = NodePath("../Hurtbox")
+metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerAnimator"]
 root_node = NodePath("../..")
@@ -627,4 +654,21 @@ position = Vector2(-2, 10)
 scale = Vector2(0.85, 1.1)
 texture = ExtResource("2_qhqgy")
 
+[node name="BloodBurst" type="GPUParticles2D" parent="."]
+position = Vector2(0, 14)
+emitting = false
+amount = 10
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_bakn2")
+
+[node name="LowHealthBleed" type="GPUParticles2D" parent="."]
+position = Vector2(0, 14)
+emitting = false
+amount = 4
+lifetime = 0.8
+process_material = SubResource("ParticleProcessMaterial_2xk8k")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="animation_finished" from="PlayerAnimator/AnimationPlayer" to="PlayerAnimator" method="_on_animation_player_animation_finished"]

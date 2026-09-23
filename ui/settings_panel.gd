@@ -9,6 +9,7 @@ signal navigation_focused
 @onready var master_slider: HSlider = %MasterSlider
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SFXSlider
+@onready var ui_slider: HSlider = %UISlider
 
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var show_seed_check: CheckButton = %ShowSeedCheck
@@ -41,6 +42,10 @@ func _load_settings_into_ui() -> void:
 		SettingsManager.sfx_volume
 	)
 
+	ui_slider.set_value_no_signal(
+		SettingsManager.ui_volume
+	)
+
 	fullscreen_check.set_pressed_no_signal(
 		SettingsManager.fullscreen
 	)
@@ -63,6 +68,10 @@ func _connect_settings() -> void:
 		SettingsManager.set_sfx_volume
 	)
 
+	ui_slider.value_changed.connect(
+		SettingsManager.set_ui_volume
+	)
+
 	fullscreen_check.toggled.connect(
 		SettingsManager.set_fullscreen
 	)
@@ -81,6 +90,7 @@ func _setup_focus_controls() -> void:
 		master_slider,
 		music_slider,
 		sfx_slider,
+		ui_slider,
 		fullscreen_check,
 		show_seed_check,
 		back_button

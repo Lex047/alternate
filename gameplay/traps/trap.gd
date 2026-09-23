@@ -3,36 +3,43 @@ class_name Trap
 
 
 @export_category("Damage")
-@export var damage: int = 25
-@export var damage_interval: float = 0.75
+@export var damage: int = 15
+@export var damage_interval: float = 2.0
 
 
 @onready var damage_timer: Timer = $DamageTimer
 
 
-var player_in_trap: Player
+var player_hurtbox: Area2D
+var player: Player
 
 
 func _ready() -> void:
 	damage_timer.wait_time = damage_interval
 
 
-func _on_body_entered(body: Node2D) -> void:
-	if body is not Player:
+func _on_area_entered(area: Area2D) -> void:
+	if area.name != "Hurtbox":
 		return
 
-	player_in_trap = body
+	var owner_player := area.get_parent() as Player
+
+	if not owner_player:
+		return
+
+	player_hurtbox = area
+	player = owner_player
 
 	_damage_player()
-
 	damage_timer.start()
 
 
-func _on_body_exited(body: Node2D) -> void:
-	if body != player_in_trap:
+func _on_area_exited(area: Area2D) -> void:
+	if area != player_hurtbox:
 		return
 
-	player_in_trap = null
+	player_hurtbox = null
+	player = null
 	damage_timer.stop()
 
 
@@ -41,9 +48,10 @@ func _on_damage_timer_timeout() -> void:
 
 
 func _damage_player() -> void:
-	if not is_instance_valid(player_in_trap):
+	if not is_instance_valid(player):
 		damage_timer.stop()
-		player_in_trap = null
+		player_hurtbox = null
+		player = null
 		return
 
-	player_in_trap.take_damage(damage)
+	player.take_damage(damage)

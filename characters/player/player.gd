@@ -36,6 +36,14 @@ class_name Player
 @export var max_health: int = 100
 
 
+@export_category("Effects")
+@export var blood_burst: GPUParticles2D
+@export var low_health_bleed: GPUParticles2D
+
+@export_range(0.0, 1.0, 0.01)
+var low_health_bleed_threshold: float = 0.25
+
+
 var direction: float = 0.0
 var is_sprinting: bool = false
 
@@ -64,6 +72,12 @@ func _ready() -> void:
 	if ledge_detector:
 		ledge_detector_base_x = abs(ledge_detector.position.x)
 
+	if blood_burst:
+		blood_burst.emitting = false
+
+	if low_health_bleed:
+		low_health_bleed.emitting = false
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_damage"):
@@ -84,8 +98,11 @@ func take_damage(amount: int) -> void:
 		0,
 		current_health - amount
 	)
-	
+
 	player_camera.shake()
+
+	_play_blood_burst()
+	_update_low_health_bleed()
 
 	GameManager.update_player_health(
 		current_health,
@@ -97,6 +114,9 @@ func take_damage(amount: int) -> void:
 
 
 func _die() -> void:
+	if low_health_bleed:
+		low_health_bleed.emitting = false
+
 	GameManager.handle_player_death()
 
 
@@ -405,6 +425,26 @@ func teleport_to(
 
 	player_camera.reset_smoothing()
 	player_camera.force_update_scroll()
+
+
+func _play_blood_burst() -> void:
+	if not blood_burst:
+		return
+
+	blood_burst.restart()
+	blood_burst.emitting = true
+
+
+func _update_low_health_bleed() -> void:
+	if not low_health_bleed:
+		return
+
+	var health_ratio: float = float(current_health) / float(max_health)
+
+	low_health_bleed.emitting = (
+		current_health > 0
+		and health_ratio <= low_health_bleed_threshold
+	)
 
 
 func _physics_process(delta: float) -> void:

@@ -8,6 +8,7 @@ signal show_seed_changed(enabled: bool)
 var master_volume: float = 100.0
 var music_volume: float = 100.0
 var sfx_volume: float = 100.0
+var ui_volume: float = 100.0
 
 var fullscreen: bool = false
 var show_seed: bool = false
@@ -63,6 +64,21 @@ func set_sfx_volume(value: float) -> void:
 	save_settings()
 
 
+func set_ui_volume(value: float) -> void:
+	ui_volume = clampf(
+		value,
+		0.0,
+		100.0
+	)
+
+	_set_bus_volume(
+		"UI",
+		ui_volume
+	)
+
+	save_settings()
+
+
 func set_fullscreen(enabled: bool) -> void:
 	fullscreen = enabled
 	_apply_fullscreen()
@@ -102,6 +118,11 @@ func apply_settings() -> void:
 	_set_bus_volume(
 		"SFX",
 		sfx_volume
+	)
+
+	_set_bus_volume(
+		"UI",
+		ui_volume
 	)
 	
 	_apply_fullscreen()
@@ -166,6 +187,12 @@ func save_settings() -> void:
 	)
 
 	config.set_value(
+		"audio",
+		"ui_volume",
+		ui_volume
+	)
+
+	config.set_value(
 		"display",
 		"fullscreen",
 		fullscreen
@@ -209,6 +236,11 @@ func load_settings() -> void:
 		100.0
 	)
 
+	ui_volume = config.get_value(
+		"audio",
+		"ui_volume",
+		100.0
+	)
 
 	fullscreen = config.get_value(
 		"display",
