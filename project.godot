@@ -23,9 +23,13 @@ ProgressManager="*res://core/progress_manager.gd"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/size/mode=4
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/mode=3
+window/size/window_width_override=1920
+window/size/window_height_override=1080
+window/stretch/mode="canvas_items"
+window/stretch/scale_mode="integer"
 
 [editor]
 
@@ -99,3 +103,4 @@ pointing/canvas_textures/default_texture_filter=1
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.13795, 0.1652, 0.226079, 1)

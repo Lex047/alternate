@@ -564,7 +564,7 @@ body_collision = NodePath("PhysicsCollider")
 ledge_grab_max_x_distance = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3, 3)
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 
 [node name="PhysicsCollider" type="CollisionShape2D" parent="."]

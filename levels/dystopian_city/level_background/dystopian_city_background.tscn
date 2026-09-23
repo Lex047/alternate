@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddstxwcv0a2k6"]
+
+[ext_resource type="Texture2D" uid="uid://b3qgl8h5cnupm" path="res://levels/dystopian_city/level_background/far_sky.png" id="1_b857j"]
+
+[node name="DystopianCityBackGround" type="Node2D"]
+
+[node name="FarSky" type="Parallax2D" parent="."]
+z_index = -100
+scroll_scale = Vector2(0.1, 1)
+repeat_size = Vector2(1840, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="FarSky"]
+texture_repeat = 2
+texture = ExtResource("1_b857j")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1840, 240)

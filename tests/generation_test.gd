@@ -214,7 +214,8 @@ func _on_tutorial_dismissed() -> void:
 
 func _begin_gameplay() -> void:
 	MusicManager.play_music(
-		game_music
+		game_music,
+		true
 	)
 
 
