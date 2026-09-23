@@ -54,4 +54,4 @@ func _damage_player() -> void:
 		player = null
 		return
 
-	player.take_damage(damage)
+	player.take_trap_damage(damage)

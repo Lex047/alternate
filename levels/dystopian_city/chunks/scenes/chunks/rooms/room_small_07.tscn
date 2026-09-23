@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=4 uid="uid://4quj4aexq0v6"]
+
+[ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_x6m37"]
+[ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_3mnu7"]
+
+[node name="RoomSmall07" instance=ExtResource("1_x6m37")]
+
+[node name="BackWall" parent="." index="0"]
+tile_map_data = PackedByteArray("AAAMAA8AAAAMAAEAAAANAA8AAAAMAAEAAAAOAA8AAAAMAAEAAAAPAA8AAAAMAAEAAAAQAA8AAAAMAAEAAAA=")
+
+[node name="Terrain" parent="." index="1"]
+tile_map_data = PackedByteArray("AAAAAAAAAAAEAAQAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAARAAAAAAAHAAIAAAARAAEAAAAHAAIAAAARAAIAAAAHAAIAAAARAAMAAAAHAAIAAAARAAQAAAAHAAIAAAARAAUAAAAHAAIAAAARAAYAAAAHAAIAAAARAAcAAAAHAAIAAAARAAgAAAAHAAIAAAARAAkAAAAHAAIAAAARAAoAAAAHAAIAAAARAAsAAAAHAAIAAAARAAwAAAAHAAIAAAARAA0AAAAHAAIAAAARAA4AAAAHAAIAAAARAA8AAAAHAAIAAAAPAAAAAAAEAAQAAAAQAAAAAAAEAAQAAAALAA8AAAAHAAsAAAAKAA8AAAAHAAsAAAAJAA8AAAAHAAsAAAAIAA8AAAAHAAsAAAAHAA8AAAAHAAsAAAAGAA8AAAAHAAsAAAAFAA8AAAAHAAsAAAAEAA8AAAAHAAsAAAADAA8AAAAHAAsAAAACAA8AAAAHAAsAAAABAA8AAAAHAAsAAAAAAA8AAAAHAAsAAAAMAA8AAAAJAAsAAAAKAAgAAAAJAAsAAAAJAAgAAAAIAAsAAAAIAAgAAAAIAAsAAAAHAAgAAAAIAAsAAAAGAAgAAAAIAAsAAAAFAAgAAAAIAAsAAAAEAAgAAAAIAAsAAAADAAgAAAAGAAsAAAA=")
+
+[node name="BottomSocket01" type="Marker2D" parent="Sockets" index="0"]
+position = Vector2(232, 256)
+gizmo_extents = 8.0
+script = ExtResource("2_3mnu7")
+direction = 3
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="LeftSocket01" type="Marker2D" parent="Sockets" index="1"]
+position = Vector2(0, 248)
+gizmo_extents = 8.0
+script = ExtResource("2_3mnu7")
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="GenerationBounds" parent="." index="4"]
+visible = false
+custom_minimum_size = Vector2(288, 256)

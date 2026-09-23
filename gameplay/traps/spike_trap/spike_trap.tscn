@@ -10,11 +10,13 @@ size = Vector2(22, 8)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_ptdp5")
+damage_interval = 1.5
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_uo8v7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_40rvs")
 

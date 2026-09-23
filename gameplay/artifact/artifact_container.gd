@@ -4,6 +4,11 @@ class_name ArtifactContainer
 
 signal collected
 
+@export_category("Visuals")
+@export var intact_texture: Texture2D
+@export var broken_texture: Texture2D
+
+@onready var sprite: Sprite2D = $Sprite2D
 
 var player_in_range: bool = false
 var is_collected: bool = false
@@ -22,6 +27,11 @@ func _process(_delta: float) -> void:
 		#)
 
 		collected.emit()
+
+
+func show_broken_state() -> void:
+	if broken_texture:
+		sprite.texture = broken_texture
 
 
 func _on_body_entered(body: Node2D) -> void:

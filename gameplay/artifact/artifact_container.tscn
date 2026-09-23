@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bmyfgy3maeuy4"]
+[gd_scene load_steps=5 format=3 uid="uid://bmyfgy3maeuy4"]
 
 [ext_resource type="Script" uid="uid://cqw2h410ery7s" path="res://gameplay/artifact/artifact_container.gd" id="1_u83si"]
-[ext_resource type="Texture2D" uid="uid://dhn321fsfy28a" path="res://gameplay/artifact/artifact_container.png" id="2_ujy0v"]
+[ext_resource type="Texture2D" uid="uid://dhn321fsfy28a" path="res://gameplay/artifact/artifact_container_intact.png" id="2_ujy0v"]
+[ext_resource type="Texture2D" uid="uid://txk8bitfgdph" path="res://gameplay/artifact/artifact_container_broken.png" id="3_y7x5f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u83si"]
 size = Vector2(56, 78)
@@ -11,6 +12,8 @@ z_index = -1
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_u83si")
+intact_texture = ExtResource("2_ujy0v")
+broken_texture = ExtResource("3_y7x5f")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_ujy0v")

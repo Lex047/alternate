@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://1jksxo6d5vlk"]
+
+[ext_resource type="Script" uid="uid://7ml7sgnbyvc6" path="res://gameplay/weapons/knife.gd" id="1_yrlvh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j83hu"]
+
+[node name="Knife" type="Node2D"]
+script = ExtResource("1_yrlvh")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+
+[node name="Hitbox" type="Area2D" parent="."]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_j83hu")

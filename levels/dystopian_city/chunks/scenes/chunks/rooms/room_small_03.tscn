@@ -1,15 +1,23 @@
-[gd_scene load_steps=3 format=4 uid="uid://c4a4vd8kq42si"]
+[gd_scene load_steps=5 format=4 uid="uid://c4a4vd8kq42si"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_sx1pv"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_0pxry"]
+[ext_resource type="PackedScene" uid="uid://dnewglfnhe2rt" path="res://gameplay/traps/spike_trap/spike_trap.tscn" id="2_o2lfi"]
+[ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="3_f5jpn"]
 
 [node name="RoomSmall03" instance=ExtResource("1_sx1pv")]
 
 [node name="BackWall" parent="." index="0"]
-tile_map_data = PackedByteArray("AAABAA8AAAAMAAMAAAACAA8AAAAMAAMAAAAEAA8AAAAMAAMAAAADAA8AAAAMAAMAAAAFAA8AAAAMAAMAAAA=")
+tile_map_data = PackedByteArray("AAABAA8AAAAMAAEAAAACAA8AAAAMAAEAAAAEAA8AAAAMAAEAAAADAA8AAAAMAAEAAAAFAA8AAAAMAAEAAAA=")
 
 [node name="Terrain" parent="." index="1"]
 tile_map_data = PackedByteArray("AAAFAA8AAAAGAAsAAAAGAA8AAAAHAAsAAAAHAA8AAAAHAAsAAAAIAA8AAAAHAAsAAAAJAA8AAAAHAAsAAAAKAA8AAAAHAAsAAAALAA8AAAAHAAsAAAAMAA8AAAAHAAsAAAANAA8AAAAHAAsAAAAOAA8AAAAHAAsAAAAPAA8AAAAHAAsAAAAAAA8AAAABAAIAAAAAAA4AAAABAAIAAAAAAA0AAAABAAIAAAAAAAwAAAABAAIAAAAAAAsAAAABAAIAAAAAAAoAAAABAAIAAAAAAAkAAAABAAIAAAAAAAgAAAABAAIAAAAAAAcAAAABAAIAAAAAAAYAAAABAAIAAAAAAAUAAAABAAIAAAAAAAQAAAABAAIAAAAAAAMAAAABAAIAAAAAAAIAAAABAAIAAAAAAAEAAAABAAIAAAAAAAAAAAAEAAQAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAAPAAAAAAAEAAQAAAABAAgAAAAHAAsAAAACAAgAAAAHAAsAAAADAAgAAAAHAAsAAAAEAAgAAAAHAAsAAAAFAAgAAAAHAAsAAAAGAAgAAAAHAAsAAAAHAAgAAAAJAAsAAAA=")
+
+[node name="SpikeTrap" parent="Objects" index="0" instance=ExtResource("2_o2lfi")]
+position = Vector2(177, 233)
+
+[node name="PendulumTrap" parent="Objects" index="1" instance=ExtResource("3_f5jpn")]
+position = Vector2(67, 147)
 
 [node name="BottomSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(56, 256)

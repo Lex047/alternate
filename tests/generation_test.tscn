@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://2vxo2ok7lchp"]
+[gd_scene load_steps=30 format=3 uid="uid://2vxo2ok7lchp"]
 
 [ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator.tscn" id="1_axj3q"]
 [ext_resource type="Script" uid="uid://buvmoe5xmaev7" path="res://tests/generation_test.gd" id="1_cw2b7"]
@@ -19,7 +19,9 @@
 [ext_resource type="PackedScene" uid="uid://c4a4vd8kq42si" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_03.tscn" id="11_o37ao"]
 [ext_resource type="PackedScene" uid="uid://c53bjb5wx4ve8" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_06.tscn" id="12_5mj5a"]
 [ext_resource type="PackedScene" uid="uid://ct5k6xlgp5cr8" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_small_01.tscn" id="13_07vur"]
+[ext_resource type="PackedScene" uid="uid://c165i1ecwpnk1" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_gauntlet_01.tscn" id="14_4br50"]
 [ext_resource type="PackedScene" uid="uid://bvxt2jy6l7jib" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_small_01.tscn" id="14_nk0po"]
+[ext_resource type="PackedScene" uid="uid://4quj4aexq0v6" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_07.tscn" id="15_k6t63"]
 [ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="15_nk0po"]
 [ext_resource type="PackedScene" uid="uid://c2vnyj6k8m8q1" path="res://ui/generation_splash/generation_splash.tscn" id="19_s6ku8"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/game_hud.tscn" id="20_e83hr"]
@@ -43,7 +45,7 @@ game_music = ExtResource("2_vmolj")
 
 [node name="LevelGenerator" parent="." instance=ExtResource("1_axj3q")]
 start_chunk_scene = ExtResource("2_lr6wi")
-chunk_scenes = Array[PackedScene]([ExtResource("4_yknkj"), ExtResource("9_nvjbw"), ExtResource("5_46m32"), ExtResource("3_nvjbw"), ExtResource("9_e6rwc"), ExtResource("10_o37ao"), ExtResource("11_o37ao"), ExtResource("12_5mj5a")])
+chunk_scenes = Array[PackedScene]([ExtResource("4_yknkj"), ExtResource("9_nvjbw"), ExtResource("5_46m32"), ExtResource("3_nvjbw"), ExtResource("9_e6rwc"), ExtResource("10_o37ao"), ExtResource("11_o37ao"), ExtResource("12_5mj5a"), ExtResource("14_4br50"), ExtResource("15_k6t63")])
 horizontal_corridor_scenes = Array[PackedScene]([ExtResource("6_l615m")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("7_mtyjm")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("8_yknkj"), ExtResource("9_46m32"), ExtResource("10_l615m"), ExtResource("11_mtyjm"), ExtResource("13_07vur"), ExtResource("14_nk0po")])

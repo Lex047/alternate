@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhn321fsfy28a"
-path="res://.godot/imported/artifact_container.png-de32552e796b5810e2b4b4c10e499139.ctex"
+path="res://.godot/imported/artifact_container_intact.png-6fc6e2e2cc189fcd2dd9835184bc7986.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gameplay/artifact/artifact_container.png"
-dest_files=["res://.godot/imported/artifact_container.png-de32552e796b5810e2b4b4c10e499139.ctex"]
+source_file="res://gameplay/artifact/artifact_container_intact.png"
+dest_files=["res://.godot/imported/artifact_container_intact.png-6fc6e2e2cc189fcd2dd9835184bc7986.ctex"]
 
 [params]
 

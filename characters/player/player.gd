@@ -34,6 +34,9 @@ class_name Player
 
 @export_category("Combat")
 @export var max_health: int = 100
+@export var trap_damage_cooldown: float = 0.75
+
+@onready var trap_damage_cooldown_timer: Timer = $TrapDamageCooldownTimer
 
 
 @export_category("Effects")
@@ -66,6 +69,7 @@ var ledge_detector_base_x: float = 0.0
 
 func _ready() -> void:
 	current_health = max_health
+	trap_damage_cooldown_timer.wait_time = trap_damage_cooldown
 
 	GameManager.register_player(self)
 
@@ -91,6 +95,15 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		incoming_damage = area.damage
 
 	take_damage(incoming_damage)
+
+
+func take_trap_damage(amount: int) -> void:
+	if not trap_damage_cooldown_timer.is_stopped():
+		return
+
+	trap_damage_cooldown_timer.start()
+
+	take_damage(amount)
 
 
 func take_damage(amount: int) -> void:

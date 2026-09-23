@@ -196,7 +196,7 @@ Development is now focused on completing the playable gameplay loop, enemy syste
 - Pixel art portal by f1xtach
   https://f1xtach.itch.io/pixel-art-portal
 
-- Pixel art Artifact generated with PixelLab
+- Pixel art Artifact(Intact + Broken) generated with PixelLab
   https://www.pixellab.ai/
 
 - Pixel Art Animated Traps — Free Game Assets / CraftPix

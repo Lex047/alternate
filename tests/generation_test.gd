@@ -307,6 +307,15 @@ func _activate_alternate_state() -> void:
 		)
 		return
 
+	var alternate_artifact: ArtifactContainer = (
+		alternate_goal.get_node_or_null(
+			"Objects/ArtifactContainer"
+		) as ArtifactContainer
+	)
+
+	if alternate_artifact:
+		alternate_artifact.show_broken_state()
+
 	player.teleport_to(
 		alternate_goal.to_global(
 			alternate_player_local_position
