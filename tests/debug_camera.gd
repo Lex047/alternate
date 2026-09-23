@@ -44,7 +44,7 @@ func _ready() -> void:
 	enabled = true
 
 	# Start zoomed out.
-	zoom = Vector2(0.25, 0.25)
+	zoom = Vector2(0.2, 0.2)
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -15,7 +15,7 @@ var is_alternate: bool = false
 
 @export_category("Debug")
 
-@export var debug_camera: Camera2D
+@export var debug_camera: DebugCamera
 @export var always_show_tutorial: bool = false
 
 var using_debug_camera: bool = false
@@ -78,15 +78,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _toggle_debug_camera() -> void:
-	var player_camera: Camera2D = (
-		player.get_node_or_null(
-			"Camera2D"
-		) as Camera2D
-	)
+	var player_camera: PlayerCamera = player.player_camera
 
 	if not player_camera:
 		push_error(
-			"Game: Player Camera2D not found."
+			"Game: Player camera reference is missing."
 		)
 		return
 

@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b4bpc3l7wnr0r"]
+[gd_scene load_steps=6 format=3 uid="uid://b4bpc3l7wnr0r"]
 
 [ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="1_b64qu"]
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="2_mldwy"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/game_hud.tscn" id="3_4i20e"]
+[ext_resource type="PackedScene" uid="uid://dnewglfnhe2rt" path="res://gameplay/traps/spike_trap/spike_trap.tscn" id="4_mldwy"]
+[ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="5_4i20e"]
 
 [node name="GameplayTest" type="Node2D"]
 
@@ -12,3 +14,10 @@
 position = Vector2(345, 386)
 
 [node name="HUD" parent="." instance=ExtResource("3_4i20e")]
+
+[node name="SpikeTrap" parent="." instance=ExtResource("4_mldwy")]
+z_index = 1
+position = Vector2(428, 424)
+
+[node name="PendulumTrap" parent="." instance=ExtResource("5_4i20e")]
+position = Vector2(738, 257)

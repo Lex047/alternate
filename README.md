@@ -199,6 +199,10 @@ Development is now focused on completing the playable gameplay loop, enemy syste
 - Pixel art Artifact generated with PixelLab
   https://www.pixellab.ai/
 
+- Pixel Art Animated Traps — Free Game Assets / CraftPix
+  https://free-game-assets.itch.io/pixel-art-animated-traps
+  https://craftpix.net/file-licenses/
+
 ## License
 
 This project is currently intended for educational and academic use.

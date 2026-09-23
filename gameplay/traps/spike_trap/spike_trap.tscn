@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnewglfnhe2rt"]
+
+[ext_resource type="Script" uid="uid://bhay33bborfty" path="res://gameplay/traps/trap.gd" id="1_ptdp5"]
+[ext_resource type="Texture2D" uid="uid://dggac0k8wq3gy" path="res://gameplay/traps/spike_trap/spike.png" id="1_uo8v7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_40rvs"]
+size = Vector2(22, 8)
+
+[node name="SpikeTrap" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ptdp5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_uo8v7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_40rvs")
+
+[node name="DamageTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="timeout" from="DamageTimer" to="." method="_on_damage_timer_timeout"]

@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name Player
 
 @export var player_audio: PlayerAudio
-@onready var player_camera: Camera2D = $Camera2D
+@onready var player_camera: PlayerCamera = $PlayerCamera
 
 
 @export_category("Movement")
@@ -84,6 +84,8 @@ func take_damage(amount: int) -> void:
 		0,
 		current_health - amount
 	)
+	
+	player_camera.shake()
 
 	GameManager.update_player_health(
 		current_health,

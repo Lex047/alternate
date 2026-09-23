@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://btvae704sco7s"]
+
+[ext_resource type="Script" uid="uid://4l6en6svjyct" path="res://gameplay/traps/pendulum_trap/pendulum_pivot.gd" id="1_25apa"]
+[ext_resource type="Texture2D" uid="uid://p720g0yjt6cu" path="res://gameplay/traps/pendulum_trap/pendulum_ax.png" id="2_s30rm"]
+[ext_resource type="Script" uid="uid://bhay33bborfty" path="res://gameplay/traps/trap.gd" id="3_s30rm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kamu5"]
+size = Vector2(22, 15)
+
+[node name="PendulumTrap" type="Node2D"]
+
+[node name="PendulumPivot" type="Node2D" parent="."]
+script = ExtResource("1_25apa")
+
+[node name="Sprite2D" type="Sprite2D" parent="PendulumPivot"]
+position = Vector2(-14, 20)
+texture = ExtResource("2_s30rm")
+hframes = 6
+frame = 5
+
+[node name="Area2D" type="Area2D" parent="PendulumPivot"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("3_s30rm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PendulumPivot/Area2D"]
+position = Vector2(0, 41.5)
+shape = SubResource("RectangleShape2D_kamu5")
+
+[node name="DamageTimer" type="Timer" parent="PendulumPivot/Area2D"]
+wait_time = 2.0
+
+[connection signal="body_entered" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_body_entered"]
+[connection signal="body_exited" from="PendulumPivot/Area2D" to="PendulumPivot/Area2D" method="_on_body_exited"]
+[connection signal="timeout" from="PendulumPivot/Area2D/DamageTimer" to="PendulumPivot/Area2D" method="_on_damage_timer_timeout"]

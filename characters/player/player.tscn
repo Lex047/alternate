@@ -1,6 +1,7 @@
-[gd_scene load_steps=55 format=3 uid="uid://c6absy1ri0sro"]
+[gd_scene load_steps=56 format=3 uid="uid://c6absy1ri0sro"]
 
 [ext_resource type="Script" uid="uid://icx0stul3s40" path="res://characters/player/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://cvkxglldwalpu" path="res://characters/player/player_camera.gd" id="2_bakn2"]
 [ext_resource type="Texture2D" uid="uid://dfe8pj148ltr1" path="res://characters/player/sprites/idle/idle-1.png" id="2_qhqgy"]
 [ext_resource type="Script" uid="uid://b8sgr2fleyirw" path="res://characters/player/player_animator.gd" id="2_wqfne"]
 [ext_resource type="AudioStream" uid="uid://b31k1mmcbrx6k" path="res://characters/audio/12_Step_wood_03.wav" id="3_bakn2"]
@@ -563,9 +564,11 @@ ledge_grab_point = NodePath("LedgeGrabPoint")
 body_collision = NodePath("PhysicsCollider")
 ledge_grab_max_x_distance = 10.0
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="PlayerCamera" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
-position_smoothing_enabled = true
+process_callback = 0
+position_smoothing_speed = 1.0
+script = ExtResource("2_bakn2")
 
 [node name="PhysicsCollider" type="CollisionShape2D" parent="."]
 position = Vector2(0, 21)
