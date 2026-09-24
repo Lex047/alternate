@@ -38,6 +38,9 @@ class_name Player
 
 @onready var trap_damage_cooldown_timer: Timer = $TrapDamageCooldownTimer
 
+@onready var weapon_pivot: Node2D = $WeaponPivot
+@onready var knife: Knife = $WeaponPivot/Knife
+
 
 @export_category("Effects")
 @export var blood_burst: GPUParticles2D
@@ -56,6 +59,8 @@ var jumped_this_airtime: bool = false
 
 var current_health: int
 var coyote_timer: float = 0.0
+
+var is_attacking: bool = false
 
 var is_ledge_climbing: bool = false
 var has_ledge_climbed: bool = false
@@ -86,6 +91,26 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_damage"):
 		take_damage(10)
+
+	if event.is_action_pressed("attack"):
+		_attack()
+
+
+func _attack() -> void:
+	if is_attacking or is_ledge_climbing:
+		return
+
+	is_attacking = true
+
+	knife.show_weapon()
+	knife.enable_hitbox()
+
+	await get_tree().create_timer(0.2).timeout
+
+	knife.disable_hitbox()
+	knife.hide_weapon()
+
+	is_attacking = false
 
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
@@ -478,6 +503,7 @@ func _physics_process(delta: float) -> void:
 
 	if direction != 0.0 and not is_ledge_climbing:
 		facing_direction = sign(direction)
+		weapon_pivot.scale.x = facing_direction
 
 	_update_ledge_detector()
 

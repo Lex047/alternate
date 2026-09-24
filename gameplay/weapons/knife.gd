@@ -1,12 +1,9 @@
 extends Node2D
 class_name Knife
 
-
-@export var damage: int = 25
-
-
 @onready var sprite: Sprite2D = $Sprite2D
-@onready var hitbox: Area2D = $Hitbox
+@onready var hitbox: DamageHitbox = $Hitbox
+@onready var hitbox_shape: CollisionShape2D = $Hitbox/CollisionShape2D
 
 
 func _ready() -> void:
@@ -19,12 +16,12 @@ func show_weapon() -> void:
 
 func hide_weapon() -> void:
 	sprite.hide()
-	hitbox.monitoring = false
+	hitbox_shape.disabled = true
 
 
 func enable_hitbox() -> void:
-	hitbox.monitoring = true
+	hitbox_shape.disabled = false
 
 
 func disable_hitbox() -> void:
-	hitbox.monitoring = false
+	hitbox_shape.disabled = true

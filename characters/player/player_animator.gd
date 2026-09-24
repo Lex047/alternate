@@ -48,14 +48,24 @@ func _handle_animations() -> void:
 	if player.is_ledge_climbing:
 		_play_animation("ledge_climb")
 		return
+
+	# Attack State
+	if player.is_attacking:
+		_play_animation("knife_stab")
+		return
 	
 	# Aerial / Jump State
 	if not player.is_on_floor():
-	# Only play 'fall' if we are dropping AND not already playing 'jump'
-		if !player.is_jumping and animation_player.current_animation != "jump":
+		# Only play 'fall' if we are dropping
+		# AND not already playing 'jump'
+		if (
+			not player.is_jumping
+			and animation_player.current_animation != "jump"
+		):
 			_play_animation("fall")
 		elif player.is_jumping:
 			_play_animation("jump")
+
 		return
 	
 	# Ground State

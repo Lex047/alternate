@@ -203,6 +203,9 @@ Development is now focused on completing the playable gameplay loop, enemy syste
   https://free-game-assets.itch.io/pixel-art-animated-traps
   https://craftpix.net/file-licenses/
 
+- Enemy Galore I by Admurin
+  https://admurin.itch.io/
+
 ## License
 
 This project is currently intended for educational and academic use.
