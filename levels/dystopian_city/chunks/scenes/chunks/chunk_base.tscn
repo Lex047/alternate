@@ -21,6 +21,8 @@ metadata/_edit_lock_ = true
 tile_set = ExtResource("1_1esse")
 metadata/_edit_lock_ = true
 
+[node name="EnemySpawns" type="Node2D" parent="."]
+
 [node name="Sockets" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
 

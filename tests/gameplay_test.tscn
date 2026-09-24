@@ -7,9 +7,9 @@
 [ext_resource type="Script" uid="uid://bl3f1ol7vrf48" path="res://gameplay/navigation/level_navigation.gd" id="4_0lb3p"]
 [ext_resource type="Script" uid="uid://cde0b7v55okfq" path="res://gameplay/navigation/nav_point.gd" id="4_fitwt"]
 [ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="5_4i20e"]
-[ext_resource type="PackedScene" uid="uid://bfoqggjiscpcf" path="res://characters/enemies/golem/golem.tscn" id="5_q3byy"]
+[ext_resource type="PackedScene" uid="uid://bfoqggjiscpcf" path="res://characters/enemies/golem_class/golem_base/golem.tscn" id="5_q3byy"]
 [ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="7_wk7wb"]
-[ext_resource type="PackedScene" uid="uid://xcb017aq6lyc" path="res://characters/enemies/golem_ranged/golem_ranged.tscn" id="10_ia1f5"]
+[ext_resource type="PackedScene" uid="uid://xcb017aq6lyc" path="res://characters/enemies/golem_class/golem_ranged/golem_ranged.tscn" id="10_ia1f5"]
 
 [node name="GameplayTest" type="Node2D"]
 
@@ -52,9 +52,7 @@ position = Vector2(738, 257)
 
 [node name="Golem" parent="." instance=ExtResource("5_q3byy")]
 position = Vector2(567, 408)
-max_health = 100
 
 [node name="RangedGolem" parent="." instance=ExtResource("10_ia1f5")]
 position = Vector2(0, 408)
-ranged_chase_speed = 65.0
-ranged_attack_distance = 140.0
+max_health = 50

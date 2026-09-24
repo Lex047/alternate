@@ -1,20 +1,13 @@
-[gd_scene load_steps=20 format=3 uid="uid://bfoqggjiscpcf"]
+[gd_scene load_steps=20 format=3 uid="uid://xcb017aq6lyc"]
 
-[ext_resource type="PackedScene" uid="uid://373gdpnrvadh" path="res://characters/enemies/enemy_base.tscn" id="1_iygny"]
-[ext_resource type="Script" uid="uid://dhk7ds7woy83c" path="res://characters/enemies/golem/golem.gd" id="2_jti1s"]
-[ext_resource type="Texture2D" uid="uid://c4ij7eg2cjxdr" path="res://characters/enemies/golem/sprites/golem_idle.png" id="3_cifca"]
-[ext_resource type="Texture2D" uid="uid://dobaxe2h53fxc" path="res://characters/enemies/golem/sprites/golem_run.png" id="4_1cyh2"]
-[ext_resource type="Script" uid="uid://djy11tpvysocd" path="res://gameplay/combat/damage_hitbox.gd" id="4_yswur"]
-[ext_resource type="Texture2D" uid="uid://trn6uwwerxrf" path="res://characters/enemies/golem/sprites/golem_attack.png" id="6_cov0t"]
-[ext_resource type="Texture2D" uid="uid://s4dn5lco1ijj" path="res://characters/enemies/golem/sprites/golem_death.png" id="7_rbyqq"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1cyh2"]
-size = Vector2(180, 100)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yswur"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cov0t"]
-size = Vector2(26, 24)
+[ext_resource type="PackedScene" uid="uid://bfoqggjiscpcf" path="res://characters/enemies/golem_class/golem_base/golem.tscn" id="1_tva3b"]
+[ext_resource type="Script" uid="uid://5mh0knv84a50" path="res://characters/enemies/golem_class/golem_ranged/golem_ranged.gd" id="2_7petr"]
+[ext_resource type="PackedScene" uid="uid://cikktokyv1quh" path="res://gameplay/projectiles/golem_projectile/golem_projectile.tscn" id="3_7q66l"]
+[ext_resource type="Texture2D" uid="uid://c4ij7eg2cjxdr" path="res://characters/enemies/golem_class/golem_base/sprites/golem_idle.png" id="4_meya0"]
+[ext_resource type="Texture2D" uid="uid://trn6uwwerxrf" path="res://characters/enemies/golem_class/golem_base/sprites/golem_attack.png" id="5_rw62s"]
+[ext_resource type="Texture2D" uid="uid://s4dn5lco1ijj" path="res://characters/enemies/golem_class/golem_base/sprites/golem_death.png" id="6_p62og"]
+[ext_resource type="Texture2D" uid="uid://dobaxe2h53fxc" path="res://characters/enemies/golem_class/golem_base/sprites/golem_run.png" id="7_x71gw"]
+[ext_resource type="Texture2D" uid="uid://b17jevcw01run" path="res://characters/enemies/golem_class/golem_ranged/sprites/golem_attack_ranged.png" id="8_oq70o"]
 
 [sub_resource type="Animation" id="Animation_yswur"]
 step = 0.2
@@ -28,7 +21,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_cifca")]
+"values": [ExtResource("4_meya0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -93,7 +86,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_cifca")]
+"values": [ExtResource("4_meya0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -158,7 +151,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_cov0t")]
+"values": [ExtResource("5_rw62s")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -211,7 +204,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("7_rbyqq")]
+"values": [ExtResource("6_p62og")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -333,7 +326,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_cifca")]
+"values": [ExtResource("4_meya0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -387,7 +380,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("4_1cyh2")]
+"values": [ExtResource("7_x71gw")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -437,85 +430,80 @@ _data = {
 &"run": SubResource("Animation_1cyh2")
 }
 
-[node name="Golem" instance=ExtResource("1_iygny")]
-script = ExtResource("2_jti1s")
-patrol_speed = 40.0
-patrol_duration_min = 2.0
-patrol_duration_max = 4.0
-idle_duration_min = 0.8
-idle_duration_max = 1.5
-lost_player_delay = 1.5
-chase_speed = 80.0
-
-[node name="Sprite2D" parent="." index="0"]
-position = Vector2(0, -16)
-texture = ExtResource("3_cifca")
-hframes = 4
-
-[node name="PhysicsCollider" parent="." index="1"]
-visible = false
-
-[node name="Hurtbox" parent="." index="2"]
-visible = false
-
-[node name="CollisionShape2D" parent="Hurtbox" index="0"]
-position = Vector2(1, -13)
-
-[node name="FloorDetector" parent="." index="3"]
-visible = false
-position = Vector2(10, 0)
-target_position = Vector2(0, 26)
-
-[node name="WallDetector" parent="." index="4"]
-position = Vector2(8, 0)
-target_position = Vector2(12, 0)
-
-[node name="PlayerDetector" type="Area2D" parent="." index="5"]
-collision_layer = 0
-collision_mask = 2
-monitorable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" index="0"]
-position = Vector2(73, -16)
-shape = SubResource("RectangleShape2D_1cyh2")
-
-[node name="AttackRange" type="Area2D" parent="." index="6"]
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" index="0"]
-position = Vector2(0, -13)
-shape = SubResource("RectangleShape2D_yswur")
-
-[node name="AttackHitbox" type="Area2D" parent="." index="7"]
-collision_layer = 4
-collision_mask = 0
-script = ExtResource("4_yswur")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" index="0"]
-position = Vector2(2, -13)
-shape = SubResource("RectangleShape2D_cov0t")
-disabled = true
-
-[node name="PatrolTimer" type="Timer" parent="." index="8"]
-one_shot = true
-
-[node name="LostPlayerTimer" type="Timer" parent="." index="9"]
-one_shot = true
-
-[node name="AlertTimer" type="Timer" parent="." index="10"]
-one_shot = true
-
-[node name="AnimationPlayer" parent="." index="11"]
-libraries = {
-&"": SubResource("AnimationLibrary_1cyh2")
+[sub_resource type="Animation" id="Animation_kxb0o"]
+length = 0.56
+step = 0.08
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("8_oq70o")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:vframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
 }
 
-[connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detector_body_entered"]
-[connection signal="body_exited" from="PlayerDetector" to="." method="_on_player_detector_body_exited"]
-[connection signal="area_entered" from="AttackRange" to="." method="_on_attack_range_area_entered"]
-[connection signal="area_exited" from="AttackRange" to="." method="_on_attack_range_area_exited"]
-[connection signal="timeout" from="PatrolTimer" to="." method="_on_patrol_timer_timeout"]
-[connection signal="timeout" from="LostPlayerTimer" to="." method="_on_lost_player_timer_timeout"]
-[connection signal="timeout" from="AlertTimer" to="." method="_on_alert_timer_timeout"]
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eq0hx"]
+_data = {
+&"attack_ranged": SubResource("Animation_kxb0o")
+}
+
+[node name="GolemRanged" instance=ExtResource("1_tva3b")]
+script = ExtResource("2_7petr")
+ranged_chase_speed = 65.0
+ranged_attack_distance = 140.0
+projectile_scene = ExtResource("3_7q66l")
+attack_cooldown = 1.0
+
+[node name="AttackRange" parent="." index="6"]
+monitoring = false
+
+[node name="CollisionShape2D" parent="AttackRange" index="0"]
+disabled = true
+
+[node name="ProjectileSpawn" type="Marker2D" parent="." index="8"]
+
+[node name="AnimationPlayer" parent="." index="12"]
+libraries = {
+&"": SubResource("AnimationLibrary_1cyh2"),
+&"Ranged": SubResource("AnimationLibrary_eq0hx")
+}

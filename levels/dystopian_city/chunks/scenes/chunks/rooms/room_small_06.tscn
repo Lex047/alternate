@@ -1,12 +1,26 @@
-[gd_scene load_steps=3 format=4 uid="uid://c53bjb5wx4ve8"]
+[gd_scene load_steps=4 format=4 uid="uid://c53bjb5wx4ve8"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_sp3y4"]
+[ext_resource type="Script" uid="uid://bn8df0aj06404" path="res://generation/enemies/enemy_spawn.gd" id="2_dtrxr"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_r0q6y"]
 
 [node name="RoomSmall06" instance=ExtResource("1_sp3y4")]
 
 [node name="Terrain" parent="." index="1"]
 tile_map_data = PackedByteArray("AAAAABQAAAAHAAsAAAABABQAAAAHAAsAAAACABQAAAAHAAsAAAADABQAAAAHAAsAAAAEABQAAAAHAAsAAAAFABQAAAAHAAsAAAAGABQAAAAHAAsAAAAHABQAAAAHAAsAAAAIABQAAAAHAAsAAAAJABQAAAAHAAsAAAAKAAwAAAAGAAsAAAAKABQAAAAHAAsAAAALAAAAAAAEAAQAAAALAAwAAAAHAAsAAAALABQAAAAHAAsAAAAMAAAAAAAEAAQAAAAMAAwAAAAHAAsAAAAMABQAAAAHAAsAAAANAAAAAAAEAAQAAAANAAwAAAAHAAsAAAANABQAAAAHAAsAAAAOAAAAAAAEAAQAAAAOAAwAAAAHAAsAAAAOABQAAAAHAAsAAAAPAAAAAAAEAAQAAAAPAAwAAAAHAAsAAAAPABQAAAAHAAsAAAAQAAAAAAAEAAQAAAAQAAwAAAAHAAsAAAAQABQAAAAHAAsAAAARAAAAAAAEAAQAAAARAAwAAAAHAAsAAAARABQAAAAHAAsAAAASAAAAAAAEAAQAAAASAAwAAAAHAAsAAAASABQAAAAHAAsAAAATAAAAAAAEAAQAAAATAAwAAAAHAAsAAAATABQAAAAHAAsAAAAUAAAAAAAEAAQAAAAUAAEAAAAHAAIAAAAUAAIAAAAHAAIAAAAUAAMAAAAHAAIAAAAUAAQAAAAHAAIAAAAUAAUAAAAHAAIAAAAUAAYAAAAHAAIAAAAUAAcAAAAHAAIAAAAUAAgAAAAHAAIAAAAUAAkAAAAHAAIAAAAUAAoAAAAHAAIAAAAUAAsAAAAHAAIAAAAUAAwAAAAHAAIAAAAUABQAAAAHAAsAAAAAAAYAAAABAAIAAAAAAAQAAAABAAIAAAAAAAUAAAABAAIAAAAAAAMAAAABAAIAAAAAAAIAAAABAAIAAAAAAAEAAAABAAIAAAAKAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAADAAAAAAAEAAQAAAACAAAAAAAEAAQAAAABAAAAAAAEAAQAAAAAAAAAAAAEAAQAAAAAAAcAAAABAAIAAAABAAcAAAAHAAsAAAACAAcAAAAHAAsAAAADAAcAAAAHAAsAAAAEAAcAAAAHAAsAAAAFAAcAAAAHAAsAAAAGAAcAAAAHAAsAAAAHAAcAAAAJAAsAAAA=")
+
+[node name="EnemySpawn" type="Marker2D" parent="EnemySpawns" index="0"]
+position = Vector2(258, 139)
+script = ExtResource("2_dtrxr")
+spawn_type = 1
+spawn_chance = 1.0
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="1"]
+position = Vector2(219, 270)
+script = ExtResource("2_dtrxr")
+spawn_chance = 0.4
+metadata/_custom_type_script = "uid://bn8df0aj06404"
 
 [node name="LeftSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(0, 328)
@@ -21,5 +35,5 @@ script = ExtResource("2_r0q6y")
 direction = 1
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 custom_minimum_size = Vector2(336, 336)

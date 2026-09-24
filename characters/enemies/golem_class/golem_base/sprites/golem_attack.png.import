@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4ij7eg2cjxdr"
-path="res://.godot/imported/golem_idle.png-2c6eff6c341a53ae27fa3db5986d9f0a.ctex"
+uid="uid://trn6uwwerxrf"
+path="res://.godot/imported/golem_attack.png-3bd9dbb0d0151039001f8eb074c8d443.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://characters/enemies/golem/sprites/golem_idle.png"
-dest_files=["res://.godot/imported/golem_idle.png-2c6eff6c341a53ae27fa3db5986d9f0a.ctex"]
+source_file="res://characters/enemies/golem_class/golem_base/sprites/golem_attack.png"
+dest_files=["res://.godot/imported/golem_attack.png-3bd9dbb0d0151039001f8eb074c8d443.ctex"]
 
 [params]
 

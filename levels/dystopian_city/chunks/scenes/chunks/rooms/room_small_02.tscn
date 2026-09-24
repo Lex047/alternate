@@ -1,12 +1,33 @@
-[gd_scene load_steps=3 format=4 uid="uid://bcrr1vl8spin7"]
+[gd_scene load_steps=4 format=4 uid="uid://bcrr1vl8spin7"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_x2foq"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_mr2u3"]
+[ext_resource type="Script" uid="uid://bn8df0aj06404" path="res://generation/enemies/enemy_spawn.gd" id="2_or47a"]
 
 [node name="RoomSmall02" instance=ExtResource("1_x2foq")]
 
 [node name="Terrain" parent="." index="1"]
 tile_map_data = PackedByteArray("AAAAABQAAAAHAAsAAAABABQAAAAHAAsAAAACABQAAAAHAAsAAAADABQAAAAHAAsAAAAEABQAAAAHAAsAAAAFABQAAAAHAAsAAAAGABQAAAAHAAsAAAAHABQAAAAHAAsAAAAIABQAAAAHAAsAAAAJABQAAAAHAAsAAAAKABQAAAAHAAsAAAALABQAAAAHAAsAAAAMABQAAAAHAAsAAAANABQAAAAHAAsAAAAOABQAAAAHAAsAAAAPABQAAAAHAAsAAAAQABQAAAAHAAsAAAARABQAAAAHAAsAAAASABQAAAAHAAsAAAATABQAAAAHAAsAAAAUABQAAAAHAAsAAAAAAAAAAAAEAAQAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAAPAAAAAAAEAAQAAAAQAAAAAAAEAAQAAAARAAAAAAAEAAQAAAASAAAAAAAEAAQAAAATAAAAAAAEAAQAAAAUAAAAAAAEAAQAAAAKAAwAAAAGAAsAAAALAAwAAAAHAAsAAAAMAAwAAAAHAAsAAAANAAwAAAAHAAsAAAAOAAwAAAAHAAsAAAAPAAwAAAAHAAsAAAAQAAwAAAAHAAsAAAARAAwAAAAHAAsAAAASAAwAAAAHAAsAAAATAAwAAAAHAAsAAAAUAAwAAAAHAAIAAAAUAAEAAAAHAAIAAAAUAAIAAAAHAAIAAAAUAAMAAAAHAAIAAAAUAAQAAAAHAAIAAAAUAAUAAAAHAAIAAAAUAAYAAAAHAAIAAAAUAAcAAAAHAAIAAAAUAAgAAAAHAAIAAAAUAAkAAAAHAAIAAAAUAAoAAAAHAAIAAAAUAAsAAAAHAAIAAAABAAwAAAAHAAsAAAACAAwAAAAHAAsAAAADAAwAAAAHAAsAAAAEAAwAAAAHAAsAAAAFAAwAAAAHAAsAAAAAAAEAAAABAAIAAAAAAAIAAAABAAIAAAAAAAMAAAABAAIAAAAAAAQAAAABAAIAAAAAAAUAAAABAAIAAAAAAAYAAAABAAIAAAAAAAcAAAABAAIAAAAAAAgAAAABAAIAAAAAAAkAAAABAAIAAAAAAAoAAAABAAIAAAAAAAsAAAABAAIAAAAAAAwAAAABAAIAAAARAAYAAAAHAAsAAAASAAYAAAAHAAsAAAATAAYAAAAHAAsAAAAQAAYAAAAGAAsAAAAGAAwAAAAJAAsAAAA=")
+
+[node name="EnemySpawn" type="Marker2D" parent="EnemySpawns" index="0"]
+position = Vector2(200, 281)
+script = ExtResource("2_or47a")
+spawn_chance = 0.5
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="1"]
+position = Vector2(56, 153)
+script = ExtResource("2_or47a")
+spawn_type = 2
+spawn_chance = 0.3
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn3" type="Marker2D" parent="EnemySpawns" index="2"]
+position = Vector2(267, 155)
+script = ExtResource("2_or47a")
+spawn_type = 1
+spawn_chance = 0.3
+metadata/_custom_type_script = "uid://bn8df0aj06404"
 
 [node name="LeftSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(0, 328)
@@ -21,6 +42,6 @@ script = ExtResource("2_mr2u3")
 direction = 1
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 offset_right = 336.0
 offset_bottom = 336.0

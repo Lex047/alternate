@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://t068gq14py7j"]
+[gd_scene load_steps=6 format=4 uid="uid://t068gq14py7j"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_r7jjp"]
 [ext_resource type="PackedScene" uid="uid://ooxj754ixu6j" path="res://gameplay/traps/spike_trap/spike_trap_stack.tscn" id="2_488h3"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_m8u7c"]
 [ext_resource type="PackedScene" uid="uid://dnewglfnhe2rt" path="res://gameplay/traps/spike_trap/spike_trap.tscn" id="3_0eql3"]
+[ext_resource type="Script" uid="uid://bn8df0aj06404" path="res://generation/enemies/enemy_spawn.gd" id="4_5icqq"]
 
 [node name="RoomLarge02" instance=ExtResource("1_r7jjp")]
 generation_weight = 0.5
@@ -20,6 +21,24 @@ position = Vector2(51, 395)
 [node name="SpikeTrap" parent="Objects" index="1" instance=ExtResource("3_0eql3")]
 position = Vector2(208, 166)
 scale = Vector2(-1, -1)
+
+[node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="0"]
+position = Vector2(42, 244)
+script = ExtResource("4_5icqq")
+spawn_type = 1
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn3" type="Marker2D" parent="EnemySpawns" index="1"]
+position = Vector2(382, 163)
+script = ExtResource("4_5icqq")
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn" type="Marker2D" parent="EnemySpawns" index="2"]
+position = Vector2(416, 357)
+script = ExtResource("4_5icqq")
+spawn_type = 2
+spawn_chance = 1.0
+metadata/_custom_type_script = "uid://bn8df0aj06404"
 
 [node name="RightSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(480, 216)
@@ -42,5 +61,5 @@ script = ExtResource("2_m8u7c")
 direction = 2
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 custom_minimum_size = Vector2(480, 416)

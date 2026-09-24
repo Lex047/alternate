@@ -43,6 +43,12 @@ var bounds_overlap_tolerance: float = 4.0
 @export_range(0.1, 0.8, 0.05)
 var alternate_preserve_ratio: float = 0.35
 
+# ==================================================
+# ENEMY SPAWNER
+# ==================================================
+@onready var enemy_spawner: EnemySpawner = (
+	$EnemySpawner
+)
 
 # ==================================================
 # GRAPH SETTINGS
@@ -469,7 +475,13 @@ func generate_level() -> void:
 					)
 					generation_failed.emit()
 					return
-				
+
+
+				enemy_spawner.populate_level(
+					generated_chunks,
+					context.active_generation_seed
+				)
+
 				generation_finished.emit(
 					context.active_generation_seed
 				)
@@ -1264,6 +1276,11 @@ func activate_alternate_layout() -> bool:
 
 	alternate_chunks.process_mode = (
 		Node.PROCESS_MODE_INHERIT
+	)
+
+	enemy_spawner.populate_level(
+		alternate_chunks,
+		alternate_context.active_generation_seed
 	)
 
 	#print(

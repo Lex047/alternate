@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://x5bsa6wbd1qy"]
+[gd_scene load_steps=6 format=4 uid="uid://x5bsa6wbd1qy"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_nxqnn"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_7mkqr"]
 [ext_resource type="PackedScene" uid="uid://ooxj754ixu6j" path="res://gameplay/traps/spike_trap/spike_trap_stack.tscn" id="2_nxqnn"]
 [ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="3_7mkqr"]
+[ext_resource type="Script" uid="uid://bn8df0aj06404" path="res://generation/enemies/enemy_spawn.gd" id="4_7mkqr"]
 
 [node name="RoomLarge_01" instance=ExtResource("1_nxqnn")]
 generation_weight = 0.5
@@ -19,6 +20,29 @@ position = Vector2(375, 425)
 
 [node name="PendulumTrap" parent="Objects" index="1" instance=ExtResource("3_7mkqr")]
 position = Vector2(789, 259)
+
+[node name="EnemySpawn" type="Marker2D" parent="EnemySpawns" index="0"]
+position = Vector2(535, 379)
+script = ExtResource("4_7mkqr")
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="1"]
+position = Vector2(748, 192)
+script = ExtResource("4_7mkqr")
+spawn_type = 1
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn3" type="Marker2D" parent="EnemySpawns" index="2"]
+position = Vector2(781, 558)
+script = ExtResource("4_7mkqr")
+spawn_chance = 0.8
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn4" type="Marker2D" parent="EnemySpawns" index="3"]
+position = Vector2(508, 560)
+script = ExtResource("4_7mkqr")
+spawn_chance = 0.2
+metadata/_custom_type_script = "uid://bn8df0aj06404"
 
 [node name="LeftSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(288, 440)
@@ -46,7 +70,7 @@ script = ExtResource("2_7mkqr")
 direction = 3
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 offset_left = 288.0
 offset_top = 78.0
 offset_right = 944.0

@@ -18,7 +18,7 @@ direction = 2
 [node name="LeftSocket01" parent="Sockets" index="1" instance=ExtResource("2_rujyc")]
 position = Vector2(512, 488)
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 visible = false
 offset_left = 512.0
 offset_top = 320.0
