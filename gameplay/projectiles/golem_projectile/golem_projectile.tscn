@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cikktokyv1quh"]
+
+[ext_resource type="Script" uid="uid://cue1fkk2fqsrq" path="res://gameplay/projectiles/golem_projectile/golem_projectile.gd" id="1_cfyon"]
+[ext_resource type="Texture2D" uid="uid://djt4n08puxsan" path="res://gameplay/projectiles/golem_projectile/golel_projectile.png" id="2_dappk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ug4o"]
+size = Vector2(6, 8)
+
+[node name="GolemProjectile" type="Area2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_cfyon")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_dappk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_4ug4o")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

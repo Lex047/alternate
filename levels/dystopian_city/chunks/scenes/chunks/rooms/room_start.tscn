@@ -27,4 +27,4 @@ metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 [node name="GenerationBounds" parent="." index="4"]
 offset_top = -183.0
 offset_right = 320.0
-offset_bottom = 192.0
+offset_bottom = 375.0
