@@ -1,6 +1,79 @@
-[gd_scene load_steps=2 format=3 uid="uid://blbq0rbhhpya2"]
+[gd_scene load_steps=6 format=4 uid="uid://blbq0rbhhpya2"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_7rqmh"]
+[ext_resource type="PackedScene" uid="uid://ooxj754ixu6j" path="res://gameplay/traps/spike_trap/spike_trap_stack.tscn" id="2_e7b21"]
+[ext_resource type="PackedScene" uid="uid://dnewglfnhe2rt" path="res://gameplay/traps/spike_trap/spike_trap.tscn" id="3_1nsrj"]
+[ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="4_jow65"]
+[ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="5_jow65"]
 
 [node name="RoomGauntlet02" instance=ExtResource("1_7rqmh")]
-generation_weight = 0.2
+generation_weight = 0.4
+
+[node name="Terrain" parent="." index="1"]
+tile_map_data = PackedByteArray("AAAAAB8AAAAHAAsAAAABAB8AAAAHAAsAAAACAB8AAAAHAAsAAAADAB8AAAAHAAsAAAAEAB8AAAAHAAsAAAAFAB8AAAAHAAsAAAAGAB8AAAAHAAsAAAAHAB8AAAAHAAsAAAAIAB8AAAAHAAsAAAAJAB8AAAAHAAsAAAAKAB8AAAAHAAsAAAALAB8AAAAHAAsAAAAMAB8AAAAHAAsAAAANAB8AAAAHAAsAAAAOAB8AAAAHAAsAAAAPAB8AAAAHAAsAAAAQAB8AAAAHAAsAAAARAB8AAAAHAAsAAAASAB8AAAAHAAsAAAATAB8AAAAHAAIAAAATAB4AAAAHAAIAAAATAB0AAAAHAAIAAAATABwAAAAHAAIAAAATABsAAAAHAAIAAAATABoAAAAHAAIAAAATABkAAAAHAAIAAAATABgAAAAHAAIAAAATABcAAAAHAAIAAAATABYAAAAHAAIAAAATABUAAAAHAAIAAAATABQAAAAHAAIAAAASAB4AAAAEAAQAAAARAB4AAAAEAAQAAAAQAB4AAAAEAAQAAAAPAB4AAAAEAAQAAAAOAB4AAAAEAAQAAAAOAB0AAAAEAAQAAAAPAB0AAAAEAAQAAAAPABwAAAAEAAQAAAAPABsAAAAEAAQAAAAOABsAAAAEAAQAAAAOABwAAAAEAAQAAAAQABsAAAAEAAQAAAARABsAAAAEAAQAAAASABsAAAAEAAQAAAARABwAAAAEAAQAAAAQABwAAAAEAAQAAAAQAB0AAAAEAAQAAAARAB0AAAAEAAQAAAASAB0AAAAEAAQAAAASABwAAAAEAAQAAAAOABoAAAAHAAsAAAAPABoAAAAHAAsAAAAQABoAAAAHAAsAAAARABoAAAAHAAsAAAASABoAAAAHAAsAAAANABoAAAAGAAsAAAATABMAAAAHAAIAAAATABIAAAAHAAIAAAATABEAAAAEAAQAAAASABEAAAAEAAQAAAARABEAAAAEAAQAAAAQABEAAAAEAAQAAAAPABEAAAAEAAQAAAAOABEAAAAEAAQAAAANABEAAAAEAAQAAAAMABEAAAAEAAQAAAALABEAAAAEAAQAAAAIABYAAAAIAAsAAAAJABYAAAAJAAsAAAAHABYAAAAGAAsAAAAKABEAAAAHAAIAAAAKABAAAAAHAAIAAAAKAA8AAAAHAAIAAAAKAA4AAAAHAAIAAAAKAA0AAAAHAAIAAAAAABgAAAABAAIAAAAAABcAAAABAAIAAAAAABYAAAABAAIAAAAAABUAAAABAAIAAAAAABQAAAABAAIAAAAAABMAAAABAAIAAAAAABIAAAABAAIAAAAAABEAAAABAAIAAAAAABAAAAABAAIAAAAAAA8AAAABAAIAAAAAAA4AAAABAAIAAAAAAA0AAAABAAIAAAAAAAwAAAABAAIAAAAAAAsAAAABAAIAAAAAAAoAAAABAAIAAAAEABAAAAAIAAsAAAAFABAAAAAJAAsAAAADABAAAAAGAAsAAAAAAAkAAAABAAIAAAAAAAgAAAABAAIAAAABAAkAAAAHAAsAAAACAAkAAAAJAAsAAAAAAAcAAAABAAIAAAAAAAYAAAABAAIAAAAAAAUAAAABAAIAAAAAAAQAAAABAAIAAAAAAAMAAAABAAIAAAAAAAIAAAABAAIAAAAAAAEAAAABAAIAAAAAAAAAAAAEAAQAAAAKAAwAAAAHAAIAAAAKAAsAAAAHAAIAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAAPAAAAAAAEAAQAAAAQAAAAAAAEAAQAAAARAAAAAAAEAAQAAAASAAAAAAAEAAQAAAATAAAAAAAEAAQAAAAKAAgAAAAHAAsAAAAKAAkAAAAHAAIAAAAKAAoAAAAHAAIAAAAIAAgAAAAHAAsAAAAJAAgAAAAHAAsAAAALAAgAAAAHAAsAAAAMAAgAAAAHAAsAAAANAAgAAAAHAAsAAAAOAAgAAAAHAAsAAAAPAAgAAAAHAAsAAAAQAAgAAAAHAAsAAAARAAgAAAAHAAsAAAASAAgAAAAHAAsAAAATAAgAAAAHAAsAAAAIAAkAAAAEAAQAAAAJAAkAAAAEAAQAAAA=")
+
+[node name="SpikeTrapStack" parent="Objects" index="0" instance=ExtResource("2_e7b21")]
+position = Vector2(87, 489)
+
+[node name="SpikeTrapStack2" parent="Objects" index="1" instance=ExtResource("2_e7b21")]
+position = Vector2(174, 121)
+
+[node name="SpikeTrap" parent="Objects" index="2" instance=ExtResource("3_1nsrj")]
+position = Vector2(153, 275)
+rotation = 4.71239
+
+[node name="SpikeTrap7" parent="Objects" index="3" instance=ExtResource("3_1nsrj")]
+position = Vector2(121, 140)
+rotation = 4.71239
+
+[node name="SpikeTrap2" parent="Objects" index="4" instance=ExtResource("3_1nsrj")]
+position = Vector2(23, 205)
+rotation = 1.5708
+
+[node name="SpikeTrap4" parent="Objects" index="5" instance=ExtResource("3_1nsrj")]
+position = Vector2(23, 181)
+rotation = 1.5708
+
+[node name="SpikeTrap5" parent="Objects" index="6" instance=ExtResource("3_1nsrj")]
+position = Vector2(278, 23)
+scale = Vector2(1, -1)
+
+[node name="SpikeTrap6" parent="Objects" index="7" instance=ExtResource("3_1nsrj")]
+position = Vector2(304, 23)
+scale = Vector2(1, -1)
+
+[node name="SpikeTrap3" parent="Objects" index="8" instance=ExtResource("3_1nsrj")]
+position = Vector2(152, 248)
+rotation = 4.71239
+
+[node name="PendulumTrap" parent="Objects" index="9" instance=ExtResource("4_jow65")]
+position = Vector2(221, 291)
+swing_angle = 90.0
+swing_duration = 2.0
+
+[node name="PendulumTrap3" parent="Objects" index="10" instance=ExtResource("4_jow65")]
+position = Vector2(55, 18)
+swing_angle = 45.0
+swing_duration = 0.75
+
+[node name="PendulumTrap2" parent="Objects" index="11" instance=ExtResource("4_jow65")]
+position = Vector2(72, 275)
+swing_angle = 75.0
+swing_duration = 1.75
+
+[node name="LeftSocket01" type="Marker2D" parent="Sockets" index="0"]
+position = Vector2(0, 504)
+gizmo_extents = 8.0
+script = ExtResource("5_jow65")
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="RightSocket01" type="Marker2D" parent="Sockets" index="1"]
+position = Vector2(320, 136)
+gizmo_extents = 8.0
+script = ExtResource("5_jow65")
+direction = 1
+metadata/_custom_type_script = "uid://cgnrtu3p324cm"
+
+[node name="GenerationBounds" parent="." index="4"]
+visible = false
+custom_minimum_size = Vector2(320, 512)

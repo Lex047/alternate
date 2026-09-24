@@ -24,21 +24,21 @@ position = Vector2(-736, -64)
 script = ExtResource("4_0lb3p")
 
 [node name="NavPoint1" type="Marker2D" parent="Navigation" node_paths=PackedStringArray("connections")]
-position = Vector2(739, 408)
+position = Vector2(-79, 408)
 script = ExtResource("4_fitwt")
 connections = [NodePath("../NavPoint2")]
 
 [node name="NavPoint2" type="Marker2D" parent="Navigation" node_paths=PackedStringArray("connections")]
-position = Vector2(490, 408)
+position = Vector2(186, 408)
 script = ExtResource("4_fitwt")
 connections = [NodePath("../NavPoint3")]
 
 [node name="NavPoint3" type="Marker2D" parent="Navigation"]
-position = Vector2(192, 407)
+position = Vector2(507, 408)
 script = ExtResource("4_fitwt")
 
 [node name="NavPoint4" type="Marker2D" parent="Navigation"]
-position = Vector2(-37, 407)
+position = Vector2(739, 408)
 script = ExtResource("4_fitwt")
 
 [node name="Player" parent="." instance=ExtResource("2_mldwy")]
@@ -51,12 +51,4 @@ position = Vector2(738, 257)
 
 [node name="Golem" parent="." instance=ExtResource("5_q3byy")]
 position = Vector2(567, 408)
-max_health = 100
-
-[node name="Golem2" parent="." instance=ExtResource("5_q3byy")]
-position = Vector2(560, 220)
-max_health = 100
-
-[node name="Golem3" parent="." instance=ExtResource("5_q3byy")]
-position = Vector2(106, 400)
 max_health = 100
