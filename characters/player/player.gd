@@ -86,6 +86,13 @@ func _ready() -> void:
 	if low_health_bleed:
 		low_health_bleed.emitting = false
 
+func restore_full_health() -> void:
+	current_health = max_health
+	
+	GameManager.update_player_health(
+		current_health,
+		max_health
+	)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_damage"):

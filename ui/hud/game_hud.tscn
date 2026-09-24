@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c2ynhunpkkrre"]
+[gd_scene load_steps=22 format=3 uid="uid://c2ynhunpkkrre"]
 
 [ext_resource type="Script" uid="uid://b2lb7ehc82gyp" path="res://ui/hud/game_hud.gd" id="1_rbyyf"]
 [ext_resource type="Theme" uid="uid://cula6gndqf2n5" path="res://ui/themes/default_theme.tres" id="2_276te"]
@@ -8,6 +8,13 @@
 [ext_resource type="AudioStream" uid="uid://bkhok686wv5e5" path="res://ui/audio/SFX_UI_MenuSelections.wav" id="5_o2lis"]
 [ext_resource type="AudioStream" uid="uid://cnpwfj5lnvrt" path="res://ui/audio/SFX_UI_Confirm.wav" id="6_gfles"]
 [ext_resource type="AudioStream" uid="uid://cqvrh7i13r2wd" path="res://ui/audio/SFX_UI_Cancel.wav" id="7_aixkq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmiag"]
+bg_color = Color(0.391493, 0.0195093, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0eg6"]
 
@@ -37,10 +44,9 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rft0p"]
 
-[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "health_label", "seed_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "objective_message_panel", "level_completion_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "objective_title", "objective_subtitle", "pause_audio")]
+[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("health_bar", "seed_label", "game_over_panel", "pause_panel", "pause_settings_panel", "settings_panel", "objective_message_panel", "level_completion_panel", "resume_button", "settings_button", "restart_button", "main_menu_button", "objective_title", "objective_subtitle", "pause_audio")]
 script = ExtResource("1_rbyyf")
-health_bar = NodePath("RootControl/HUDMargin/VBoxContainer/HealthBar")
-health_label = NodePath("RootControl/HUDMargin/VBoxContainer/HealthLabel")
+health_bar = NodePath("RootControl/HUDMargin/VBoxContainer/HBoxContainer/HealthBar")
 seed_label = NodePath("RootControl/HUDMargin/VBoxContainer/SeedLabel")
 game_over_panel = NodePath("RootControl/GameOverPanel")
 pause_panel = NodePath("RootControl/PausePanel")
@@ -79,16 +85,20 @@ custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="HealthLabel" type="Label" parent="RootControl/HUDMargin/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="RootControl/HUDMargin/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RootControl/HUDMargin/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "HP 100 / 100"
+text = "HP"
 
-[node name="HealthBar" type="ProgressBar" parent="RootControl/HUDMargin/VBoxContainer"]
+[node name="HealthBar" type="ProgressBar" parent="RootControl/HUDMargin/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(128, 14)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 20
+theme_override_styles/fill = SubResource("StyleBoxFlat_cmiag")
 value = 100.0
 
 [node name="Spacer" type="Control" parent="RootControl/HUDMargin/VBoxContainer"]
@@ -251,7 +261,6 @@ visible = true
 layout_mode = 2
 
 [node name="ObjectivePanel" type="PanelContainer" parent="RootControl"]
-visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -275,6 +284,14 @@ horizontal_alignment = 1
 [node name="SubtitleLabel" type="Label" parent="RootControl/ObjectivePanel/ObjectiveMessage"]
 layout_mode = 2
 text = "RETURN TO THE ENTRY POINT"
+horizontal_alignment = 1
+
+[node name="HealthNotice" type="Label" parent="RootControl/ObjectivePanel/ObjectiveMessage"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.592157, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0.25098, 1)
+theme_override_font_sizes/font_size = 14
+text = "The Artifact reinvigorates you "
 horizontal_alignment = 1
 
 [node name="PauseAudio" type="Node" parent="."]

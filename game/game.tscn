@@ -1,0 +1,67 @@
+[gd_scene load_steps=31 format=3 uid="uid://2vxo2ok7lchp"]
+
+[ext_resource type="Script" uid="uid://buvmoe5xmaev7" path="res://game/game.gd" id="1_hbvmx"]
+[ext_resource type="AudioStream" uid="uid://cntcce3efk5j0" path="res://audio/music/future_noir.ogg" id="2_fegy3"]
+[ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="3_pvdu1"]
+[ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator/level_generator.tscn" id="4_cf130"]
+[ext_resource type="PackedScene" uid="uid://c4357685gf36o" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_start.tscn" id="5_posua"]
+[ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="6_gvtgv"]
+[ext_resource type="PackedScene" uid="uid://c8scebk7eutd0" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_05.tscn" id="7_5ywmu"]
+[ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="8_mhp6k"]
+[ext_resource type="PackedScene" uid="uid://bawiwc3is1o13" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_04.tscn" id="9_vkvnp"]
+[ext_resource type="PackedScene" uid="uid://t068gq14py7j" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_02.tscn" id="10_urpib"]
+[ext_resource type="PackedScene" uid="uid://bcrr1vl8spin7" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_02.tscn" id="11_cieqw"]
+[ext_resource type="PackedScene" uid="uid://c4a4vd8kq42si" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_03.tscn" id="12_ta815"]
+[ext_resource type="PackedScene" uid="uid://c53bjb5wx4ve8" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_06.tscn" id="13_64wtb"]
+[ext_resource type="PackedScene" uid="uid://c165i1ecwpnk1" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_gauntlet_01.tscn" id="14_0rekh"]
+[ext_resource type="PackedScene" uid="uid://4quj4aexq0v6" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_07.tscn" id="15_281ou"]
+[ext_resource type="PackedScene" uid="uid://blbq0rbhhpya2" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_gauntlet_02.tscn" id="16_nrbry"]
+[ext_resource type="PackedScene" uid="uid://chbondcs7cy6l" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_horizontal_01.tscn" id="17_iswgq"]
+[ext_resource type="PackedScene" uid="uid://bgwthi7s3jey3" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_vertical_02.tscn" id="18_7tmf6"]
+[ext_resource type="PackedScene" uid="uid://cp7rt51aeyi3s" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_01.tscn" id="19_sisia"]
+[ext_resource type="PackedScene" uid="uid://dh318hpudqgk" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_top_01.tscn" id="20_xorak"]
+[ext_resource type="PackedScene" uid="uid://6gkyw1g06v4" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_01.tscn" id="21_4jymc"]
+[ext_resource type="PackedScene" uid="uid://cahxl381523xg" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_bottom_01.tscn" id="22_0lgry"]
+[ext_resource type="PackedScene" uid="uid://ct5k6xlgp5cr8" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_small_01.tscn" id="23_h7iu2"]
+[ext_resource type="PackedScene" uid="uid://bvxt2jy6l7jib" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_small_01.tscn" id="24_8sg4y"]
+[ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="25_vktc5"]
+[ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/game_hud.tscn" id="26_ohnrv"]
+[ext_resource type="PackedScene" uid="uid://c2vnyj6k8m8q1" path="res://ui/generation_splash/generation_splash.tscn" id="27_kaw54"]
+[ext_resource type="PackedScene" uid="uid://bpxrgvvtkve4r" path="res://ui/tutorial_splash/tutorial_splash.tscn" id="28_1paru"]
+[ext_resource type="PackedScene" uid="uid://cavriwbq8wpgh" path="res://ui/alternate_transition/alternate_transition.tscn" id="29_jbuku"]
+[ext_resource type="Script" uid="uid://bv1vj4ycofmy5" path="res://debug/debug_camera.gd" id="30_bq3im"]
+
+[node name="Game" type="Node2D" node_paths=PackedStringArray("tutorial_splash", "level_generator", "generation_splash", "alternate_transition", "game_hud", "debug_camera", "player")]
+script = ExtResource("1_hbvmx")
+tutorial_splash = NodePath("TutorialSplash")
+level_generator = NodePath("LevelGenerator")
+generation_splash = NodePath("GenerationSplash")
+alternate_transition = NodePath("AlternateTransition")
+game_hud = NodePath("GameHUD")
+debug_camera = NodePath("DebugCamera")
+player = NodePath("Player")
+game_music = ExtResource("2_fegy3")
+
+[node name="Player" parent="." instance=ExtResource("3_pvdu1")]
+
+[node name="LevelGenerator" parent="." instance=ExtResource("4_cf130")]
+start_chunk_scene = ExtResource("5_posua")
+chunk_scenes = Array[PackedScene]([ExtResource("6_gvtgv"), ExtResource("7_5ywmu"), ExtResource("8_mhp6k"), ExtResource("9_vkvnp"), ExtResource("10_urpib"), ExtResource("11_cieqw"), ExtResource("12_ta815"), ExtResource("13_64wtb"), ExtResource("14_0rekh"), ExtResource("15_281ou"), ExtResource("16_nrbry")])
+horizontal_corridor_scenes = Array[PackedScene]([ExtResource("17_iswgq")])
+vertical_corridor_scenes = Array[PackedScene]([ExtResource("18_7tmf6")])
+terminal_chunk_scenes = Array[PackedScene]([ExtResource("19_sisia"), ExtResource("20_xorak"), ExtResource("21_4jymc"), ExtResource("22_0lgry"), ExtResource("23_h7iu2"), ExtResource("24_8sg4y")])
+goal_chunk_scenes = Array[PackedScene]([ExtResource("25_vktc5")])
+generation_seed = 66152306
+use_random_seed = true
+
+[node name="GameHUD" parent="." instance=ExtResource("26_ohnrv")]
+
+[node name="GenerationSplash" parent="." instance=ExtResource("27_kaw54")]
+
+[node name="TutorialSplash" parent="." instance=ExtResource("28_1paru")]
+
+[node name="AlternateTransition" parent="." instance=ExtResource("29_jbuku")]
+
+[node name="DebugCamera" type="Camera2D" parent="."]
+enabled = false
+script = ExtResource("30_bq3im")

@@ -1,101 +1,96 @@
 # Alternate
 
-**Alternate** is a 2D pixel-art platformer currently being developed in Godot as a final project.
+**Alternate** is a 2D pixel-art platformer developed in Godot as a final project.
 
-The game combines responsive platforming with hand-authored level chunks assembled through procedural generation. The player explores a generated dystopian environment, reaches a target at the end of the level, triggers an altered version of the world, and must make their way back to escape.
+The game combines responsive platforming with hand-authored level chunks assembled through procedural generation. The player explores a generated dystopian environment, reaches an artifact at the end of the level, triggers an altered version of the world, and must survive the perilous return journey to escape.
 
-## Current Features
+---
 
-### Player Movement
+## Core Features
 
-- Walking
-- Sprinting
-- Jumping
-- Coyote time
-- Ledge grabbing and climbing
-- Automatic ledge detection
-- Grab-point reach validation
-- Left and right facing ledges
+### Player Movement & Traversal
+
+- Responsive lateral movement, acceleration, and sprinting
+- Jump physics tuned with coyote time and jump buffering
+- Automatic ledge detection, reach validation, and climbing (facing left or right)
 - Dedicated climbable collision layer
 
-### Player Systems
+### Player Systems & Combat
 
-- Health system
-- Hurtbox and damage handling
-- Death and restart handling
-- Movement and action sound effects
+- Robust health and invulnerability framework
+- Dedicated hurtbox, hitbox, and damage calculation pipeline
+- Death, respawn, and run restart handling
+- Movement, action, and impact sound effects
 
 ### Procedural Level Generation
 
-- Graph-based procedural level structure
-- Reusable hand-authored chunk scenes
-- Growth rooms, corridors, terminals, start rooms, and goal rooms
-- Horizontal and vertical chunk connections
-- Socket-based chunk placement
-- Collision and bounds validation
-- Solver backtracking
-- Automatic generation retries
-- Graph regeneration after repeated placement failures
-- Deterministic seeded generation
-- Random player-readable level seeds
-- Optional level seed display
-- Weighted chunk selection
-- Usage balancing between room variants
-- Prevention of identical consecutive growth rooms
-- Multiple small and large room variants
-- Generation debugging and validation
+- **Graph-Based Architecture:** High-level logical layout resolved into physical, hand-authored chunk scenes.
+- **Dynamic Chunk Types:** Start rooms, goal rooms, growth rooms, corridors, and dead-end terminals.
+- **Smart Placement:** Socket-based directional stitching with bounds validation, collision checks, and solver backtracking.
+- **Balancing & Variety:** Usage balancing to prevent repetitive chunk runs, weighted chunk selection, and automatic graph regeneration upon placement bottlenecks.
+- **Deterministic Seeding:** Readable seed generation with run reproduction and an optional in-game seed HUD toggle.
 
-### User Interface
+### Dual-State World ("The Alternate")
 
-- Main menu
-- Pause menu
-- Game over interface
-- Health display
-- Reusable settings panel
-- Master, music, and SFX volume controls
-- Fullscreen setting
-- Level seed visibility setting
-- Keyboard and mouse focus navigation
-- UI interaction sound effects
-- Level generation splash screen
+- **Phase Shift Mechanic:** Interacting with the goal-room artifact shatters reality, flipping the level into its hostile "Alternate" state.
+- **Dynamic Environment Changes:** Shifting environmental hazards and restructured pathing requirements on the return route.
+- **Extraction Sequence:** The player must backtrack through the transformed layout to reach the newly activated extraction portal at the original spawn point.
 
-### Audio
+### Enemy AI (Finite State Machine)
 
-- Player movement and action SFX
-- UI navigation and confirmation SFX
-- Main menu music
-- Gameplay music
-- Separate Master, Music, SFX, and UI audio buses
-- Persistent audio settings
+- Modular Finite State Machine (FSM) architecture driving enemy logic:
+  - **Melee Enemy:** Patrols terrain, acquires player target within line-of-sight/aggro radius, chases aggressively, and executes close-range telegraph attacks.
+  - **Ranged Enemy:** Maintains spacing, tracks player's horizontal positioning, and fires moving projectiles with gravity effect and cooldown windows.
+- Dynamic enemy spawning via chunk-authored spawn markers.
+- Hurtbox/Hitbox interaction with stagger effects on the enemies.
 
-## In Development
+### Environmental Hazards
 
-Current development is focused on completing the main gameplay loop.
+- Static and animated surface hazards (spikes, floor traps).
+- Timing-based traps requiring precise platforming execution.
+- World-state-reactive hazards that intensify once the Alternate state is triggered.
 
-Planned and in-progress systems include:
+### User Interface & Audio
 
-- Player spawning from generated start-room markers
-- Artifact interaction in the generated goal room
-- Alternate world state and transition
-- Return journey after collecting the artifact
-- Exit portal and level completion
-- Enemies
-  - Animation
-  - Player detection
-  - Movement and pathfinding
-  - Combat and damage interaction
-- Enemy spawn markers inside generated chunks
-- Environmental hazards such as spikes and moving traps
-- Additional room and terminal variants
-- Treasure rooms
-- Treasure chests and a small weapon pool
-- Alternate-state environment changes
+- Complete UI flow: Splash screen, Main Menu, Pause Menu, Settings Panel, and Game Over screen.
+- Health display and optional level seed display.
+- Full keyboard and controller focus navigation.
+- 4-channel audio bus architecture: **Master**, **Music**, **SFX**, and **UI**.
+- Persistent user settings for fullscreen and audio volume.
 
-## Built With
+---
 
-- **Godot 4.4.1**
-- **GDScript**
-- Pixel-art assets and animations
+## The Gameplay Loop
+
+```mermaid
+flowchart LR
+    A[Start Run] --> B[Explore Generated Sector]
+    B --> C[Navigate Hazards & Combat]
+    C --> D[Trigger Alternate State]
+    D --> E[Survive Transformed Return]
+    E --> F[Reach Active Portal]
+    F --> G[Victory / Escape]
+```
+
+1. **Infiltration:** Spawn at the start room of a procedurally assembled facility.
+2. **Exploration:** Navigate terrain, bypass deadly traps, and defeat patrolling melee and ranged units.
+3. **The Trigger:** Reach the core chamber and interact with the Artifact.
+4. **The Alternate:** The facility enters a compromised state—new hazards activate, the environment shifts, and escape conditions lock in.
+5. **Extraction:** Race back across the modified terrain to the extraction portal to complete the run.
+
+## Project Structure
+
+Alternate is engineered around modular, component-driven design principles in Godot 4:
+
+- `src/characters/`: Player and enemy FSM implementations, states, and hitboxes.
+- `src/generation/`: Graph solvers, chunk registries, socket matchers, and placement validators.
+- `src/levels/level/chunks`: Hand-authored scene slices categorized by type (corridor, growth, terminal, goal).
+- `src/gameplay/`: Reusable game components such as traps, projectiles and weapons
+- `src/core/`: Game Management components such as game and setting managers
+- `src/ui/`: Menus, transition panels, splashes and in-game HUD layers.
+- `src/autoload/`: Global singletons managing world state, audio routing, and seed persistence.
+
+---
 
 ## Built With
 
@@ -126,46 +121,30 @@ Planned and in-progress systems include:
 | Move Right | D / Right Arrow |
 | Jump       | Space           |
 | Sprint     | Shift           |
+| Interact   | E               |
+| Attack     | X               |
 
 Controls may change during development.
 
-## Project Structure
+## In Development
 
-Alternate uses reusable scenes and component-focused systems.
+- Additional chunk themes and environmental biomes
 
-Levels are assembled from hand-authored chunk scenes. Each chunk contains its own terrain, background elements, gameplay objects, connection sockets, and generation bounds.
+- Expanded weapon and item pool via optional treasure rooms
 
-Chunks are connected procedurally using compatible directional sockets. Horizontal and vertical corridors are used as structural connections between gameplay rooms.
+- Environment and biome relevant Game Assets
 
-The generator first creates a logical level graph and then attempts to realise that graph using physical chunk scenes. Placement is validated using chunk bounds, socket compatibility, collision checks, and backtracking.
+- Boss encounter guarding the artifact room
 
-Chunk selection uses generation weights and usage balancing so common rooms can appear more frequently while distinctive or larger rooms can remain less common.
+- Extended enemy roster with aerial/flying units
 
-Generated levels use deterministic seeds, allowing individual layouts to be reproduced for debugging and testing.
+- Enemy Pathfinding system
 
-Gameplay systems such as the player, HUD, settings, audio, and procedural generation are kept separate where possible so they can be developed and tested independently.
-
-## Planned Gameplay Loop
-
-The intended core gameplay loop is:
-
-Generate a new level.
-Spawn the player in the starting chunk.
-Explore the generated environment.
-Avoid hazards and fight enemies.
-Reach the goal room and interact with the artifact.
-Trigger the Alternate state.
-Return through the altered level.
-Reach the activated exit portal.
-Escape and complete the level.
+- Speedrun timer and run statistic tracking
 
 ## Development Status
 
 This project is actively in development as a final academic project.
-
-The procedural generation, player movement, UI, settings, audio, and core supporting systems are currently functional.
-
-Development is now focused on completing the playable gameplay loop, enemy systems, environmental interaction, and final level content before testing and polish.
 
 ## Credits
 
@@ -206,8 +185,11 @@ Development is now focused on completing the playable gameplay loop, enemy syste
 - Enemy Galore I by Admurin
   https://admurin.itch.io/
 
+- dying female by AmeAngelofSin
+  https://freesound.org/people/AmeAngelofSin/sounds/345049/
+  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
 ## License
 
-This project is currently intended for educational and academic use.
-
-Unless otherwise stated, project code and original assets should not be reused or redistributed without permission.
+This project is created for educational and academic assessment.
+All rights to original code and project assembly belong to the author. Third-party assets remain subject to their respective original licenses noted above.

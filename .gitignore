@@ -10,6 +10,7 @@
 *.ipa
 *.html
 *.wasm
+*export_presets.cfg
 
 # OS / System junk
 .DS_Store

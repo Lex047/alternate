@@ -10,8 +10,8 @@ var music_volume: float = 30.0
 var sfx_volume: float = 100.0
 var ui_volume: float = 100.0
 
-var fullscreen: bool = false
-var show_seed: bool = false
+var fullscreen: bool = true
+var show_seed: bool = true
 
 
 func _ready() -> void:
@@ -245,11 +245,11 @@ func load_settings() -> void:
 	fullscreen = config.get_value(
 		"display",
 		"fullscreen",
-		false
+		true
 	)
 
 	show_seed = config.get_value(
 		"gameplay",
 		"show_seed",
-		false
+		true
 	)

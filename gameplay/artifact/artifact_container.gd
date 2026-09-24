@@ -12,6 +12,7 @@ signal collected
 
 var player_in_range: bool = false
 var is_collected: bool = false
+var player: Player = null
 
 
 func _process(_delta: float) -> void:
@@ -22,9 +23,8 @@ func _process(_delta: float) -> void:
 	):
 		is_collected = true
 
-		#print(
-			#"ArtifactContainer: collected signal emitted"
-		#)
+		if player:
+			player.restore_full_health()
 
 		collected.emit()
 
@@ -36,11 +36,11 @@ func show_broken_state() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player:
+		player = body
 		player_in_range = true
-		#print("ArtifactContainer: player entered range")
 
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Player:
 		player_in_range = false
-		#print("ArtifactContainer: player left range")
+		player = null
