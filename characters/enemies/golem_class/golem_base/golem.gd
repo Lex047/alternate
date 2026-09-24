@@ -12,6 +12,7 @@ enum State {
 	DEAD,
 }
 
+@export var golem_audio: EnemyAudio
 
 @export_category("Patrol")
 @export var patrol_speed: float = 40.0
@@ -313,6 +314,9 @@ func _process_chase() -> void:
 func _enter_attack() -> void:
 	velocity.x = 0.0
 
+	if golem_audio: 
+		golem_audio.play_attack()
+
 	animation_player.play("attack")
 
 	_run_attack()
@@ -375,6 +379,9 @@ func _enter_hurt() -> void:
 		"disabled",
 		true
 	)
+	
+	if golem_audio:
+		golem_audio.play_hit()
 
 	animation_player.play("hurt")
 
@@ -414,6 +421,9 @@ func _enter_dead() -> void:
 		"disabled",
 		true
 	)
+
+	if golem_audio:
+		golem_audio.play_death()
 
 	animation_player.play("death")
 

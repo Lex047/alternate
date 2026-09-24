@@ -1,18 +1,19 @@
-[gd_scene load_steps=63 format=3 uid="uid://c6absy1ri0sro"]
+[gd_scene load_steps=64 format=3 uid="uid://c6absy1ri0sro"]
 
 [ext_resource type="Script" uid="uid://icx0stul3s40" path="res://characters/player/player.gd" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cvkxglldwalpu" path="res://characters/player/player_camera.gd" id="2_bakn2"]
 [ext_resource type="Texture2D" uid="uid://dfe8pj148ltr1" path="res://characters/player/sprites/idle/idle-1.png" id="2_qhqgy"]
 [ext_resource type="Script" uid="uid://b8sgr2fleyirw" path="res://characters/player/player_animator.gd" id="2_wqfne"]
 [ext_resource type="PackedScene" uid="uid://1jksxo6d5vlk" path="res://gameplay/weapons/knife.tscn" id="3_2xk8k"]
-[ext_resource type="AudioStream" uid="uid://b31k1mmcbrx6k" path="res://characters/audio/12_Step_wood_03.wav" id="3_bakn2"]
+[ext_resource type="AudioStream" uid="uid://b31k1mmcbrx6k" path="res://characters/audio/step_wood.wav" id="3_bakn2"]
 [ext_resource type="Texture2D" uid="uid://3gtcef5pven0" path="res://characters/player/sprites/idle/idle-2.png" id="3_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://clmset0y7roe8" path="res://characters/player/sprites/idle/idle-3.png" id="4_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://bclymfiq5pjdk" path="res://characters/player/sprites/idle/idle-4.png" id="5_fjrip"]
 [ext_resource type="Texture2D" uid="uid://cwokcv1rtf6aj" path="res://characters/player/sprites/run/run-1.png" id="6_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://db2jctx1j2alf" path="res://characters/player/sprites/run/run-2.png" id="7_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b000iqmr2smt" path="res://characters/player/sprites/run/run-3.png" id="8_f1ej7"]
-[ext_resource type="AudioStream" uid="uid://basmkhyjvau4m" path="res://characters/audio/56_Attack_03.wav" id="8_jysfx"]
+[ext_resource type="AudioStream" uid="uid://basmkhyjvau4m" path="res://characters/audio/attack.wav" id="8_jysfx"]
+[ext_resource type="AudioStream" uid="uid://c3qwy6djobt4u" path="res://characters/audio/hurt.wav" id="9_8tbpq"]
 [ext_resource type="Texture2D" uid="uid://bme15hs12ia78" path="res://characters/player/sprites/run/run-4.png" id="9_oprun"]
 [ext_resource type="Texture2D" uid="uid://0unlf6p1vgb2" path="res://characters/player/sprites/run/run-5.png" id="10_a8ls1"]
 [ext_resource type="Texture2D" uid="uid://bubfavadt64i5" path="res://characters/player/sprites/run/run-6.png" id="11_qfm1y"]
@@ -44,8 +45,8 @@
 [ext_resource type="Texture2D" uid="uid://4mv4jdnkfu1l" path="res://characters/player/sprites/ledge_climb/ledge_climb-4.png" id="38_5rrwf"]
 [ext_resource type="Texture2D" uid="uid://dnnelkbev3e5v" path="res://characters/player/sprites/ledge_climb/ledge_climb-5.png" id="39_gro5v"]
 [ext_resource type="Script" uid="uid://b7bdwtghykpcc" path="res://characters/player/player_audio.gd" id="40_5rrwf"]
-[ext_resource type="AudioStream" uid="uid://bju2fnhpk2jh5" path="res://characters/audio/30_Jump_03.wav" id="41_gro5v"]
-[ext_resource type="AudioStream" uid="uid://klla1yqqkute" path="res://characters/audio/42_Cling_climb_03.wav" id="44_2xk8k"]
+[ext_resource type="AudioStream" uid="uid://bju2fnhpk2jh5" path="res://characters/audio/jump.wav" id="41_gro5v"]
+[ext_resource type="AudioStream" uid="uid://klla1yqqkute" path="res://characters/audio/ledge_climb.wav" id="44_2xk8k"]
 [ext_resource type="Texture2D" uid="uid://dbnvgstbbe01k" path="res://characters/player/sprites/attack/knife_stab/knife_stab-1.png" id="46_qi0sd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8v65i"]
@@ -861,6 +862,7 @@ jump_sound = ExtResource("41_gro5v")
 land_sound = ExtResource("3_bakn2")
 ledge_climb_sound = ExtResource("44_2xk8k")
 attack_sound = ExtResource("8_jysfx")
+hurt_sound = ExtResource("9_8tbpq")
 metadata/_edit_lock_ = true
 
 [node name="MovementPlayer" type="AudioStreamPlayer" parent="PlayerAudio"]

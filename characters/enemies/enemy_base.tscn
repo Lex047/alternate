@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://373gdpnrvadh"]
+[gd_scene load_steps=5 format=3 uid="uid://373gdpnrvadh"]
 
 [ext_resource type="Script" uid="uid://cl8xao2fek3h4" path="res://characters/enemies/enemy_base.gd" id="1_kvjwy"]
+[ext_resource type="Script" uid="uid://u7sgxqrj0wab" path="res://characters/enemies/enemy_audio.gd" id="2_dhbtv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4cs3e"]
 
@@ -30,5 +31,12 @@ target_position = Vector2(0, 25)
 target_position = Vector2(25, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="EnemyAudio" type="Node" parent="."]
+script = ExtResource("2_dhbtv")
+
+[node name="MovementPlayer" type="AudioStreamPlayer" parent="EnemyAudio"]
+
+[node name="ActionPlayer" type="AudioStreamPlayer" parent="EnemyAudio"]
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

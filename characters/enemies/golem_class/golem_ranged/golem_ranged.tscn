@@ -493,6 +493,7 @@ ranged_chase_speed = 65.0
 ranged_attack_distance = 140.0
 projectile_scene = ExtResource("3_7q66l")
 attack_cooldown = 1.0
+max_health = 50
 
 [node name="AttackRange" parent="." index="6"]
 monitoring = false

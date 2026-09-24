@@ -10,7 +10,7 @@ class_name PlayerAudio
 @export var land_sound: AudioStream
 @export var ledge_climb_sound: AudioStream
 @export var attack_sound: AudioStream
-
+@export var hurt_sound: AudioStream
 
 func play_footstep() -> void:
 	if not footstep_sound:
@@ -35,6 +35,8 @@ func play_ledge_climb() -> void:
 func play_attack() -> void:
 	_play_action(attack_sound, 1.0)
 
+func play_hurt() -> void:
+	_play_action(hurt_sound, 1.0)
 
 func _play_action(
 	sound: AudioStream,

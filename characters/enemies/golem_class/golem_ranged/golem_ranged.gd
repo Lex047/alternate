@@ -70,6 +70,10 @@ func _enter_attack() -> void:
 	velocity.x = 0.0
 
 	_face_target()
+	
+	if golem_audio:
+		golem_audio.play_attack()
+	
 	_play_animation("Ranged/attack_ranged")
 
 	_run_ranged_attack()

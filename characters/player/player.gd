@@ -140,7 +140,10 @@ func take_damage(amount: int) -> void:
 	)
 
 	player_camera.shake()
-
+	
+	if player_audio:
+		player_audio.play_hurt()
+	
 	_play_blood_burst()
 	_update_low_health_bleed()
 

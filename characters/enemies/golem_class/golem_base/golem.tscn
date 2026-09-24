@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bfoqggjiscpcf"]
+[gd_scene load_steps=22 format=3 uid="uid://bfoqggjiscpcf"]
 
 [ext_resource type="PackedScene" uid="uid://373gdpnrvadh" path="res://characters/enemies/enemy_base.tscn" id="1_iygny"]
 [ext_resource type="Script" uid="uid://dhk7ds7woy83c" path="res://characters/enemies/golem_class/golem_base/golem.gd" id="2_jti1s"]
@@ -7,9 +7,11 @@
 [ext_resource type="Script" uid="uid://djy11tpvysocd" path="res://gameplay/combat/damage_hitbox.gd" id="4_yswur"]
 [ext_resource type="Texture2D" uid="uid://trn6uwwerxrf" path="res://characters/enemies/golem_class/golem_base/sprites/golem_attack.png" id="6_cov0t"]
 [ext_resource type="Texture2D" uid="uid://s4dn5lco1ijj" path="res://characters/enemies/golem_class/golem_base/sprites/golem_death.png" id="7_rbyqq"]
+[ext_resource type="AudioStream" uid="uid://qh6l16okuwid" path="res://characters/audio/hit.wav" id="8_kqsie"]
+[ext_resource type="AudioStream" uid="uid://basmkhyjvau4m" path="res://characters/audio/attack.wav" id="9_kqsie"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1cyh2"]
-size = Vector2(180, 100)
+size = Vector2(180, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yswur"]
 
@@ -437,8 +439,9 @@ _data = {
 &"run": SubResource("Animation_1cyh2")
 }
 
-[node name="Golem" instance=ExtResource("1_iygny")]
+[node name="Golem" node_paths=PackedStringArray("golem_audio") instance=ExtResource("1_iygny")]
 script = ExtResource("2_jti1s")
+golem_audio = NodePath("EnemyAudio")
 patrol_speed = 40.0
 patrol_duration_min = 2.0
 patrol_duration_max = 4.0
@@ -492,6 +495,7 @@ shape = SubResource("RectangleShape2D_yswur")
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("4_yswur")
+damage = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" index="0"]
 position = Vector2(2, -13)
@@ -511,6 +515,11 @@ one_shot = true
 libraries = {
 &"": SubResource("AnimationLibrary_1cyh2")
 }
+
+[node name="EnemyAudio" parent="." index="12"]
+hit_sound = ExtResource("8_kqsie")
+attack_sound = ExtResource("9_kqsie")
+death_sound = ExtResource("8_kqsie")
 
 [connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detector_body_entered"]
 [connection signal="body_exited" from="PlayerDetector" to="." method="_on_player_detector_body_exited"]

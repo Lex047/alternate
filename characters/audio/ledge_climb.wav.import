@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://klla1yqqkute"
-path="res://.godot/imported/42_Cling_climb_03.wav-87cd910490df42cfe10911be5b6184c1.sample"
+path="res://.godot/imported/ledge_climb.wav-9ef132e91af1b9c45742471ccab10292.sample"
 
 [deps]
 
-source_file="res://characters/audio/42_Cling_climb_03.wav"
-dest_files=["res://.godot/imported/42_Cling_climb_03.wav-87cd910490df42cfe10911be5b6184c1.sample"]
+source_file="res://characters/audio/ledge_climb.wav"
+dest_files=["res://.godot/imported/ledge_climb.wav-9ef132e91af1b9c45742471ccab10292.sample"]
 
 [params]
 

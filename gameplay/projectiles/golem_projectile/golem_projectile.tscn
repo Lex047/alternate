@@ -10,6 +10,7 @@ size = Vector2(6, 8)
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_cfyon")
+damage = 15
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_dappk")
