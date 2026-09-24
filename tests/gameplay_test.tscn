@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b4bpc3l7wnr0r"]
+[gd_scene load_steps=10 format=3 uid="uid://b4bpc3l7wnr0r"]
 
 [ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="1_b64qu"]
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="2_mldwy"]
 [ext_resource type="PackedScene" uid="uid://chbondcs7cy6l" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_horizontal_01.tscn" id="2_q3byy"]
 [ext_resource type="PackedScene" uid="uid://c2ynhunpkkrre" path="res://ui/hud/game_hud.tscn" id="3_4i20e"]
+[ext_resource type="Script" uid="uid://bl3f1ol7vrf48" path="res://gameplay/navigation/level_navigation.gd" id="4_0lb3p"]
+[ext_resource type="Script" uid="uid://cde0b7v55okfq" path="res://gameplay/navigation/nav_point.gd" id="4_fitwt"]
 [ext_resource type="PackedScene" uid="uid://btvae704sco7s" path="res://gameplay/traps/pendulum_trap/pendulum_trap.tscn" id="5_4i20e"]
 [ext_resource type="PackedScene" uid="uid://bfoqggjiscpcf" path="res://characters/enemies/golem/golem.tscn" id="5_q3byy"]
 [ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="7_wk7wb"]
@@ -14,6 +16,30 @@
 
 [node name="CorridorHorizontal_01" parent="." instance=ExtResource("2_q3byy")]
 position = Vector2(-272, 112)
+
+[node name="RoomSmall_01" parent="." instance=ExtResource("7_wk7wb")]
+position = Vector2(-736, -64)
+
+[node name="Navigation" type="Node2D" parent="."]
+script = ExtResource("4_0lb3p")
+
+[node name="NavPoint1" type="Marker2D" parent="Navigation" node_paths=PackedStringArray("connections")]
+position = Vector2(739, 408)
+script = ExtResource("4_fitwt")
+connections = [NodePath("../NavPoint2")]
+
+[node name="NavPoint2" type="Marker2D" parent="Navigation" node_paths=PackedStringArray("connections")]
+position = Vector2(490, 408)
+script = ExtResource("4_fitwt")
+connections = [NodePath("../NavPoint3")]
+
+[node name="NavPoint3" type="Marker2D" parent="Navigation"]
+position = Vector2(192, 407)
+script = ExtResource("4_fitwt")
+
+[node name="NavPoint4" type="Marker2D" parent="Navigation"]
+position = Vector2(-37, 407)
+script = ExtResource("4_fitwt")
 
 [node name="Player" parent="." instance=ExtResource("2_mldwy")]
 position = Vector2(345, 386)
@@ -27,5 +53,10 @@ position = Vector2(738, 257)
 position = Vector2(567, 408)
 max_health = 100
 
-[node name="RoomSmall_01" parent="." instance=ExtResource("7_wk7wb")]
-position = Vector2(-736, -64)
+[node name="Golem2" parent="." instance=ExtResource("5_q3byy")]
+position = Vector2(560, 220)
+max_health = 100
+
+[node name="Golem3" parent="." instance=ExtResource("5_q3byy")]
+position = Vector2(106, 400)
+max_health = 100

@@ -87,6 +87,8 @@ func _ready() -> void:
 
 	_update_facing()
 
+	# current_state already starts as PATROL,
+	# so initialise that state's behaviour directly.
 	_enter_state(current_state)
 
 
