@@ -7,9 +7,12 @@ class_name PlayerAnimator
 @export var hurtbox: Area2D
 
 var base_offset_x: float = 0.0
+var base_sprite_position: Vector2
 
 func _ready() -> void:
-	# Automatic fallback if exports are left empty in the Inspector
+	base_sprite_position = sprite.position
+	base_offset_x = abs(sprite.position.x)
+	
 	if not player and get_parent() is Player:
 		player = get_parent() as Player
 	if not animation_player:
@@ -32,13 +35,18 @@ func _process(_delta: float) -> void:
 func _handle_flip() -> void:
 	if player.facing_direction < 0.0:
 		sprite.flip_h = true
-		sprite.position.x = base_offset_x
+
+		if not player.is_ledge_climbing:
+			sprite.position.x = base_offset_x
 
 		if hurtbox:
 			hurtbox.scale.x = -1.0
+
 	else:
 		sprite.flip_h = false
-		sprite.position.x = -base_offset_x
+
+		if not player.is_ledge_climbing:
+			sprite.position.x = -base_offset_x
 
 		if hurtbox:
 			hurtbox.scale.x = 1.0
@@ -86,3 +94,10 @@ func _on_animation_player_animation_finished(
 ) -> void:
 	if anim_name == &"ledge_climb":
 		player.finish_ledge_climb()
+
+		sprite.position = Vector2(
+			base_offset_x
+			if player.facing_direction < 0.0
+			else -base_offset_x,
+			base_sprite_position.y
+		)

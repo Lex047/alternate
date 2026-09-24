@@ -28,7 +28,6 @@ class_name Player
 @export var ledge_grab_max_x_distance: float = 8.0
 @export var ledge_grab_max_y_distance: float = 8.0
 @export var wall_clearance: float = 2.0
-@export var floor_clearance: float = 2.0
 @export var ledge_regrab_delay: float = 0.25
 
 
@@ -434,7 +433,6 @@ func _start_ledge_climb(
 		ledge_corner.y
 		- collision_offset_y
 		- body_half_height
-		- floor_clearance
 	)
 
 	ledge_stand_position = Vector2(
@@ -448,6 +446,8 @@ func _start_ledge_climb(
 func finish_ledge_climb() -> void:
 	global_position = ledge_stand_position
 	velocity = Vector2.ZERO
+
+	apply_floor_snap()
 
 	is_ledge_climbing = false
 	has_ledge_climbed = true
