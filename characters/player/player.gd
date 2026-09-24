@@ -100,6 +100,9 @@ func _attack() -> void:
 		return
 
 	is_attacking = true
+	
+	if player_audio:
+		player_audio.play_attack()
 
 	knife.show_weapon()
 	knife.enable_hitbox()

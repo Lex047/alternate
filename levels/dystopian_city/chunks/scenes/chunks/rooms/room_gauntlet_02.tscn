@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://blbq0rbhhpya2"]
+
+[ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_7rqmh"]
+
+[node name="RoomGauntlet02" instance=ExtResource("1_7rqmh")]
+generation_weight = 0.2

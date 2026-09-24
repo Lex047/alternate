@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://c6absy1ri0sro"]
+[gd_scene load_steps=63 format=3 uid="uid://c6absy1ri0sro"]
 
 [ext_resource type="Script" uid="uid://icx0stul3s40" path="res://characters/player/player.gd" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cvkxglldwalpu" path="res://characters/player/player_camera.gd" id="2_bakn2"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://cwokcv1rtf6aj" path="res://characters/player/sprites/run/run-1.png" id="6_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://db2jctx1j2alf" path="res://characters/player/sprites/run/run-2.png" id="7_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b000iqmr2smt" path="res://characters/player/sprites/run/run-3.png" id="8_f1ej7"]
+[ext_resource type="AudioStream" uid="uid://basmkhyjvau4m" path="res://characters/audio/56_Attack_03.wav" id="8_jysfx"]
 [ext_resource type="Texture2D" uid="uid://bme15hs12ia78" path="res://characters/player/sprites/run/run-4.png" id="9_oprun"]
 [ext_resource type="Texture2D" uid="uid://0unlf6p1vgb2" path="res://characters/player/sprites/run/run-5.png" id="10_a8ls1"]
 [ext_resource type="Texture2D" uid="uid://bubfavadt64i5" path="res://characters/player/sprites/run/run-6.png" id="11_qfm1y"]
@@ -859,6 +860,7 @@ footstep_sound = ExtResource("3_bakn2")
 jump_sound = ExtResource("41_gro5v")
 land_sound = ExtResource("3_bakn2")
 ledge_climb_sound = ExtResource("44_2xk8k")
+attack_sound = ExtResource("8_jysfx")
 metadata/_edit_lock_ = true
 
 [node name="MovementPlayer" type="AudioStreamPlayer" parent="PlayerAudio"]
