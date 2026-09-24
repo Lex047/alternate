@@ -54,7 +54,10 @@ func _handle_flip() -> void:
 func _handle_animations() -> void:
 	# Ledge Climb State
 	if player.is_ledge_climbing:
-		_play_animation("ledge_climb")
+		if player.facing_direction < 0.0:
+			_play_animation("ledge_climb_left")
+		else:
+			_play_animation("ledge_climb")
 		return
 
 	# Attack State
@@ -92,7 +95,10 @@ func _play_animation(animation_name: String) -> void:
 func _on_animation_player_animation_finished(
 	anim_name: StringName
 ) -> void:
-	if anim_name == &"ledge_climb":
+	if (
+		anim_name == &"ledge_climb"
+		or anim_name == &"ledge_climb_left"
+	):
 		player.finish_ledge_climb()
 
 		sprite.position = Vector2(

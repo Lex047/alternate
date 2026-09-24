@@ -12,6 +12,17 @@ class_name Golem
 
 var is_patrolling: bool = true
 
+
+@export_category("Detection")
+@onready var alert_timer: Timer = $AlertTimer
+
+var is_alerting: bool = false
+
+@export var lost_player_delay: float = 1.5
+
+@onready var lost_player_timer: Timer = $LostPlayerTimer
+
+
 @export_category("Combat")
 @export var chase_speed: float = 80.0
 
@@ -45,6 +56,8 @@ var target_player: Player
 func _ready() -> void:
 	super._ready()
 
+	lost_player_timer.wait_time = lost_player_delay
+	
 	floor_detector_base_x = abs(floor_detector.position.x)
 	wall_detector_base_x = abs(wall_detector.position.x)
 	wall_target_base_x = abs(wall_detector.target_position.x)
@@ -63,6 +76,9 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 
 	elif is_attacking:
+		velocity.x = 0.0
+
+	elif is_alerting:
 		velocity.x = 0.0
 
 	elif target_player and player_in_attack_range:
@@ -190,6 +206,9 @@ func hurt() -> void:
 	if is_dead:
 		return
 
+	is_alerting = false
+	alert_timer.stop()
+
 	is_hurt = true
 	is_attacking = false
 
@@ -202,7 +221,17 @@ func hurt() -> void:
 func die() -> void:
 	is_hurt = false
 	is_attacking = false
+	is_alerting = false
 	velocity.x = 0.0
+
+	if patrol_timer.is_inside_tree():
+		patrol_timer.stop()
+
+	if lost_player_timer.is_inside_tree():
+		lost_player_timer.stop()
+
+	if alert_timer.is_inside_tree():
+		alert_timer.stop()
 
 	attack_hitbox_shape.set_deferred("disabled", true)
 	hurtbox_shape.set_deferred("disabled", true)
@@ -237,17 +266,52 @@ func _update_facing() -> void:
 
 
 func _on_player_detector_body_entered(body: Node2D) -> void:
-	if body is Player:
-		target_player = body
+	if body is not Player:
+		return
+
+	lost_player_timer.stop()
+
+	if target_player == body:
+		return
+
+	target_player = body
+	_start_alert()
+
+
+func _start_alert() -> void:
+	if is_dead or is_hurt:
+		return
+
+	is_alerting = true
+	velocity.x = 0.0
+
+	var direction_to_player: float = sign(
+		target_player.global_position.x - global_position.x
+	)
+
+	if direction_to_player != 0.0:
+		move_direction = direction_to_player
+		_update_facing()
+
+	animation_player.play("alert")
+	alert_timer.start()
 
 
 func _on_player_detector_body_exited(body: Node2D) -> void:
-	if body == target_player:
-		target_player = null
+	if body != target_player:
+		return
+
+	if is_dead:
+		return
+
+	if not lost_player_timer.is_inside_tree():
+		return
+
+	lost_player_timer.start()
 
 
 func _update_animation() -> void:
-	if is_dead or is_hurt or is_attacking:
+	if is_dead or is_hurt or is_attacking or is_alerting:
 		return
 
 	if abs(velocity.x) > 1.0:
@@ -302,3 +366,12 @@ func _on_animation_player_animation_finished(
 
 	elif anim_name == &"death":
 		queue_free()
+
+
+func _on_lost_player_timer_timeout() -> void:
+	target_player = null
+	player_in_attack_range = false
+
+
+func _on_alert_timer_timeout() -> void:
+	is_alerting = false
