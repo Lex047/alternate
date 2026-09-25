@@ -6,7 +6,7 @@ const SETTINGS_PATH := "user://settings.cfg"
 signal show_seed_changed(enabled: bool)
 
 var master_volume: float = 100.0
-var music_volume: float = 30.0
+var music_volume: float = 40.0
 var sfx_volume: float = 100.0
 var ui_volume: float = 100.0
 
@@ -227,7 +227,7 @@ func load_settings() -> void:
 	music_volume = config.get_value(
 		"audio",
 		"music_volume",
-		30.0
+		40.0
 	)
 
 	sfx_volume = config.get_value(

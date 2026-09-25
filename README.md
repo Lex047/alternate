@@ -189,6 +189,10 @@ This project is actively in development as a final academic project.
   https://freesound.org/people/AmeAngelofSin/sounds/345049/
   Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
+- "Darkness is Coming" by Kevin MacLeod (incompetech.com)
+  https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100584&Search=Search
+  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
 ## License
 
 This project is created for educational and academic assessment.

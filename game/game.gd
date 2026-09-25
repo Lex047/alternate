@@ -32,6 +32,7 @@ var level_completed: bool = false
 @export_category("Audio")
 
 @export var game_music: AudioStream
+@export var game_music_alternate: AudioStream
 
 
 func _ready() -> void:
@@ -104,6 +105,8 @@ func _toggle_debug_camera() -> void:
 
 
 func _start_game() -> void:
+	MusicManager.stop_music()
+	
 	generation_splash.show_splash()
 
 	# Give Godot a frame to actually draw the splash.
@@ -269,8 +272,6 @@ func _on_artifact_collected() -> void:
 		)
 	)
 
-	print("Game: Artifact collected!")
-
 	alternate_transition.play_transition()
 	
 
@@ -321,6 +322,9 @@ func _activate_alternate_state() -> void:
 			alternate_player_local_position
 		)
 	)
+
+	if game_music_alternate:
+		MusicManager.play_music(game_music_alternate, true)
 
 	is_alternate = true
 

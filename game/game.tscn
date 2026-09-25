@@ -1,7 +1,8 @@
-[gd_scene load_steps=31 format=3 uid="uid://2vxo2ok7lchp"]
+[gd_scene load_steps=32 format=3 uid="uid://2vxo2ok7lchp"]
 
 [ext_resource type="Script" uid="uid://buvmoe5xmaev7" path="res://game/game.gd" id="1_hbvmx"]
 [ext_resource type="AudioStream" uid="uid://cntcce3efk5j0" path="res://audio/music/future_noir.ogg" id="2_fegy3"]
+[ext_resource type="AudioStream" uid="uid://n4q0a1doh3bf" path="res://audio/music/darkness_is_coming.mp3" id="3_fegy3"]
 [ext_resource type="PackedScene" uid="uid://c6absy1ri0sro" path="res://characters/player/player.tscn" id="3_pvdu1"]
 [ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator/level_generator.tscn" id="4_cf130"]
 [ext_resource type="PackedScene" uid="uid://c4357685gf36o" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_start.tscn" id="5_posua"]
@@ -41,6 +42,7 @@ game_hud = NodePath("GameHUD")
 debug_camera = NodePath("DebugCamera")
 player = NodePath("Player")
 game_music = ExtResource("2_fegy3")
+game_music_alternate = ExtResource("3_fegy3")
 
 [node name="Player" parent="." instance=ExtResource("3_pvdu1")]
 
