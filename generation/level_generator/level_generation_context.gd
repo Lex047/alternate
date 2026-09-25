@@ -1,3 +1,7 @@
+# Shared configuration and mutable placement state for one generation pipeline.
+# Normal and alternate layouts use separate contexts. Logical node/edge mappings
+# and closure records connect the graph to physical chunks for rollback and
+# alternate-layout partitioning.
 extends RefCounted
 class_name LevelGenerationContext
 
@@ -44,6 +48,9 @@ var terminals_placed: int = 0
 var chunk_usage_counts: Dictionary = {}
 
 
+# Clear placement results while retaining the selected logical graph and scene
+# configuration. The generator clears physical nodes and initializes usage
+# separately before asking the solver to try again.
 func reset_attempt_state() -> void:
 	placed_chunks.clear()
 	graph_node_chunks.clear()

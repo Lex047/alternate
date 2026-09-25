@@ -1,3 +1,6 @@
+# Builds a rooted room tree with one START branch, a configured number of growth
+# rooms, and a GOAL attached to a deepest growth leaf. Branch probability and
+# child limits shape the topology before the spatial solver chooses scenes.
 extends RefCounted
 class_name LevelGraphBuilder
 

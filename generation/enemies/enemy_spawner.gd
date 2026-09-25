@@ -1,3 +1,6 @@
+# Populates authored spawn markers with melee or ranged enemies using a seed
+# derived from the original generation seed. Spatial ordering stabilizes random consumption,
+# and resolved markers prevent duplicate population of the same layout.
 extends Node
 class_name EnemySpawner
 

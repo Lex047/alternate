@@ -1,3 +1,6 @@
+# Logical room tree, independent of physical corridor and terminal chunks.
+# Parent routes identify the path to the goal; descendant queries define which
+# rooms belong to the alternate rebuild beyond the preserved cut room.
 extends RefCounted
 class_name LevelGraph
 

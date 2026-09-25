@@ -1,3 +1,5 @@
+# Shared enemy health, gravity, and DamageHitbox reception. Subclasses own
+# hurt and death responses while this base prevents damage after death.
 extends CharacterBody2D
 class_name EnemyBase
 

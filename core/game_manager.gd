@@ -1,3 +1,6 @@
+# Autoload coordinating the active player, health/death signals, pause, and
+# scene restart/menu actions. It processes while paused so those actions remain
+# available; gameplay_input_enabled gates its global keyboard shortcuts.
 extends Node
 
 

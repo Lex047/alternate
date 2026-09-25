@@ -1,3 +1,5 @@
+# Separate channels for navigation focus and confirm/back feedback, allowing
+# menu actions to sound without cutting off the focus cue.
 extends Node
 class_name MenuAudio
 

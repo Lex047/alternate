@@ -1,3 +1,5 @@
+# Persistent music playback shared by menus and gameplay. Reusing the current
+# track keeps playback continuous unless the caller requests a restart.
 extends Node
 
 @onready var music_player: AudioStreamPlayer = $MusicPlayer
@@ -10,7 +12,6 @@ func play_music(
 	if not music:
 		return
 
-	# Don't restart the same song unless explicitly requested.
 	if (
 		music_player.stream == music
 		and music_player.playing

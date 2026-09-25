@@ -1,3 +1,5 @@
+# Logical room identity and parent/child links used by generation. Physical
+# chunks are mapped separately by ID; degree describes its logical connections.
 extends RefCounted
 class_name LevelGraphNode
 

@@ -1,3 +1,6 @@
+# Shared physical placement operations for the generation solvers: instantiate
+# chunks, match opposing sockets, align openings, and reject overlapping bounds.
+# Fit probes create temporary chunks and discard them without committing a placement.
 extends RefCounted
 class_name LevelChunkTools
 

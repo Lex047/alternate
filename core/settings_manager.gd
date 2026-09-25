@@ -1,3 +1,6 @@
+# Autoload owning persistent audio, display, and seed-visibility preferences.
+# Setters apply changes immediately and save them; seed visibility is broadcast
+# to the HUD separately from the audio bus and window settings.
 extends Node
 
 

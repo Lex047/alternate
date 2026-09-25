@@ -1,3 +1,6 @@
+# Derives separate graph and spatial random streams from one run seed. Placement
+# retries consume the spatial stream without changing subsequent graph choices;
+# all solver shuffles and weighted selections use that spatial stream.
 extends RefCounted
 class_name LevelGenerationRng
 

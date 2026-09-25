@@ -1,3 +1,6 @@
+# Owns player movement, coyote-time jumping, ledge climbing, and knife attack
+# windows. Health changes feed GameManager and damage feedback; PlayerAnimator
+# reads movement/combat state and completes ledge climbs when their animation ends.
 extends CharacterBody2D
 class_name Player
 
@@ -244,6 +247,9 @@ func _get_detector_size() -> Vector2:
 	return Vector2.ZERO
 
 
+# Ledge detection combines a top-surface ray with a facing-wall ray inside the
+# shape-cast region. The resulting corner must also be within the grab marker's
+# reach before the climb can take over movement.
 func _find_ledge_corner() -> Vector2:
 	if not ledge_detector:
 		return Vector2.INF

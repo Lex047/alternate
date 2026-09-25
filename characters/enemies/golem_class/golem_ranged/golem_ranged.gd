@@ -1,3 +1,6 @@
+# Ranged golem specialization using the base detection and damage states. It
+# chases until within firing distance, then releases a horizontal projectile
+# after a windup and waits through recovery and cooldown before chasing again.
 extends Golem
 class_name GolemRanged
 
@@ -30,14 +33,11 @@ func _process_chase() -> void:
 		- global_position.x
 	)
 
-	# Close enough to shoot.
 	if distance_to_player <= ranged_attack_distance:
 		velocity.x = 0.0
 		_change_state(State.ATTACK)
 		return
 
-	# Player is too far away.
-	# Chase until we're back within firing distance.
 	if (
 		wall_detector.is_colliding()
 		or not floor_detector.is_colliding()
@@ -79,8 +79,10 @@ func _enter_attack() -> void:
 	_run_ranged_attack()
 
 
+# Projectile release is timed to the ranged animation, followed by recovery
+# and the configured shot cooldown. State checks cancel the remaining sequence
+# when hurt or death interrupts the attack.
 func _run_ranged_attack() -> void:
-	# Windup before projectile leaves the hand.
 	await get_tree().create_timer(0.26).timeout
 
 	if current_state != State.ATTACK:
@@ -88,13 +90,11 @@ func _run_ranged_attack() -> void:
 
 	_fire_projectile()
 
-	# Finish attack animation.
 	await get_tree().create_timer(0.52).timeout
 
 	if current_state != State.ATTACK:
 		return
 
-	# Delay between shots.
 	await get_tree().create_timer(attack_cooldown).timeout
 
 	if current_state != State.ATTACK:

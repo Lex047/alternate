@@ -1,3 +1,6 @@
+# Rejects partial layouts whose unused openings can no longer fit closure
+# pieces. Probes completed graph nodes and open corridors independently; this
+# is a feasibility check, while LevelClosureSolver commits the final closures.
 extends RefCounted
 class_name LevelFrontierValidator
 

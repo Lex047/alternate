@@ -1,3 +1,5 @@
+# Persists whether the tutorial has been dismissed across sessions. Gameplay
+# uses this flag to decide whether to show the introductory splash.
 extends Node
 
 

@@ -1,3 +1,5 @@
+# Separates footsteps from action cues so movement and action audio can overlap.
+# Jump, landing, climbing, attack, and hurt cues share the action channel.
 extends Node
 class_name PlayerAudio
 

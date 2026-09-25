@@ -1,3 +1,6 @@
+# Tracks a player hurtbox inside the hazard and requests damage on entry and
+# on timer ticks. Player.take_trap_damage supplies the shared trap-hit cooldown,
+# so overlapping hazards cannot bypass that protection.
 extends Area2D
 class_name Trap
 

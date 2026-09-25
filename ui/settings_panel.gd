@@ -1,3 +1,6 @@
+# Reusable settings controls backed by SettingsManager. Initializes without
+# emitting change signals, then applies user edits immediately. Focus signals
+# let the containing menu supply audio, with a brief guard when opening the panel.
 extends VBoxContainer
 class_name SettingsPanel
 

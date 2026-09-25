@@ -1,3 +1,5 @@
+# Reports logical topology, placement counts, scene usage, and unresolved
+# openings from the current generation context to diagnose failed layouts.
 extends RefCounted
 class_name LevelGenerationDebug
 

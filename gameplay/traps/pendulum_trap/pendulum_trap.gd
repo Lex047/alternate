@@ -1,3 +1,5 @@
+# Drives the pendulum pivot through a repeating eased swing. Collision and
+# damage remain the responsibility of the trap area attached to the pivot.
 extends Node2D
 
 

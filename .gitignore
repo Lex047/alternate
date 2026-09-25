@@ -1,6 +1,7 @@
 # Godot-specific cache and build files
 .godot/
 *.import/
+*.tmp
 
 # Exported binaries / build targets
 /build/

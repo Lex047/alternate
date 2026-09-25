@@ -1,13 +1,13 @@
+# Coordinates graph construction, spatial solving, closure, and enemy population.
+# A run is ready only after both normal and alternate layouts are complete.
+# The alternate pipeline copies preserved chunks, rebuilds descendants of a cut
+# room, and stages the result off-world until the game requests activation.
 extends Node2D
 class_name LevelGenerator
 
 signal generation_finished(seed: int)
 signal generation_failed
 
-
-# ==================================================
-# GENERATION SETTINGS
-# ==================================================
 
 @export_category("Generation")
 
@@ -34,25 +34,16 @@ var attempts_per_graph: int = 4
 var bounds_overlap_tolerance: float = 4.0
 
 
-# ==================================================
-# ALTERNATE SETTINGS
-# ==================================================
-
 @export_category("Alternate")
 
 @export_range(0.1, 0.8, 0.05)
 var alternate_preserve_ratio: float = 0.35
 
-# ==================================================
-# ENEMY SPAWNER
-# ==================================================
+
 @onready var enemy_spawner: EnemySpawner = (
 	$EnemySpawner
 )
 
-# ==================================================
-# GRAPH SETTINGS
-# ==================================================
 
 @export_category("Graph")
 
@@ -63,10 +54,6 @@ var max_graph_children: int = 2
 var graph_branch_chance: float = 0.35
 
 
-# ==================================================
-# SOLVER SETTINGS
-# ==================================================
-
 @export_category("Solver")
 
 @export_range(1, 8, 1)
@@ -76,36 +63,20 @@ var max_local_backtrack_retries: int = 4
 var max_solver_backtracks: int = 250
 
 
-# ==================================================
-# RANDOMNESS SETTINGS
-# ==================================================
-
 @export_category("Randomness")
 
 @export var generation_seed: int = 12345
 @export var use_random_seed: bool = false
 
 
-# ==================================================
-# DEBUG SETTINGS
-# ==================================================
-
 @export_category("Debug")
 
 @export var verbose_generation_debug: bool = false
 
 
-# ==================================================
-# NODE REFERENCES
-# ==================================================
-
 @onready var generated_chunks: Node2D = $GeneratedChunks
 @onready var alternate_chunks: Node2D = $AlternateChunks
 
-
-# ==================================================
-# COMPONENTS
-# ==================================================
 
 var context: LevelGenerationContext
 
@@ -342,7 +313,9 @@ func _sync_alternate_context_from_exports(
 # ==================================================
 # GENERATION
 # ==================================================
-
+# Try several spatial placements per logical graph before building another
+# graph, within a total attempt budget. Success requires exact room counts and
+# no open sockets, followed by successful preparation of the alternate layout.
 func generate_level() -> void:
 	_initialize_components()
 	_sync_context_from_exports()
@@ -711,6 +684,9 @@ func get_alternate_rebuild_nodes() -> Array[LevelGraphNode]:
 	)
 
 
+# The rebuild includes descendant rooms, their incoming corridors, and closure
+# branches owned by those rooms. The cut room itself and unrelated branches
+# remain in the preserved partition.
 func _get_alternate_rebuild_growth_count() -> int:
 	var count: int = 0
 
@@ -926,6 +902,8 @@ func _build_alternate_preserved_copy() -> Dictionary:
 	return copy_map
 
 
+# Only reopen connections from the copied cut room to replaced descendants.
+# Recorded socket paths preserve every other connection in the copied layout.
 func _open_alternate_cut_sockets(
 	copy_map: Dictionary
 ) -> bool:
@@ -1190,6 +1168,9 @@ func _prepare_alternate_layout() -> bool:
 	return false
 
 
+# Recreate preserved geometry for each attempt and add it to occupied chunks
+# so the new subtree cannot overlap it. Preserved rooms do not count toward the
+# new graph's growth quota.
 func _begin_alternate_generation_attempt() -> Dictionary:
 	alternate_context.reset_attempt_state()
 
@@ -1257,6 +1238,9 @@ func get_alternate_goal_chunk() -> Chunk:
 	return null
 
 
+# Swap the active and staged containers without regenerating geometry. The
+# normal layout remains allocated off-world with processing disabled; alternate
+# enemies are populated using the alternate seed when it becomes active.
 func activate_alternate_layout() -> bool:
 	if not alternate_layout_ready:
 		push_error(
@@ -1282,10 +1266,6 @@ func activate_alternate_layout() -> bool:
 		alternate_chunks,
 		alternate_context.active_generation_seed
 	)
-
-	#print(
-		#"LevelGenerator: Alternate layout activated."
-	#)
 
 	return true
 

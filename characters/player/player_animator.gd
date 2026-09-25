@@ -1,3 +1,6 @@
+# Maps player state to animations, prioritizing ledge climbs, attacks, then
+# locomotion. Mirrors the sprite and hurtbox with facing, and hands completed
+# climb animations back to Player to place the body on the ledge.
 extends Node2D
 class_name PlayerAnimator
 
@@ -52,7 +55,6 @@ func _handle_flip() -> void:
 			hurtbox.scale.x = 1.0
 
 func _handle_animations() -> void:
-	# Ledge Climb State
 	if player.is_ledge_climbing:
 		if player.facing_direction < 0.0:
 			_play_animation("ledge_climb_left")
@@ -60,15 +62,11 @@ func _handle_animations() -> void:
 			_play_animation("ledge_climb")
 		return
 
-	# Attack State
 	if player.is_attacking:
 		_play_animation("knife_stab")
 		return
-	
-	# Aerial / Jump State
+
 	if not player.is_on_floor():
-		# Only play 'fall' if we are dropping
-		# AND not already playing 'jump'
 		if (
 			not player.is_jumping
 			and animation_player.current_animation != "jump"
@@ -78,8 +76,7 @@ func _handle_animations() -> void:
 			_play_animation("jump")
 
 		return
-	
-	# Ground State
+
 	if player.direction != 0.0:
 		if player.is_sprinting:
 			_play_animation("run")

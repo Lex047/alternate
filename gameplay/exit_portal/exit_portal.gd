@@ -1,3 +1,5 @@
+# Return objective activated by the game after alternation. An in-range player
+# can interact to emit exited; the game controller handles completion once.
 extends Area2D
 class_name ExitPortal
 
@@ -38,8 +40,6 @@ func activate() -> void:
 
 	animated_sprite.show()
 	animated_sprite.play()
-
-	#print("ExitPortal: activated.")
 
 
 func _on_body_entered(body: Node) -> void:

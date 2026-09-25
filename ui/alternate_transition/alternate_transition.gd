@@ -1,3 +1,5 @@
+# Fade overlay exposing a fully covered midpoint for the game to swap layouts.
+# Rejects overlapping transitions and signals completion after the reveal.
 extends CanvasLayer
 class_name AlternateTransition
 

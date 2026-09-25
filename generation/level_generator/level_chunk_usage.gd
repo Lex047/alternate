@@ -1,3 +1,6 @@
+# Weights candidate scenes by authored generation weight divided by prior use.
+# Produces a weighted ordering without replacement; usage snapshots let solver
+# backtracking restore selection history alongside the physical layout.
 extends RefCounted
 class_name LevelChunkUsage
 

@@ -1,3 +1,5 @@
+# Player-controlled knife presentation and damage window. Player opens and
+# closes the hitbox during attacks; hiding the weapon also disables collisions.
 extends Node2D
 class_name Knife
 

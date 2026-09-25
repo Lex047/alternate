@@ -1,3 +1,5 @@
+# Authored enemy placement marker carrying type and probability. EnemySpawner
+# resolves each marker once, including rolls that produce no enemy.
 extends Marker2D
 class_name EnemySpawn
 

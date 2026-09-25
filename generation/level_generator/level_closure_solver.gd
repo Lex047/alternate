@@ -1,3 +1,6 @@
+# Seals unused layout sockets with terminal chunks, inserting a corridor when
+# the source is a room. Records closure branches separately from logical graph
+# edges so alternation can keep or replace them with their source rooms.
 extends RefCounted
 class_name LevelClosureSolver
 

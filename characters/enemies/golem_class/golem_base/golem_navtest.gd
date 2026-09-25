@@ -1,3 +1,7 @@
+# Navigation test variant of the melee golem state machine. Chase refreshes an
+# A* route through LevelNavigation and follows waypoint X positions; it does not
+# implement jumping. Without a navigation graph it chases directly, while local
+# wall and floor probes still constrain movement.
 extends EnemyBase
 class_name GolemNavTest
 
@@ -96,8 +100,6 @@ func _ready() -> void:
 
 	_update_facing()
 
-	# current_state already starts as PATROL,
-	# so initialise that state's behaviour directly.
 	_enter_state(current_state)
 
 
@@ -128,10 +130,6 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-
-# ------------------------------------------------------------------
-# State management
-# ------------------------------------------------------------------
 
 func _change_state(new_state: State) -> void:
 	if current_state == new_state:
@@ -196,10 +194,6 @@ func _exit_state(state: State) -> void:
 		)
 
 
-# ------------------------------------------------------------------
-# Idle
-# ------------------------------------------------------------------
-
 func _enter_idle() -> void:
 	velocity.x = 0.0
 
@@ -216,10 +210,6 @@ func _enter_idle() -> void:
 func _process_idle() -> void:
 	velocity.x = 0.0
 
-
-# ------------------------------------------------------------------
-# Patrol
-# ------------------------------------------------------------------
 
 func _enter_patrol() -> void:
 	_play_animation("run")
@@ -243,10 +233,6 @@ func _process_patrol() -> void:
 	velocity.x = move_direction * patrol_speed
 
 
-# ------------------------------------------------------------------
-# Alert
-# ------------------------------------------------------------------
-
 func _enter_alert() -> void:
 	velocity.x = 0.0
 
@@ -268,10 +254,6 @@ func _process_alert() -> void:
 	velocity.x = 0.0
 
 
-# ------------------------------------------------------------------
-# Chase
-# ------------------------------------------------------------------
-
 func _enter_chase() -> void:
 	_play_animation("run")
 
@@ -279,6 +261,9 @@ func _enter_chase() -> void:
 	_refresh_navigation_path()
 
 
+# Routes are refreshed as the target moves. Waypoints are consumed by horizontal
+# reach or overshoot; after the final point the golem approaches the target
+# directly. An assigned graph with no route leaves the golem idle.
 func _process_chase(delta: float) -> void:
 	if not is_instance_valid(target_player):
 		target_player = null
@@ -413,10 +398,6 @@ func _move_toward_x(target_x: float) -> void:
 	_play_animation("run")
 
 
-# ------------------------------------------------------------------
-# Attack
-# ------------------------------------------------------------------
-
 func _enter_attack() -> void:
 	velocity.x = 0.0
 
@@ -429,6 +410,9 @@ func _process_attack() -> void:
 	velocity.x = 0.0
 
 
+# The hit window follows the melee animation timing. State checks after each
+# wait stop an interrupted attack from continuing; leaving ATTACK disables its
+# hitbox even if the timed sequence returns early.
 func _run_attack() -> void:
 	# Frames 0–1: windup
 	await get_tree().create_timer(0.16).timeout
@@ -464,10 +448,6 @@ func _run_attack() -> void:
 		_change_state(State.PATROL)
 
 
-# ------------------------------------------------------------------
-# Hurt
-# ------------------------------------------------------------------
-
 func hurt() -> void:
 	if current_state == State.DEAD:
 		return
@@ -489,10 +469,6 @@ func _enter_hurt() -> void:
 func _process_hurt() -> void:
 	velocity.x = 0.0
 
-
-# ------------------------------------------------------------------
-# Death
-# ------------------------------------------------------------------
 
 func die() -> void:
 	is_dead = true
@@ -529,10 +505,6 @@ func _process_dead() -> void:
 	velocity.x = 0.0
 
 
-# ------------------------------------------------------------------
-# Facing
-# ------------------------------------------------------------------
-
 func _turn_around() -> void:
 	move_direction *= -1.0
 	_update_facing()
@@ -561,10 +533,6 @@ func _update_facing() -> void:
 
 	player_detector.scale.x = move_direction
 
-
-# ------------------------------------------------------------------
-# Player detection
-# ------------------------------------------------------------------
 
 func _on_player_detector_body_entered(
 	body: Node2D
@@ -604,10 +572,6 @@ func _on_player_detector_body_exited(
 	lost_player_timer.start()
 
 
-# ------------------------------------------------------------------
-# Attack range
-# ------------------------------------------------------------------
-
 func _on_attack_range_area_entered(
 	area: Area2D
 ) -> void:
@@ -638,10 +602,6 @@ func _on_attack_range_area_exited(
 		player_in_attack_range = false
 
 
-# ------------------------------------------------------------------
-# Animation
-# ------------------------------------------------------------------
-
 func _play_animation(
 	animation_name: String
 ) -> void:
@@ -667,10 +627,6 @@ func _on_animation_player_animation_finished(
 	):
 		queue_free()
 
-
-# ------------------------------------------------------------------
-# Timers
-# ------------------------------------------------------------------
 
 func _on_patrol_timer_timeout() -> void:
 	if current_state == State.PATROL:

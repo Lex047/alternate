@@ -1,3 +1,6 @@
+# Free camera for inspecting generated layouts with keyboard movement, mouse
+# panning, and wheel zoom. Movement scales with zoom to keep screen-space travel
+# consistent; the game controller switches between this and the player camera.
 extends Camera2D
 class_name DebugCamera
 
@@ -43,7 +46,6 @@ func _process(delta: float) -> void:
 func _ready() -> void:
 	enabled = true
 
-	# Start zoomed out.
 	zoom = Vector2(0.2, 0.2)
 
 
@@ -58,7 +60,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _handle_mouse_button(
 	event: InputEventMouseButton
 ) -> void:
-	# Middle mouse button pans.
 	if event.button_index == MOUSE_BUTTON_MIDDLE:
 		dragging = event.pressed
 
@@ -67,14 +68,12 @@ func _handle_mouse_button(
 
 		return
 
-	# Scroll up = zoom in.
 	if (
 		event.button_index == MOUSE_BUTTON_WHEEL_UP
 		and event.pressed
 	):
 		_change_zoom(zoom_step)
 
-	# Scroll down = zoom out.
 	elif (
 		event.button_index == MOUSE_BUTTON_WHEEL_DOWN
 		and event.pressed
@@ -92,8 +91,6 @@ func _handle_mouse_motion(
 		event.position - last_mouse_position
 	)
 
-	# Divide by zoom so dragging feels consistent
-	# regardless of how far out we are.
 	global_position -= (
 		mouse_delta
 		/ zoom.x

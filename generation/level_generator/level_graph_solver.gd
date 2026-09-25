@@ -1,3 +1,7 @@
+# Realizes the logical room tree as socket-aligned rooms linked by corridors.
+# Each recursive retry snapshots placement and bookkeeping, checks closure
+# feasibility, and rolls back failed subtrees within a shared backtrack budget.
+# The root succeeds only when all remaining openings have been closed.
 extends RefCounted
 class_name LevelGraphSolver
 
@@ -492,6 +496,9 @@ func _try_place_graph_room(
 	return null
 
 
+# Restore physical chunks, counts, usage, and graph/closure mappings together.
+# The caller reopens surviving sockets from its snapshot; RNG state deliberately
+# continues forward so retries can explore different placements.
 func _rollback_solver_state(
 	placed_count_before: int,
 	normal_before: int,

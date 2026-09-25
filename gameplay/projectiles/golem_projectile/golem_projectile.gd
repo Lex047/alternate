@@ -1,3 +1,6 @@
+# Ranged golem damage area moving horizontally while gravity adds downward
+# velocity. It spins for visual feedback and expires on contact or timeout;
+# player damage is handled by the receiving hurtbox.
 extends DamageHitbox
 class_name GolemProjectile
 

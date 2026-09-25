@@ -1,3 +1,6 @@
+# One-shot artifact interaction while the player is in range. Collection
+# restores health and signals the game controller to start alternation; the
+# alternate room can display the broken container independently.
 extends Area2D
 class_name ArtifactContainer
 

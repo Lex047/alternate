@@ -1,3 +1,5 @@
+# Routes golem combat cues through a shared action player, with pitch changes
+# distinguishing attack, hit, and death feedback.
 extends Node
 class_name EnemyAudio
 

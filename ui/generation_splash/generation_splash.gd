@@ -1,3 +1,5 @@
+# Loading overlay controlled by the game during synchronous generation and
+# setup. Status text also exposes generation or player/artifact setup failures.
 extends CanvasLayer
 class_name GenerationSplash
 

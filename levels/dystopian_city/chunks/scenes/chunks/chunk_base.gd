@@ -1,3 +1,6 @@
+# Scene contract for generated level pieces: typed sockets, selection weight,
+# and placement bounds. Bounds are translated into world space without rotation
+# or scale, matching the generator's translation-only socket alignment.
 extends Node2D
 class_name Chunk
 

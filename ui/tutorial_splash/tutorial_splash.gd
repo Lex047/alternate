@@ -1,3 +1,6 @@
+# Pauses the run for the introductory controls overlay while continuing to
+# receive input. A short dismissal delay avoids consuming the opening keypress;
+# dismissal saves progress, resumes the tree, and signals gameplay to begin.
 extends CanvasLayer
 class_name TutorialSplash
 

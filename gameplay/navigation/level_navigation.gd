@@ -1,3 +1,6 @@
+# Builds an AStar2D graph from direct NavPoint children and their authored
+# connections. Links are bidirectional and paths use world coordinates between
+# the nearest graph points; this graph does not infer walkability from geometry.
 extends Node2D
 class_name LevelNavigation
 

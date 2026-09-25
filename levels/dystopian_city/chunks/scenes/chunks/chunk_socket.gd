@@ -1,4 +1,5 @@
-@tool
+# Authored connection point on a Chunk. Solvers pair opposing directions and
+# track is_used during placement, rollback, and alternate socket reopening.
 extends Marker2D
 class_name ChunkSocket
 

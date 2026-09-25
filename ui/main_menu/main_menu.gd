@@ -1,3 +1,6 @@
+# Entry menu controlling game launch, settings navigation, and menu music.
+# Mouse hover shares keyboard focus; programmatic focus restoration suppresses
+# navigation sounds.
 extends Control
 
 
@@ -40,11 +43,6 @@ func _ready() -> void:
 	MusicManager.play_music(menu_music)
 
 
-# ==================================================
-# FOCUS
-# ==================================================
-
-
 func _setup_mouse_focus() -> void:
 	var focus_controls: Array[Control] = [
 		start_button,
@@ -75,11 +73,6 @@ func _on_control_focused() -> void:
 	menu_audio.play_focus()
 
 
-# ==================================================
-# MAIN MENU
-# ==================================================
-
-
 func _on_start_button_pressed() -> void:
 	if game_scene_path.is_empty():
 		return
@@ -104,11 +97,6 @@ func _on_quit_button_pressed() -> void:
 	menu_audio.play_confirm()
 
 	get_tree().quit()
-
-
-# ==================================================
-# SETTINGS
-# ==================================================
 
 
 func _on_settings_back_requested() -> void:

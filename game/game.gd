@@ -1,3 +1,7 @@
+# Coordinates the run from generation and tutorial through artifact retrieval
+# and return to the entry portal. Artifact collection starts a fade; its midpoint
+# activates the prepared alternate layout and transfers the player into its goal
+# room. The HUD owns completion input after the run is paused.
 extends Node2D
 
 @export_category("Management")
@@ -118,10 +122,6 @@ func _start_game() -> void:
 func _on_generation_finished(
 	generation_seed: int
 ) -> void:
-	#print(
-		#"Game: Level ready with seed ",
-		#generation_seed
-	#)
 
 	if not _place_player_at_start():
 		generation_splash.set_status(
@@ -252,6 +252,8 @@ func _connect_artifact() -> bool:
 	return true
 
 
+# Carry the player's goal-room-local position across the layout swap because
+# the alternate goal can occupy a different world position.
 func _on_artifact_collected() -> void:
 	if is_alternate:
 		return
@@ -339,10 +341,6 @@ func _activate_alternate_state() -> void:
 
 
 func _on_alternate_transition_finished() -> void:
-	#print(
-		#"Game: Alternate transition finished."
-	#)
-
 	if not is_alternate:
 		return
 
@@ -388,6 +386,8 @@ func _activate_exit_portal() -> bool:
 	return true
 
 
+# Completion hands keyboard control to the always-processing HUD before pausing
+# the tree, avoiding the GameManager pause/restart shortcut path.
 func _on_exit_portal_exited() -> void:
 	if level_completed:
 		return

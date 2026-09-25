@@ -1,3 +1,6 @@
+# Presents player health, optional seed, objectives, and pause/death/completion
+# panels. Stays active while gameplay is paused, delegates settings changes to
+# SettingsPanel, and routes completion shortcuts back to the game controller.
 extends CanvasLayer
 class_name GameHUD
 
@@ -113,11 +116,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 
-# ==================================================
-# HUD
-# ==================================================
-
-
 func _on_player_health_changed(
 	current_health: int,
 	max_health: int
@@ -176,11 +174,6 @@ func show_completion() -> void:
 	level_completion_panel.show()
 
 
-# ==================================================
-# PAUSE
-# ==================================================
-
-
 func _on_pause_changed(
 	is_paused: bool
 ) -> void:
@@ -222,11 +215,6 @@ func _on_main_menu_button_pressed() -> void:
 	GameManager.go_to_main_menu()
 
 
-# ==================================================
-# SETTINGS
-# ==================================================
-
-
 func _on_settings_back_requested() -> void:
 	pause_audio.play_back()
 
@@ -234,11 +222,6 @@ func _on_settings_back_requested() -> void:
 	pause_panel.show()
 
 	_grab_focus_silently(settings_button)
-
-
-# ==================================================
-# FOCUS
-# ==================================================
 
 
 func _setup_pause_focus() -> void:
@@ -276,16 +259,10 @@ func _on_control_focused() -> void:
 	pause_audio.play_focus()
 
 
-# ==================================================
-# OBJECTIVE MESSAGE
-# ==================================================
-
-
 func show_objective_message(
 	title: String,
 	subtitle: String = ""
 ) -> void:
-	#print("HUD: showing objective message")
 	
 	if objective_message_tween:
 		objective_message_tween.kill()
