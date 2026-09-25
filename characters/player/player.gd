@@ -91,6 +91,7 @@ func _ready() -> void:
 
 func restore_full_health() -> void:
 	current_health = max_health
+	_update_low_health_bleed()
 	
 	GameManager.update_player_health(
 		current_health,
