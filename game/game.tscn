@@ -40,7 +40,6 @@ generation_splash = NodePath("GenerationSplash")
 alternate_transition = NodePath("AlternateTransition")
 game_hud = NodePath("GameHUD")
 debug_camera = NodePath("DebugCamera")
-debug_camera_enabled = true
 always_show_tutorial = true
 player = NodePath("Player")
 game_music = ExtResource("2_fegy3")

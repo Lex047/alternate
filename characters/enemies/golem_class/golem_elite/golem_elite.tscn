@@ -5,7 +5,7 @@
 
 [node name="GolemElite" instance=ExtResource("1_13ik6")]
 script = ExtResource("2_namdh")
-elite_tint = Color(0.995766, 1, 0.318056, 1)
+elite_tint = Color(0.831373, 0.686275, 0.215686, 1)
 elite_max_health = 250
 elite_patrol_speed = 60.0
 elite_chase_speed = 170.0

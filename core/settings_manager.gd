@@ -1,12 +1,14 @@
 # Autoload owning persistent audio, display, and seed-visibility preferences.
-# Setters apply changes immediately and save them; seed visibility is broadcast
-# to the HUD separately from the audio bus and window settings.
+# Setters apply changes immediately and save them; web fullscreen requests are
+# retried on user input when browser restrictions block the initial request.
 extends Node
 
 
 const SETTINGS_PATH := "user://settings.cfg"
 
+
 signal show_seed_changed(enabled: bool)
+
 
 var master_volume: float = 100.0
 var music_volume: float = 40.0
@@ -16,10 +18,52 @@ var ui_volume: float = 100.0
 var fullscreen: bool = true
 var show_seed: bool = true
 
+var fullscreen_retry_pending: bool = false
+
 
 func _ready() -> void:
 	load_settings()
 	apply_settings()
+
+	if (
+		fullscreen
+		and OS.has_feature("web")
+		and not _is_fullscreen_active()
+	):
+		fullscreen_retry_pending = true
+
+
+func _process(_delta: float) -> void:
+	if not fullscreen:
+		fullscreen_retry_pending = false
+		return
+
+	if _is_fullscreen_active():
+		fullscreen_retry_pending = false
+		return
+
+	if OS.has_feature("web"):
+		fullscreen_retry_pending = true
+	else:
+		_apply_fullscreen()
+
+
+func _input(event: InputEvent) -> void:
+	if not fullscreen_retry_pending:
+		return
+
+	if not fullscreen:
+		fullscreen_retry_pending = false
+		return
+
+	if _is_fullscreen_active():
+		fullscreen_retry_pending = false
+		return
+
+	if not _is_fullscreen_activation_event(event):
+		return
+
+	_apply_fullscreen()
 
 
 func set_master_volume(value: float) -> void:
@@ -84,6 +128,10 @@ func set_ui_volume(value: float) -> void:
 
 func set_fullscreen(enabled: bool) -> void:
 	fullscreen = enabled
+
+	if not fullscreen:
+		fullscreen_retry_pending = false
+
 	_apply_fullscreen()
 	save_settings()
 
@@ -98,13 +146,48 @@ func set_show_seed(enabled: bool) -> void:
 
 func _apply_fullscreen() -> void:
 	if fullscreen:
-		DisplayServer.window_set_mode(
-			DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
-		)
+		if OS.has_feature("web"):
+			DisplayServer.window_set_mode(
+				DisplayServer.WINDOW_MODE_FULLSCREEN
+			)
+		else:
+			DisplayServer.window_set_mode(
+				DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+			)
+
 	else:
 		DisplayServer.window_set_mode(
 			DisplayServer.WINDOW_MODE_WINDOWED
 		)
+
+
+func _is_fullscreen_active() -> bool:
+	var window_mode := DisplayServer.window_get_mode()
+
+	return (
+		window_mode
+		== DisplayServer.WINDOW_MODE_FULLSCREEN
+		or window_mode
+		== DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	)
+
+
+func _is_fullscreen_activation_event(
+	event: InputEvent
+) -> bool:
+	if event is InputEventKey:
+		return event.pressed
+
+	if event is InputEventMouseButton:
+		return event.pressed
+
+	if event is InputEventJoypadButton:
+		return event.pressed
+
+	if event is InputEventScreenTouch:
+		return event.pressed
+
+	return false
 
 
 func apply_settings() -> void:
@@ -127,7 +210,7 @@ func apply_settings() -> void:
 		"UI",
 		ui_volume
 	)
-	
+
 	_apply_fullscreen()
 
 
@@ -206,7 +289,6 @@ func save_settings() -> void:
 		"show_seed",
 		show_seed
 	)
-	
 
 	config.save(SETTINGS_PATH)
 
