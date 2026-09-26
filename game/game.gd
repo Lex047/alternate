@@ -20,6 +20,7 @@ var is_alternate: bool = false
 @export_category("Debug")
 
 @export var debug_camera: DebugCamera
+@export var debug_camera_enabled = false
 @export var always_show_tutorial: bool = false
 
 var using_debug_camera: bool = false
@@ -79,7 +80,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(
 		"toggle_debug_camera"
 	):
-		_toggle_debug_camera()
+		if debug_camera_enabled:
+			_toggle_debug_camera()
 
 
 func _toggle_debug_camera() -> void:

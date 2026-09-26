@@ -1,0 +1,38 @@
+[gd_scene load_steps=24 format=3 uid="uid://bvdt3vec5dvfu"]
+
+[ext_resource type="Script" uid="uid://nckbcnym7ii6" path="res://tests/generation/generation_evaluator.gd" id="1_shbdh"]
+[ext_resource type="PackedScene" uid="uid://b3bqssbfmvfwj" path="res://generation/level_generator/level_generator.tscn" id="2_xq0ya"]
+[ext_resource type="PackedScene" uid="uid://c4357685gf36o" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_start.tscn" id="3_kbgat"]
+[ext_resource type="PackedScene" uid="uid://c165i1ecwpnk1" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_gauntlet_01.tscn" id="4_553t6"]
+[ext_resource type="PackedScene" uid="uid://blbq0rbhhpya2" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_gauntlet_02.tscn" id="5_h1fjd"]
+[ext_resource type="PackedScene" uid="uid://x5bsa6wbd1qy" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_01.tscn" id="6_nhoos"]
+[ext_resource type="PackedScene" uid="uid://t068gq14py7j" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_large_02.tscn" id="7_ywgh0"]
+[ext_resource type="PackedScene" uid="uid://cyiy5oe7pjutm" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_01.tscn" id="8_0e22q"]
+[ext_resource type="PackedScene" uid="uid://bcrr1vl8spin7" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_02.tscn" id="9_7ibbm"]
+[ext_resource type="PackedScene" uid="uid://c4a4vd8kq42si" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_03.tscn" id="10_mjl77"]
+[ext_resource type="PackedScene" uid="uid://bawiwc3is1o13" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_04.tscn" id="11_nhqyc"]
+[ext_resource type="PackedScene" uid="uid://c8scebk7eutd0" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_05.tscn" id="12_8nfq5"]
+[ext_resource type="PackedScene" uid="uid://c53bjb5wx4ve8" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_06.tscn" id="13_pgnfq"]
+[ext_resource type="PackedScene" uid="uid://4quj4aexq0v6" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_small_07.tscn" id="14_tqbnd"]
+[ext_resource type="PackedScene" uid="uid://chbondcs7cy6l" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_horizontal_01.tscn" id="15_fxxyx"]
+[ext_resource type="PackedScene" uid="uid://bgwthi7s3jey3" path="res://levels/dystopian_city/chunks/scenes/chunks/corridors/corridor_vertical_02.tscn" id="16_o3iwk"]
+[ext_resource type="PackedScene" uid="uid://cahxl381523xg" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_bottom_01.tscn" id="17_df03k"]
+[ext_resource type="PackedScene" uid="uid://6gkyw1g06v4" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_01.tscn" id="18_pcqd5"]
+[ext_resource type="PackedScene" uid="uid://bvxt2jy6l7jib" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_left_small_01.tscn" id="19_0i786"]
+[ext_resource type="PackedScene" uid="uid://cp7rt51aeyi3s" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_01.tscn" id="20_tthiw"]
+[ext_resource type="PackedScene" uid="uid://ct5k6xlgp5cr8" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_right_small_01.tscn" id="21_3a13b"]
+[ext_resource type="PackedScene" uid="uid://dh318hpudqgk" path="res://levels/dystopian_city/chunks/scenes/chunks/terminals/terminal_top_01.tscn" id="22_ao151"]
+[ext_resource type="PackedScene" uid="uid://ddwwgae386sy5" path="res://levels/dystopian_city/chunks/scenes/chunks/rooms/room_goal_01.tscn" id="23_n6mlu"]
+
+[node name="GenerationEvaluation" type="Node2D"]
+script = ExtResource("1_shbdh")
+
+[node name="LevelGenerator" parent="." instance=ExtResource("2_xq0ya")]
+start_chunk_scene = ExtResource("3_kbgat")
+chunk_scenes = Array[PackedScene]([ExtResource("4_553t6"), ExtResource("5_h1fjd"), ExtResource("6_nhoos"), ExtResource("7_ywgh0"), ExtResource("8_0e22q"), ExtResource("9_7ibbm"), ExtResource("10_mjl77"), ExtResource("11_nhqyc"), ExtResource("12_8nfq5"), ExtResource("13_pgnfq"), ExtResource("14_tqbnd")])
+horizontal_corridor_scenes = Array[PackedScene]([ExtResource("15_fxxyx")])
+vertical_corridor_scenes = Array[PackedScene]([ExtResource("16_o3iwk")])
+terminal_chunk_scenes = Array[PackedScene]([ExtResource("17_df03k"), ExtResource("18_pcqd5"), ExtResource("19_0i786"), ExtResource("20_tthiw"), ExtResource("21_3a13b"), ExtResource("22_ao151")])
+goal_chunk_scenes = Array[PackedScene]([ExtResource("23_n6mlu")])
+chunk_count = 10
+use_random_seed = true

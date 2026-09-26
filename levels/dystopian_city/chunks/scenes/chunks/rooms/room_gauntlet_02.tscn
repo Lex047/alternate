@@ -79,7 +79,15 @@ metadata/_custom_type_script = "uid://bn8df0aj06404"
 [node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="1"]
 position = Vector2(288, 83)
 script = ExtResource("6_qlrsr")
+spawn_type = 2
+spawn_chance = 0.5
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn3" type="Marker2D" parent="EnemySpawns" index="2"]
+position = Vector2(157, 83)
+script = ExtResource("6_qlrsr")
 spawn_type = 1
+spawn_chance = 0.5
 metadata/_custom_type_script = "uid://bn8df0aj06404"
 
 [node name="Sockets" parent="." index="4"]

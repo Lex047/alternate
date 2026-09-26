@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://4gayskhp4j66"]
+
+[ext_resource type="PackedScene" uid="uid://xcb017aq6lyc" path="res://characters/enemies/golem_class/golem_ranged/golem_ranged.tscn" id="1_13ik6"]
+[ext_resource type="Script" uid="uid://bw31wg1r01848" path="res://characters/enemies/golem_class/golem_elite/golem_elite.gd" id="2_namdh"]
+
+[node name="GolemElite" instance=ExtResource("1_13ik6")]
+script = ExtResource("2_namdh")
+elite_tint = Color(0.995766, 1, 0.318056, 1)
+elite_max_health = 250
+elite_patrol_speed = 60.0
+elite_chase_speed = 170.0
+elite_attack_cooldown = 0.2
+melee_engage_distance = 90.0
+danger_health_ratio = 0.35
+retreat_trigger_distance = 90.0
+retreat_safe_distance = 130.0
+retreat_speed = 210.0
+elite_lost_player_delay = 3.5
+elite_lost_chase_speed = 250.0
+attack_cooldown = 0.5
+max_health = 50
+
+[node name="AttackRange" parent="." index="6"]
+monitoring = true
+
+[node name="CollisionShape2D" parent="AttackRange" index="0"]
+disabled = false
+
+[node name="AttackHitbox" parent="." index="7"]
+damage = 35

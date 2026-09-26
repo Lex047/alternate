@@ -44,6 +44,13 @@ script = ExtResource("4_7mkqr")
 spawn_chance = 0.2
 metadata/_custom_type_script = "uid://bn8df0aj06404"
 
+[node name="EnemySpawn5" type="Marker2D" parent="EnemySpawns" index="4"]
+position = Vector2(420, 373)
+script = ExtResource("4_7mkqr")
+spawn_type = 3
+spawn_chance = 0.9
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
 [node name="LeftSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(288, 440)
 gizmo_extents = 8.0

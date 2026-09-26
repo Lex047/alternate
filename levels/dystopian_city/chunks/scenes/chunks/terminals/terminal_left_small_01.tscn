@@ -16,7 +16,7 @@ script = ExtResource("2_xx7je")
 direction = 1
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 offset_left = 224.0
 offset_top = 32.0
 offset_right = 352.0

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=4 uid="uid://6gkyw1g06v4"]
+[gd_scene load_steps=5 format=4 uid="uid://6gkyw1g06v4"]
 
 [ext_resource type="PackedScene" uid="uid://dgvjgd8miorlb" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_base.tscn" id="1_02tbf"]
 [ext_resource type="Script" uid="uid://cgnrtu3p324cm" path="res://levels/dystopian_city/chunks/scenes/chunks/chunk_socket.gd" id="2_d1wla"]
 [ext_resource type="PackedScene" uid="uid://dnewglfnhe2rt" path="res://gameplay/traps/spike_trap/spike_trap.tscn" id="2_ihp8s"]
+[ext_resource type="Script" uid="uid://bn8df0aj06404" path="res://generation/enemies/enemy_spawn.gd" id="3_ihp8s"]
 
 [node name="TerminalLeft01" instance=ExtResource("1_02tbf")]
 chunk_type = 3
@@ -20,6 +21,20 @@ position = Vector2(157, 201)
 position = Vector2(182, 201)
 scale = Vector2(-1, 1)
 
+[node name="EnemySpawn" type="Marker2D" parent="EnemySpawns" index="0"]
+position = Vector2(408, 222)
+script = ExtResource("3_ihp8s")
+spawn_type = 3
+spawn_chance = 0.8
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
+[node name="EnemySpawn2" type="Marker2D" parent="EnemySpawns" index="1"]
+position = Vector2(297, 224)
+script = ExtResource("3_ihp8s")
+spawn_type = 2
+spawn_chance = 0.3
+metadata/_custom_type_script = "uid://bn8df0aj06404"
+
 [node name="RightSocket01" type="Marker2D" parent="Sockets" index="0"]
 position = Vector2(576, 280)
 gizmo_extents = 8.0
@@ -27,7 +42,7 @@ script = ExtResource("2_d1wla")
 direction = 1
 metadata/_custom_type_script = "uid://cgnrtu3p324cm"
 
-[node name="GenerationBounds" parent="." index="4"]
+[node name="GenerationBounds" parent="." index="5"]
 offset_left = 128.0
 offset_top = -16.0
 offset_right = 576.0

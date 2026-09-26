@@ -40,6 +40,8 @@ generation_splash = NodePath("GenerationSplash")
 alternate_transition = NodePath("AlternateTransition")
 game_hud = NodePath("GameHUD")
 debug_camera = NodePath("DebugCamera")
+debug_camera_enabled = true
+always_show_tutorial = true
 player = NodePath("Player")
 game_music = ExtResource("2_fegy3")
 game_music_alternate = ExtResource("3_fegy3")
@@ -53,6 +55,7 @@ horizontal_corridor_scenes = Array[PackedScene]([ExtResource("17_iswgq")])
 vertical_corridor_scenes = Array[PackedScene]([ExtResource("18_7tmf6")])
 terminal_chunk_scenes = Array[PackedScene]([ExtResource("19_sisia"), ExtResource("20_xorak"), ExtResource("21_4jymc"), ExtResource("22_0lgry"), ExtResource("23_h7iu2"), ExtResource("24_8sg4y")])
 goal_chunk_scenes = Array[PackedScene]([ExtResource("25_vktc5")])
+chunk_count = 10
 generation_seed = 66152306
 use_random_seed = true
 

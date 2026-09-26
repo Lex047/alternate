@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3bqssbfmvfwj"]
+[gd_scene load_steps=6 format=3 uid="uid://b3bqssbfmvfwj"]
 
 [ext_resource type="Script" uid="uid://cbvbiia3qwfd4" path="res://generation/level_generator/level_generator.gd" id="1_1crrm"]
 [ext_resource type="PackedScene" uid="uid://cibf1rxbl2nqs" path="res://generation/enemies/enemy_spawner.tscn" id="2_ig0t5"]
 [ext_resource type="PackedScene" uid="uid://bfoqggjiscpcf" path="res://characters/enemies/golem_class/golem_base/golem.tscn" id="3_y4cm2"]
 [ext_resource type="PackedScene" uid="uid://xcb017aq6lyc" path="res://characters/enemies/golem_class/golem_ranged/golem_ranged.tscn" id="4_u8yvq"]
+[ext_resource type="PackedScene" uid="uid://4gayskhp4j66" path="res://characters/enemies/golem_class/golem_elite/golem_elite.tscn" id="5_y4cm2"]
 
 [node name="LevelGenerator" type="Node2D"]
 script = ExtResource("1_1crrm")
@@ -15,4 +16,5 @@ script = ExtResource("1_1crrm")
 [node name="EnemySpawner" parent="." instance=ExtResource("2_ig0t5")]
 melee_enemy_scene = ExtResource("3_y4cm2")
 ranged_enemy_scene = ExtResource("4_u8yvq")
+elite_enemy_scene = ExtResource("5_y4cm2")
 ranged_enemy_chance = 0.5

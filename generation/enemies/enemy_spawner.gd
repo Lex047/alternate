@@ -1,6 +1,6 @@
-# Populates authored spawn markers with melee or ranged enemies using a seed
-# derived from the original generation seed. Spatial ordering stabilizes random consumption,
-# and resolved markers prevent duplicate population of the same layout.
+# Populates authored spawn markers with melee, ranged or explicitly placed elite enemies using
+# a seed derived from the original generation seed. Spatial ordering stabilizes random
+# consumption, and resolved markers prevent duplicate population of the same layout.
 extends Node
 class_name EnemySpawner
 
@@ -11,6 +11,7 @@ const ENEMY_SEED_SALT: int = 0x45A1B2C3
 @export_category("Enemy Scenes")
 @export var melee_enemy_scene: PackedScene
 @export var ranged_enemy_scene: PackedScene
+@export var elite_enemy_scene: PackedScene
 
 @export_category("Generation")
 @export_range(0.0, 1.0, 0.05)
@@ -123,8 +124,6 @@ func _resolve_spawn(
 	if not enemy:
 		return
 
-	# The enemy and spawn point use the same parent,
-	# so the marker's local position can be copied directly.
 	enemy.position = spawn_point.position
 
 	spawn_point.get_parent().add_child(
@@ -142,6 +141,9 @@ func _choose_enemy_scene(
 
 		EnemySpawn.SpawnType.RANGED:
 			return ranged_enemy_scene
+
+		EnemySpawn.SpawnType.ELITE:
+			return elite_enemy_scene
 
 		EnemySpawn.SpawnType.ANY:
 			if (

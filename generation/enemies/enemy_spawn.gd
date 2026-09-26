@@ -8,6 +8,7 @@ enum SpawnType {
 	ANY,
 	MELEE,
 	RANGED,
+	ELITE,
 }
 
 

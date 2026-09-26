@@ -5,6 +5,16 @@ extends DamageHitbox
 class_name GolemProjectile
 
 
+@export_category("Projectile Visuals")
+@export var projectile_variant_tint: Color = Color(
+	0.55,
+	0.55,
+	0.55,
+	1.0
+)
+@export var apply_tint: bool = false
+
+
 @export_category("Movement")
 @export var speed: float = 180.0
 @export var projectile_gravity: float = 40.0
@@ -25,6 +35,9 @@ var fall_velocity: float = 0.0
 
 
 func _ready() -> void:
+	if apply_tint:
+		modulate = projectile_variant_tint
+
 	await get_tree().create_timer(lifetime).timeout
 
 	if is_instance_valid(self):
@@ -56,8 +69,9 @@ func _physics_process(delta: float) -> void:
 	)
 
 
-func _on_body_entered(_body: Node2D) -> void:
-	queue_free()
+func _on_body_entered(body: Node2D) -> void:
+	if body is not Player:
+		queue_free()
 
 
 func _on_area_entered(area: Area2D) -> void:

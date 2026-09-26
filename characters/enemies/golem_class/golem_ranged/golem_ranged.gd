@@ -121,13 +121,27 @@ func _fire_projectile() -> void:
 	if not projectile:
 		return
 
+	_configure_projectile(projectile)
+
 	get_tree().current_scene.add_child(projectile)
 
 	projectile.global_position = (
-		projectile_spawn.global_position + Vector2(0, -16)
+		projectile_spawn.global_position
+		+ Vector2(0, -16)
 	)
 
 	projectile.direction = Vector2(
 		move_direction,
 		0.0
 	)
+
+	projectile.direction = Vector2(
+		move_direction,
+		0.0
+	)
+
+
+func _configure_projectile(
+	_projectile: GolemProjectile
+) -> void:
+	pass

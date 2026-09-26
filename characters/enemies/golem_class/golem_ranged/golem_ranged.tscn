@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c4ij7eg2cjxdr" path="res://characters/enemies/golem_class/golem_base/sprites/golem_idle.png" id="4_meya0"]
 [ext_resource type="Texture2D" uid="uid://trn6uwwerxrf" path="res://characters/enemies/golem_class/golem_base/sprites/golem_attack.png" id="5_rw62s"]
 [ext_resource type="Texture2D" uid="uid://s4dn5lco1ijj" path="res://characters/enemies/golem_class/golem_base/sprites/golem_death.png" id="6_p62og"]
+[ext_resource type="Texture2D" uid="uid://fm6w0d13o3i5" path="res://characters/enemies/golem_class/golem_base/sprites/golem_hurt.png" id="7_0grrg"]
 [ext_resource type="Texture2D" uid="uid://dobaxe2h53fxc" path="res://characters/enemies/golem_class/golem_base/sprites/golem_run.png" id="7_x71gw"]
 [ext_resource type="Texture2D" uid="uid://b17jevcw01run" path="res://characters/enemies/golem_class/golem_ranged/sprites/golem_attack_ranged.png" id="8_oq70o"]
 
@@ -255,9 +256,6 @@ tracks/4/keys = {
 "values": [Vector2(0, -16), Vector2(0, -14), Vector2(0, -12), Vector2(0, -10), Vector2(0, -8), Vector2(0, -6), Vector2(0, -4), Vector2(0, -2), Vector2(0, 0)]
 }
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_cov0t"]
-load_path = "res://.godot/imported/golem_hurt.png-999a938971738db09a4ffafc29e46061.ctex"
-
 [sub_resource type="Animation" id="Animation_cov0t"]
 resource_name = "hurt"
 length = 0.3
@@ -272,7 +270,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("CompressedTexture2D_cov0t")]
+"values": [ExtResource("7_0grrg")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -493,7 +491,7 @@ ranged_chase_speed = 65.0
 ranged_attack_distance = 140.0
 projectile_scene = ExtResource("3_7q66l")
 attack_cooldown = 1.0
-max_health = 50
+max_health = 100
 
 [node name="AttackRange" parent="." index="6"]
 monitoring = false
